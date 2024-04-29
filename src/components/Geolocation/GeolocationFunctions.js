@@ -19,7 +19,7 @@ import EditDialog from './Dialogs/EditDialog';
  * Geolocation etrnies in list
  * @param {{data: { position: float[], name: string }[]}}
  */
-export function GeoLocationItems({ data }) {
+export function GeoLocationItems({ data, disabledSaveChangesButton }) {
     const 
         session = useSession(),
         [open, setOpen] = useState(false),
@@ -39,7 +39,7 @@ export function GeoLocationItems({ data }) {
                     <ListItem key={index}>
                         {/* Place-Icon */}
                         <ListItemIcon 
-                            onClick={() => session.setSessionData({ geolocation: geo })} // Exchange data with MapContainer
+                            onClick={() => session.setSessionData({ ...session.sessionData, geolocation: geo })} // Exchange data with MapContainer
                             children={<Place sx={{ color: '#2587be', '&:hover': { cursor: 'pointer' } }} />} 
                         />
                         {/* Placename + Position */}
@@ -82,8 +82,9 @@ export function GeoLocationItems({ data }) {
                                 <MenuItem 
                                     onClick={() =>{
                                         // When a geolocation is deleted, re-map through the changed geolocations array and rerender
-                                        setGeolocations(geolocations.filter((geo) => geo.name !== geolocation.name))
-                                        setAnchorEl(null)
+                                        setAnchorEl(null);
+                                        disabledSaveChangesButton(false);
+                                        session.setSessionData({ ...session.sessionData, updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name) })
                                 }}>Delete</MenuItem>
                             </Menu>
                         </ListItemSecondaryAction>
@@ -94,7 +95,8 @@ export function GeoLocationItems({ data }) {
                 geolocation={geolocation}
                 dialogProps={{
                     open: open,
-                    onClose: setOpen
+                    onClose: setOpen,
+                    enableSaveChangesButton: () => disabledSaveChangesButton(false)
                 }}
             />
         </Box>

@@ -1,4 +1,5 @@
 import { 
+    useEffect,
     useState
 } from 'react';
 import { 
@@ -9,18 +10,33 @@ import {
     Item
 } from './customComponents';
 import Mapping from './Mapping/Mapping';
+import { useSession } from './SessionProvider';
 import Geolocation from './Geolocation/Geolocation';
 import FileExplorer from './FileExplorer/FileExplorer';
 import { TextContent } from './TextContent/TextContent';
+import { structureLocationAttribute } from '../utils/jsonFunctions';
 
 export default function MainArea() {
     const 
+        { sessionData, setSessionData } = useSession(),
+        // Data from json-file
         [currentData, setCurrentData] = useState(),
+        // TextContent of currentData
+        [textContent, setTextContent] = useState(),
         // Geolocations of currentData
-        geolocations = currentData ? Object.entries(currentData.locations).map(([placename, [lat, long]]) => ({
-            position: [lat, long],
-            name: placename,
-        })) : undefined;
+        [geolocations, setGeolocations] = useState();
+
+    /**  
+     * When a new json-file is chosen, set the value and rerender MainArea
+     * FIXME: Attributes "text" and "locations" may vary due to the reason, that it depends on the imported json-file
+     */
+    useEffect(() => {
+        setTextContent(currentData?.text)
+        setGeolocations(structureLocationAttribute(currentData?.locations))
+    }, [currentData]);
+    
+    // When the attribute "updatedGeolocations" changes (e.g. Deletion of a location), the MainArea should be rerendered
+    useEffect(() => setGeolocations(sessionData?.updatedGeolocations), [sessionData?.updatedGeolocations]);
 
     return (
         <Box component="main"
@@ -69,7 +85,8 @@ export default function MainArea() {
                                 }}
                                 children={
                                     <TextContent
-                                        data={currentData}
+                                        textContent ={textContent }
+                                        geolocations={geolocations}
                                     />
                                 }
                             />

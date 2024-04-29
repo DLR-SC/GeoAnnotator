@@ -1,13 +1,13 @@
 import { Box } from "@mui/material"
 import { highlightDetectedLocations } from "./TextContentFunctions"
 
-export function TextContent({ data }) {
+export function TextContent({ textContent, geolocations }) {
     return (
         <Box 
             // noWrap
             variant='inherit'
             children={
-                highlightDetectedLocations(data)
+                highlightDetectedLocations(textContent, geolocations)
             }
             sx={{
                 overflowY: 'auto',

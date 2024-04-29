@@ -3,15 +3,18 @@ import { Typography } from '@mui/material';
 
 /**
  * 
- * @param {{text: string, source: string, locations: {location: float[]}}} data 
+ * @param {string} textContent 
+ * @param {{placename: string, position: [float, float]}[]} locations 
  */
-export function highlightDetectedLocations(data) {
-    return (
-        data ? highlightText(data.text, Object.keys(data.locations)) : null
-    )
+export function highlightDetectedLocations(textContent, geolocations) {
+    return (textContent && geolocations ? highlightText(textContent, getPlacenamesOfGeolocations(geolocations)) : null)
 }
 
-// Function to split and highlight specific words
+/**
+ * Split and hightlight the locations in text
+ * @param {string} text 
+ * @param {string[]} wordsToHighlight 
+ */
 function highlightText (text, wordsToHighlight) {
     const
         regex = new RegExp(`(${wordsToHighlight.join('|')})`, 'gi'),
@@ -29,3 +32,15 @@ function highlightText (text, wordsToHighlight) {
         )
     )
   };
+
+/**
+ * @param {{name: string, position: [float, float]}} geolocations 
+ * @returns {string[]}
+ */
+function getPlacenamesOfGeolocations(geolocations) {
+    let placenames = []    
+    for(let geolocation of geolocations) {
+        placenames.push(geolocation.name)
+    }
+    return placenames;
+}

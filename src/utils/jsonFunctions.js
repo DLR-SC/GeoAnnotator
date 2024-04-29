@@ -21,3 +21,18 @@ export function convertFileToJSONArray(file, setFileData) {
     reader.onload = (e) => setFileData(JSON.parse(e.target.result));
     reader.readAsText(file);
 }
+
+/**
+ * Structure the locations attribute of currentData, and turn it into a JSONArray with following attributes:
+ * - placename: Location
+ * - position: Coordinates of Location
+ * 
+ * @param {{ location: [float, float] }} locations 
+ * @returns 
+ */
+export function structureLocationAttribute(locations) {
+    return locations ? Object.entries(locations).map(([placename, [lat, long]]) => ({
+        position: [lat, long],
+        name: placename,
+    })) : undefined;
+}

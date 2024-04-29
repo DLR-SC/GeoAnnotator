@@ -12,7 +12,7 @@ import { DialogContentArea } from './DialogFunctions';
  * 
  * @param {{
  *  geolocation: { name: string, position: float[] }, 
- *  dialogProps: { open: Boolean, onClose: func    }
+ *  dialogProps: { open: Boolean, onClose: Function }
  * }}
  * @returns {React.JSX.Element}
  */
@@ -54,7 +54,10 @@ export default function EditDialog({ geolocation, dialogProps }) {
             </TextField>
             <SaveButton
               // TODO: Save the edited location
-              onClick={() => dialogProps.onClose(false)}
+              onClick={() => {
+                dialogProps.onClose(false)
+                dialogProps.enableSaveChangesButton()
+              }}
             >
               Save
             </SaveButton>
