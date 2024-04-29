@@ -3,7 +3,7 @@
 ## What is the Geo Annotator used for?
 The Geo Annotator (GA) is used for managing annotated data, which has been parsed with a specific geoparser like CamCoder, Edinburgh Geoparser or more.
 
-![Geo Annotator - Example][example.png "Geo Annotator"]
+![Geo Annotator - Example](example.png "Geo Annotator")
 
 ## Requirements
 Thus the GA is powered with React, Node.js is required.
