@@ -1,20 +1,12 @@
-import { 
-    useEffect,
-    useState
-} from 'react';
-import { 
-    Box, 
-    Grid
-} from '@mui/material';
-import {
-    Item
-} from './customComponents';
 import Mapping from './Mapping/Mapping';
+import { Box, Grid } from '@mui/material';
+import { Item } from './customComponents';
+import { useEffect, useState } from 'react';
 import { useSession } from './SessionProvider';
 import Geolocation from './Geolocation/Geolocation';
 import FileExplorer from './FileExplorer/FileExplorer';
 import { TextContent } from './TextContent/TextContent';
-import { structureLocationAttribute } from '../utils/jsonFunctions';
+import { restructureLocationAttribute, structureLocationAttribute } from '../utils/jsonFunctions';
 
 export default function MainArea() {
     const 
@@ -42,7 +34,7 @@ export default function MainArea() {
     return (
         <Box component="main"
             sx={{
-                minWidth: '100vh'
+                minWidth: '50rem'
             }}
         >
             <Grid container 
@@ -84,7 +76,7 @@ export default function MainArea() {
                         direction="column"
                     >
                         {/* TextContent */}
-                        <Grid item height={'35%'}>
+                        <Grid item>
                             <Item
                                 children={
                                     <TextContent
@@ -94,8 +86,8 @@ export default function MainArea() {
                                 }
                             />
                         </Grid>
-                        {/* Mapping  */}
-                        <Grid item height={'65%'}>
+                        {/* Mapping */}
+                        <Grid item height>
                             <Item
                                 children={
                                     <Mapping
@@ -117,7 +109,7 @@ export default function MainArea() {
                             <Geolocation
                                 geolocations={geolocations}
                                 handleSaveButtonClick={() => {
-
+                                    setSessionData({...sessionData, newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), key: sessionData?.fileIndex }})
                                 }}
                             />
                         }

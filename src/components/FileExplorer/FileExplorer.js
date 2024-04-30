@@ -1,12 +1,30 @@
 import { List } from '@mui/material';
-import React, { useState } from 'react';
 import FileUploader from './FileUploader';
-import { extractEntries } from './FileExplorerFunctions';
+import { useSession } from '../SessionProvider';
+import React, { useEffect, useState } from 'react';
 import { convertFileToJSONArray } from '../../utils/jsonFunctions';
+import { ExtractEntries, ExtractNewEntries, hasKey } from './FileExplorerFunctions';
 
 export default function FileExplorer({ handleFileItemClick }) {
     // Data from file
-    const [fileDataset, setFileDataset] = useState([]);
+    const 
+        { sessionData, setSessionData } = useSession(),
+        [fileDataset, setFileDataset] = useState([]),
+        [newFileDataset, setNewFileDataset] = useState();
+
+    // When changes are saved, it should be added to the "newFileDataset" list
+    useEffect(
+        () => {
+            const fileData = sessionData?.newFileData;
+            if(fileData) {
+                if(newFileDataset === undefined) setNewFileDataset([fileData]) 
+                else if(hasKey(newFileDataset, fileData)) alert('File has already been changed!'); 
+                else newFileDataset.push(fileData);
+            }
+        }, 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [sessionData?.newFileData]
+    )
 
     return (
         <>
@@ -25,13 +43,11 @@ export default function FileExplorer({ handleFileItemClick }) {
                     borderRadius: '0.5rem',
                     backgroundColor: 'white'
                 }}
-                children={
-                    extractEntries(
-                        fileDataset,
-                        handleFileItemClick
-                    )
-                }
-            />
+            >
+                <ExtractEntries data={fileDataset} handleClick={handleFileItemClick}/>
+                {/* Dynamically add new entries (by saving changes) */}
+                <ExtractNewEntries data={newFileDataset} handleClick={handleFileItemClick} />
+            </List>
         </>
     )
 }

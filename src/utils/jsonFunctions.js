@@ -23,7 +23,7 @@ export function convertFileToJSONArray(file, setFileData) {
 }
 
 /**
- * Structure the locations attribute of currentData, and turn it into a JSONArray with following attributes:
+ * Structure the locations attribute of currentData, and turn it into a JSONArray, each object with following attributes:
  * - placename: Location
  * - position: Coordinates of Location
  * 
@@ -35,4 +35,13 @@ export function structureLocationAttribute(locations) {
         position: [lat, long],
         name: placename,
     })) : undefined;
+}
+
+/**
+ * Restructure the location attribute and turn it into a JSONObject with following attributes:
+ * - location: Placename of coordinate
+ *      - position: Coordinates (lat, long)
+ */
+export function restructureLocationAttribute(geolocations) { 
+    return Object.fromEntries(geolocations.map(geolocation => [geolocation.name, geolocation.position]));
 }
