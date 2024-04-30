@@ -1,42 +1,37 @@
+import { List } from '@mui/material';
 import React, { useState } from 'react';
-import {
-    List,
-    Box
-} from '@mui/material';
-import {
-    extractEntries
-} from './FileExplorerFunctions';
 import FileUploader from './FileUploader';
+import { extractEntries } from './FileExplorerFunctions';
 import { convertFileToJSONArray } from '../../utils/jsonFunctions';
 
 export default function FileExplorer({ handleFileItemClick }) {
     // Data from file
-    const [fileData, setFileData] = useState([]);
+    const [fileDataset, setFileDataset] = useState([]);
 
     return (
-        <Box>
+        <>
             <FileUploader 
                 onFilesSelect={(files) => { 
                     // FIXME: We assume, that we only have selected one file. Thus we expect only one element in the array
-                    convertFileToJSONArray(files[0], setFileData)
+                    convertFileToJSONArray(files[0], setFileDataset)
                 }}
             />
             <List
                 sx={{
-                    marginTop: 2,
                     paddingX: 2,
+                    marginTop: 2,
+                    height: '75vh',
                     overflowY: 'auto',
-                    height: '70vh',
+                    borderRadius: '0.5rem',
                     backgroundColor: 'white'
                 }}
-                >
-                {
+                children={
                     extractEntries(
-                        fileData,
+                        fileDataset,
                         handleFileItemClick
                     )
                 }
-            </List>
-        </Box>
+            />
+        </>
     )
 }

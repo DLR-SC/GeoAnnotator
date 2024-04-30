@@ -1,6 +1,8 @@
+import { MapRounded } from '@mui/icons-material';
 import {
+    ListItemButton,
     ListItemText,
-    ListItemButton
+    ListItemIcon
 } from '@mui/material';
 
 /**
@@ -15,10 +17,9 @@ export function extractEntries(data, handleClick) {
         data.map((object, index) => (
             <ListItemButton
                 key={index}
-                onClick={() => {
-                    handleClick(object);
-                }}
+                onClick={() => handleClick(object, index)}
                 >
+                <ListItemIcon children={<MapRounded sx={{ color: 'limegreen' }}/>} />
                 <ListItemText primary={`file_${index}.json`} />
             </ListItemButton>
         ))

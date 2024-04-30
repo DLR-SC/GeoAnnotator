@@ -1,16 +1,16 @@
+import { useState } from 'react';
 import { List } from '@mui/material';
 import { SaveButton } from '../customComponents';
 import { GeoLocationItems } from './GeolocationFunctions';
-import { useState } from 'react';
 
-export default function Geolocation({ geolocations }) {
+export default function Geolocation({ geolocations, handleSaveButtonClick }) {
     const [disabledButton, setDisabledButton] = useState(true);
 
     return (
         <>
             <List
                 sx={{
-                    height: '72.5vh',
+                    height: '75vh',
                     overflowY: 'auto',
                     backgroundColor: 'white',
                     marginBottom: 2
@@ -19,18 +19,15 @@ export default function Geolocation({ geolocations }) {
                     geolocations ?  (
                         <GeoLocationItems
                             data={geolocations}
-                            disabledSaveChangesButton={setDisabledButton}
+                            disableSaveChangesButton={setDisabledButton}
                         />
                     ) : null
                 }
             />
             <SaveButton
-                // TODO: Enable button when changes were made and save the edited annotations in a new file with additional ending '.edt' when clicked
                 disabled={disabledButton}
                 variant='contained'
-                onClick={
-                    null
-                }
+                onClick={handleSaveButtonClick}
             >
                 Save changes
             </SaveButton>

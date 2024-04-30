@@ -18,6 +18,7 @@ import { structureLocationAttribute } from '../utils/jsonFunctions';
 
 export default function MainArea() {
     const 
+        // eslint-disable-next-line no-unused-vars
         { sessionData, setSessionData } = useSession(),
         // Data from json-file
         [currentData, setCurrentData] = useState(),
@@ -31,8 +32,8 @@ export default function MainArea() {
      * FIXME: Attributes "text" and "locations" may vary due to the reason, that it depends on the imported json-file
      */
     useEffect(() => {
-        setTextContent(currentData?.text)
-        setGeolocations(structureLocationAttribute(currentData?.locations))
+        setTextContent(currentData?.text);
+        setGeolocations(structureLocationAttribute(currentData?.locations));
     }, [currentData]);
     
     // When the attribute "updatedGeolocations" changes (e.g. Deletion of a location), the MainArea should be rerendered
@@ -55,13 +56,16 @@ export default function MainArea() {
                 {/* Left wing - FileExplorer */}
                 <Grid item xs={2}
                     sx={{
-                        minWidth: '15rem',
+                        minWidth: '16rem' // Content should'nt be crushed when window is being reduced in size
                     }}
                 >
                     <Item
                         children={
                             <FileExplorer 
-                                handleFileItemClick={(jsonData) => setCurrentData(jsonData)}
+                                handleFileItemClick={(jsonData, key) => {
+                                    setCurrentData(jsonData);
+                                    setSessionData({ ...sessionData, fileData: jsonData, fileIndex: key });
+                                }}
                             />
                         }
                     />
@@ -74,15 +78,14 @@ export default function MainArea() {
                 >
                     <Grid 
                         container 
-                        spacing={1} 
+                        spacing={1}
+                        wrap='nowrap'
+                        height={'100%'}
                         direction="column"
                     >
-                        {/* Textcontent */}
-                        <Grid item xs>
+                        {/* TextContent */}
+                        <Grid item height={'35%'}>
                             <Item
-                                sx={{
-                                    padding: 2,
-                                }}
                                 children={
                                     <TextContent
                                         textContent ={textContent }
@@ -92,12 +95,8 @@ export default function MainArea() {
                             />
                         </Grid>
                         {/* Mapping  */}
-                        <Grid item xs>
+                        <Grid item height={'65%'}>
                             <Item
-                                sx={{
-                                    padding: 1,
-                                    height: '100%',
-                                }}
                                 children={
                                     <Mapping
                                         geolocations={geolocations}
@@ -117,6 +116,9 @@ export default function MainArea() {
                         children={
                             <Geolocation
                                 geolocations={geolocations}
+                                handleSaveButtonClick={() => {
+
+                                }}
                             />
                         }
                     />

@@ -10,11 +10,11 @@ export function TextContent({ textContent, geolocations }) {
                 highlightDetectedLocations(textContent, geolocations)
             }
             sx={{
+                padding: 1.5,
+                height: '100%',
                 overflowY: 'auto',
-                height: '25vh',
-                backgroundColor: 'white',
                 borderRadius: '0.5rem',
-                padding: 1.5
+                backgroundColor: 'white'
             }}
         />
     )

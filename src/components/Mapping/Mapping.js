@@ -14,11 +14,10 @@ import {
 export default function Mapping({ geolocations }) {
     return (
         <MapContainer 
-            center={[21.41, 39.81]} 
-            zoom={13} 
-            style={{ 
-                height: "55vh",
-                width: '100%' 
+            zoom={12}
+            center={[21.41, 39.81]} // Mekka 
+            style={{
+                height: '100%'
             }}
         >
             <TileLayer

@@ -15,11 +15,11 @@ import {
 } from '@mui/icons-material';
 import EditDialog from './Dialogs/EditDialog';
 
-/**
- * Geolocation etrnies in list
+/** 
+ * Location list: Geolocation entries
  * @param {{data: { position: float[], name: string }[]}}
  */
-export function GeoLocationItems({ data, disabledSaveChangesButton }) {
+export function GeoLocationItems({ data, disableSaveChangesButton }) {
     const 
         session = useSession(),
         [open, setOpen] = useState(false),
@@ -27,10 +27,12 @@ export function GeoLocationItems({ data, disabledSaveChangesButton }) {
         [geolocation, setGeolocation] = useState(),
         [geolocations, setGeolocations] = useState(data);
 
-    // Everytime when a new json-file is chosen and the data parameter changes, rerender the geolocations
-    useEffect(() => {
-        setGeolocations(data);
-    }, [data])
+    // When the geolocations are updated (Not necessarily a new json-file chosen), rerender the location list
+    useEffect(() => setGeolocations(data), [data])
+
+    // When a new json-file is chosen, disable the save changes button
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => disableSaveChangesButton(true), [session.sessionData?.fileData])
 
     return (
         <Box>
@@ -78,12 +80,12 @@ export function GeoLocationItems({ data, disabledSaveChangesButton }) {
                                     Edit
                                 </MenuItem>
                                 {/* Delete */}
-                                {/* TODO: Rerender textcontent and mapping when geolocations are deleted */}
                                 <MenuItem 
                                     onClick={() =>{
                                         // When a geolocation is deleted, re-map through the changed geolocations array and rerender
                                         setAnchorEl(null);
-                                        disabledSaveChangesButton(false);
+                                        disableSaveChangesButton(false);
+                                        // High-order components are being 'informed' about the deletion
                                         session.setSessionData({ ...session.sessionData, updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name) })
                                 }}>Delete</MenuItem>
                             </Menu>
@@ -96,7 +98,7 @@ export function GeoLocationItems({ data, disabledSaveChangesButton }) {
                 dialogProps={{
                     open: open,
                     onClose: setOpen,
-                    enableSaveChangesButton: () => disabledSaveChangesButton(false)
+                    enableSaveChangesButton: () => disableSaveChangesButton(false)
                 }}
             />
         </Box>

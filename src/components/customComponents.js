@@ -6,17 +6,20 @@ import {
 
 export const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? 
-    '#1A2027' 
-    : 
-    // '#76b5c5' // tourqise
-    // '#eeeee4' // sand
-    '#CFD6D9'
+        /* Dark Theme */
+        '#1A2027' 
+        :
+        /* Light Theme */
+        // '#76b5c5' // tourqise
+        // '#eeeee4' // sand
+        '#CFD6D9'
     ,
     ...theme.typography.body2,
-    padding: theme.spacing(3),
-    textAlign: 'center',
     color: theme.palette.text.secondary,
-    alignItems: "stretch"
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    width: '100%',
+    height: '100%'
 }));
 
 export const UploadButton = styled(Button)({
