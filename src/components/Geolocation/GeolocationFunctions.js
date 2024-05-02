@@ -95,6 +95,7 @@ export function GeoLocationItems({ data, disableSaveChangesButton }) {
             }
             <EditDialog
                 geolocation={geolocation}
+                geolocations={geolocations}
                 dialogProps={{
                     open: open,
                     onClose: setOpen,

@@ -5,8 +5,41 @@ The Geo Annotator (GA) is used for managing annotated data, which has been parse
 
 ![Geo Annotator - Example](./src/example.png "Geo Annotator")
 
-## Requirements
-Thus the GA is powered with React, Node.js is required.
+## Installation
+To simply install all packages, run 
+```bash 
+npm install
+```
+
+If you manually want to install the packages, do the following:
+- If you haven't Node.js already installed on your local system
+```bash
+conda create -n GeoAnnotator nodejs && conda activate GeoAnnotator
+```
+- React Material UI (MUI)
+```bash
+npm install @mui/material @mui/icons-material
+```
+- React Draggable (For draggable dialogs/popups)
+```bash
+npm install react-draggable
+```
+- Leaflet (Mapping)
+```bash
+npm install react-leaflet leaflet
+```
+- emotion.js (for custom react-components)
+```bash
+npm install @emotion/react @emotion/styled
+```
+- A custom font
+```bash
+npm install @fontsource/roboto
+```
+- Axios.js for recalling Request-API's in backend
+```bash
+npm install axios
+```
 
 ## Usage
 Choose a json-file, that contains a JSON-Array with JSON-Objects, each with following attributes:
