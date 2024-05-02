@@ -8,7 +8,7 @@ import { ExtractEntries, ExtractNewEntries, hasKey } from './FileExplorerFunctio
 export default function FileExplorer({ handleFileItemClick }) {
     // Data from file
     const 
-        { sessionData, setSessionData } = useSession(),
+        { sessionData } = useSession(),
         [fileDataset, setFileDataset] = useState([]),
         [newFileDataset, setNewFileDataset] = useState();
 
@@ -18,7 +18,7 @@ export default function FileExplorer({ handleFileItemClick }) {
             const fileData = sessionData?.newFileData;
             if(fileData) {
                 if(newFileDataset === undefined) setNewFileDataset([fileData]) 
-                else if(hasKey(newFileDataset, fileData)) alert('File has already been changed!'); 
+                else if(hasKey(newFileDataset, fileData)) /* TODO: When editing the same file, try to add a sub_index to it or overwrite the existing json-entry */; 
                 else newFileDataset.push(fileData);
             }
         }, 

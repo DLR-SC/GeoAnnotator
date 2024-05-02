@@ -48,7 +48,7 @@ export default function MainArea() {
                 {/* Left wing - FileExplorer */}
                 <Grid item xs={2}
                     sx={{
-                        minWidth: '16rem' // Content should'nt be crushed when window is being reduced in size
+                        minWidth: '18rem' // Content should'nt be crushed when window is being reduced in size
                     }}
                 >
                     <Item

@@ -27,16 +27,19 @@ export function ExtractEntries({data, handleClick}) {
 }
 
 /**
- * TODO: When editing the same file, try to add a sub_index to it.
- * 
+ * Save changes as new entries in FileExplorer-list
+ * @param {Object} param 
+ * @param {{ text: string, locations: Object, key: number }} param.data 
+ * @param {Function} param.handleClick 
  */
 export function ExtractNewEntries({ data, handleClick }) {
+    // If data is undefined, return nothing
     if(!data) return;
 
     return (
         data.map((object) => (
             <ListItemButton
-                key={object?.key}
+                key={object?.key + 0.1}
                 onClick={() => handleClick(object, object?.key)}
             >
                 <ListItemIcon children={<MapRounded sx={{ color: 'red' }}/>} />
