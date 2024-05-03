@@ -28,7 +28,7 @@ export const UploadButton = styled(Button)({
     fontWeight: 'bold',
     '&:hover': {
         backgroundColor: 'darkorange',
-    },
+    }
 });
 
 export const SaveButton = styled(Button)({
@@ -37,5 +37,5 @@ export const SaveButton = styled(Button)({
     fontWeight: 'bold',
     '&:hover': {
         backgroundColor: 'darkgreen',
-    },
+    }
 });

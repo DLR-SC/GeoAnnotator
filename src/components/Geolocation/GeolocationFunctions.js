@@ -17,9 +17,11 @@ import EditDialog from './Dialogs/EditDialog';
 
 /** 
  * Location list: Geolocation entries
- * @param {{data: { position: float[], name: string }[]}}
+ * @param {Object} param
+ * @param {{ position: float[], name: string }[]} param.data
+ * @param {Function} param.disableSaveChangesButton
  */
-export function GeoLocationItems({ data, disableSaveChangesButton }) {
+export function GeolocationItems({ data, disableSaveChangesButton }) {
     const 
         session = useSession(),
         [open, setOpen] = useState(false),

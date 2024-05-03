@@ -1,16 +1,16 @@
+import Mapping from '../../Mapping/Mapping';
 import { useSession } from '../../SessionProvider';
 import React, { useEffect, useState } from 'react';
 import { SaveButton } from '../../customComponents';
 import { DialogContentArea, getOptionalCoordinates } from './DialogFunctions';
-import { TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography } from '@mui/material';
 
 /**
  * Dialog for editing location
- * @param {{
- *  geolocations: { name: string, position: float[] }[], 
- *  geolocation: { name: string, position: float[] }, 
- *  dialogProps: { open: Boolean, onClose: Function }
- * }}
+ * @param {Object} param
+ * @param {{ name: string, position: float[] }} param.geolocation
+ * @param {{ name: string, position: float[] }[]} param.geolocations
+ * @param {{ open: Boolean, onClose: Function }} param.dialogProps
  * @returns {React.JSX.Element}
  */
 export default function EditDialog({ geolocations, geolocation, dialogProps }) {
@@ -19,38 +19,37 @@ export default function EditDialog({ geolocations, geolocation, dialogProps }) {
     [location, setLocation] = useState(0),
     [optionalCoordinates, setOptionalCoordinates] = useState();
 
-    useEffect(
-      () => {
-        if(geolocation)
-          getOptionalCoordinates(geolocation?.name)
-            // Retrieve data
-            .then(data => setOptionalCoordinates(data))
-            // TODO: Exception handling when request fails
-            .catch(error => null)
-      },
-      [geolocation]
-    );
+  useEffect(
+    () => {
+      if(geolocation)
+        getOptionalCoordinates(geolocation?.name)
+          // Retrieve data
+          .then(data => setOptionalCoordinates(data))
+          // TODO: Exception handling when request fails
+          .catch(error => null)
+    },
+    [geolocation]
+  );
 
   return (
       <DialogContentArea
         title={'Edit location'}
         open={dialogProps.open}
         onClose={() => {
-          setLocation(' ')
+          setLocation(0) // Reset the value
           dialogProps.onClose(false)
         }}
-        children={
-          <>
+      >
             {/* Placename */}
             <TextField
               disabled
-              margin='normal'
-              variant='outlined'
+              variant='filled'
               label='Placename'
               defaultValue={geolocation?.name}
+              fullWidth
             />
+
             {/* Position */}
-            {/* TODO: Communication with Backend - 5 possible Options */}
             <FormControl variant='filled' sx={{ m: 1, width: "100%" }}>
               <InputLabel id="editdialog-position-select-label">Position</InputLabel>
               <Select
@@ -61,25 +60,52 @@ export default function EditDialog({ geolocations, geolocation, dialogProps }) {
               >
                 <MenuItem key={geolocation?.name} value={0} children={`(${geolocation?.position[0]}, ${geolocation?.position[1]})`} />
                 {
-                  optionalCoordinates?.map(([lat, long], index) => (
-                    <MenuItem key={geolocation?.name + `_${index}`} value={`[${lat},${long}]`} children={`(${lat}, ${long})`} />
+                  optionalCoordinates?.map((coordinates, index) => (
+                    <MenuItem
+                      key={coordinates.name + index} 
+                      value={coordinates.position.toString() /* See below */} 
+                      children={
+                        coordinates.continent
+                        +
+                        (coordinates.country ? `, ${coordinates.country}` : '') 
+                        +
+                        (coordinates.state   ? `, ${coordinates.state  }` : '')
+                        +
+                        (coordinates.name   ? `, ${coordinates.name  }` : '')
+                      }
+                    />
                   ))
                 }
               </Select>
             </FormControl>
+
+            {/* Mapping */}
+            <Box sx={{ width: '100%', height: '15rem', marginBottom: 4 }}>
+              <Mapping 
+                geolocations={optionalCoordinates.concat([geolocation])} // Add current geolocation, sothat all locations + the optional ones are displayed
+                markerClickHandler={(event) => {
+                  let latlng = event.latlng, position = [latlng['lat'], latlng['lng']];
+                  setLocation(position.toString()); // Convert it into a string, sothat JS doesn't compare by reference, but by value (In this case, only with primitive values)
+                }}
+              />
+              <Typography fontSize={10}>Double click the respective marker to change the corresponding position</Typography>
+            </Box>
+
+            {/* Save Button */}
             <SaveButton
-              // TODO: Save the edited location
               onClick={() => {
-                setSessionData({...sessionData, updatedGeolocations: geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(location)})})
-                setLocation(0); // Reset the value
+                // If changes were made, pass the updated geolocation to the high order component "MainArea" and enable the save changes button
+                if(location) {
+                  dialogProps.enableSaveChangesButton();
+                  setSessionData({...sessionData, updatedGeolocations: geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) })});
+                }
+                setLocation(0); // Reset the value for future changes
                 dialogProps.onClose(false); 
-                dialogProps.enableSaveChangesButton(); // FIXME: Only enable button when changes are really made
               }}
             >
               Save
             </SaveButton>
-          </>
-        }
-      />
+
+      </DialogContentArea>
   )
 }

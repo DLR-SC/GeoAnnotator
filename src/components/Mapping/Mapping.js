@@ -11,7 +11,14 @@ import {
     FocusOnClickedMarker
 } from './MappingFunctions';
 
-export default function Mapping({ geolocations }) {
+/**
+ * Mapping of locations
+ * @param {Object} param 
+ * @param {{ name: string, position: float[] }[]} param.geolocations
+ * @param {Function} param.clickHandler
+ * @returns 
+ */
+export default function Mapping({ geolocations, markerClickHandler }) {
     return (
         <MapContainer 
             zoom={12}
@@ -26,12 +33,18 @@ export default function Mapping({ geolocations }) {
             />
             {
                 geolocations ? geolocations.map((marker, index) => (
-                    <Marker key={index} position={marker.position}>
+                    <Marker 
+                        key={index} 
+                        position={marker.position}
+                        eventHandlers={{
+                            'dblclick': markerClickHandler ? markerClickHandler : () => { return undefined; }
+                        }}
+                    >
                         <Popup>{marker.name}</Popup>
                     </Marker>
                 )) : null
             }
-            { geolocations ? <FocusOnLatest markers={geolocations}/> : null }
+            <FocusOnLatest markers={geolocations}/>
             <FocusOnClickedMarker/>
         </MapContainer>
     );

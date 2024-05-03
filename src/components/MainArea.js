@@ -29,7 +29,7 @@ export default function MainArea() {
     }, [currentData]);
     
     // When the attribute "updatedGeolocations" changes (e.g. Deletion of a location), the MainArea should be rerendered
-    useEffect(() => setGeolocations(sessionData?.updatedGeolocations), [sessionData?.updatedGeolocations]);
+    useEffect(() => {if(sessionData?.updatedGeolocations) setGeolocations(sessionData?.updatedGeolocations)}, [sessionData?.updatedGeolocations]);
 
     return (
         <Box component="main"

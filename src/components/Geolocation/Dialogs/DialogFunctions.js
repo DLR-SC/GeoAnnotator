@@ -1,16 +1,14 @@
+import axios from 'axios';
 import {
     Dialog,
     DialogTitle,
     DialogContent,
     Paper,
     List,
-    ListItem,
-    MenuItem
+    ListItem
 } from '@mui/material';
-import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { useState } from 'react';
+import Draggable from 'react-draggable';
 
 /**
  * Content area of Edit-Dialog
@@ -38,6 +36,7 @@ export function DialogContentArea(props) {
         </Draggable>
       )}
       aria-labelledby='draggable-dialog-title'
+      fullWidth
     >
       <DialogTitle 
         id='draggable-dialog-title'
@@ -45,9 +44,7 @@ export function DialogContentArea(props) {
         children={title}
       />
       <DialogContent>
-          <List 
-              sx={{ pt: 0 }}
-          >
+          <List sx={{ pt: 0 }}>
             <ListItem
               sx={{
                 flexDirection: 'column'
@@ -67,21 +64,6 @@ DialogContentArea.propTypes = {
   children: PropTypes.any
 };
 
-export function OptionalCoordinates({ geolocation }) {
-  let [optionalCoordinates, setOptionalCoordinates] = useState();
-  getOptionalCoordinates(geolocation?.name)
-    // Retrieve data
-    .then(data => setOptionalCoordinates(data))
-    // Exceptionhandling
-    .catch(error => null);
-
-  return (
-    optionalCoordinates?.map(([lat, long]) => (
-      <MenuItem value={[lat, long]} children={`(${lat}, ${long})`} />
-    ))
-  )
-}
-
 /**
  * Return 5 possible coordinates for given placename
  * @param {string} placename
@@ -93,8 +75,7 @@ export async function getOptionalCoordinates(placename) {
       baseURL: 'http://localhost:8000/api',
       responseType: 'json'
     },
-    data = await axios.get(`/coordinates?placename=${placename}`, config),
-    coordinates = Object.entries(data.data).map(([placename, coordinates], index) => coordinates);
+    data = await axios.get(`/geolocations?placename=${placename}`, config);
   
-  return coordinates;
+  return data.data;
 }

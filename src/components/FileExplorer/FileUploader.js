@@ -20,7 +20,7 @@ export default function FolderUploader({ onFilesSelect }) {
           // multiple 
           type="file"
           inputRef={fileInputRef} 
-          accept=".json"
+          // accept=".json"
           webkitdirectory="false" /* Due to restrictions, we are not capable to select a folder */
           onChange={(event) => {
               try {
