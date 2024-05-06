@@ -26,8 +26,8 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
                 }
             />
             <SaveButton
-                disabled={disabledButton}
                 variant='contained'
+                disabled={disabledButton}
                 onClick={handleSaveButtonClick}
             >
                 Save changes

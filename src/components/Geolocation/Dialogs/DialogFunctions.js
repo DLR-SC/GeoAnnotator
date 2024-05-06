@@ -5,8 +5,9 @@ import {
     DialogContent,
     Paper,
     List,
-    ListItem
+    IconButton
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 
@@ -26,7 +27,7 @@ export function DialogContentArea(props) {
   return (
     <Dialog 
       open={open}
-      onClose={() => onClose()} 
+      onClose={onClose} 
       PaperComponent={(props) => (
         <Draggable
           handle="#draggable-dialog-title"
@@ -40,18 +41,22 @@ export function DialogContentArea(props) {
     >
       <DialogTitle 
         id='draggable-dialog-title'
-        sx={{ cursor: 'move' }}
-        children={title}
-      />
+        sx={{ cursor: 'move', display: 'flex', justifyContent: 'space-between' }}
+      >
+        {title}
+        <IconButton
+          aria-label='close'
+          onClick={onClose}
+          sx={{ color: (theme) => theme.palette.grey[500] }}
+        > 
+          <Close />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
-          <List sx={{ pt: 0 }}>
-            <ListItem
-              sx={{
-                flexDirection: 'column'
-              }}
-              children={children}
-            />
-          </List>
+          <List 
+            sx={{ p: 0, flexDirection: 'column' }} 
+            children={children}
+          />
       </DialogContent>
     </Dialog>
   );

@@ -4,21 +4,20 @@ import {
     Popup,
     Marker, 
     TileLayer,
-    MapContainer
+    MapContainer,
 } from 'react-leaflet';
 import {
     FocusOnLatest,
-    FocusOnClickedMarker
+    FocusOnSelectedMarker
 } from './MappingFunctions';
 
 /**
- * Mapping of locations
+ * Mapping of locations in a dialog
  * @param {Object} param 
  * @param {{ name: string, position: float[] }[]} param.geolocations
- * @param {Function} param.clickHandler
- * @returns 
+ * @param {Function} param.markerClickHandler
  */
-export default function Mapping({ geolocations }) {
+export default function DialogMapping({ geolocations, markerClickHandler }) {
     return (
         <MapContainer 
             zoom={12}
@@ -32,10 +31,13 @@ export default function Mapping({ geolocations }) {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {
-                geolocations ? geolocations.map((marker, index) => (
+                geolocations ? geolocations?.map((marker, index) => (
                     <Marker 
                         key={index} 
                         position={marker.position}
+                        eventHandlers={{
+                            'dblclick': markerClickHandler ? markerClickHandler : () => undefined
+                        }}
                     >
                         <Popup>
                             {marker.name}
@@ -46,7 +48,7 @@ export default function Mapping({ geolocations }) {
                 )) : null
             }
             <FocusOnLatest markers={geolocations}/>
-            <FocusOnClickedMarker/>
+            <FocusOnSelectedMarker/>
         </MapContainer>
     );
 }

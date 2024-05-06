@@ -1,9 +1,9 @@
-import Mapping from '../../Mapping/Mapping';
 import { useSession } from '../../SessionProvider';
 import React, { useEffect, useState } from 'react';
 import { SaveButton } from '../../customComponents';
+import DialogMapping from '../../Mapping/DialogMapping';
 import { DialogContentArea, getOptionalCoordinates } from './DialogFunctions';
-import { TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography } from '@mui/material';
+import { TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography, Grid, ListItem } from '@mui/material';
 
 /**
  * Dialog for editing location
@@ -17,7 +17,14 @@ export default function EditDialog({ geolocations, geolocation, dialogProps }) {
   const
     { sessionData, setSessionData } = useSession(),
     [location, setLocation] = useState(0),
-    [optionalCoordinates, setOptionalCoordinates] = useState();
+    [disableButton, setDisableButton] = useState(true),
+    [optionalCoordinates, setOptionalCoordinates] = useState(),
+    resetProps = () => {
+      setLocation(0)              // Reset the location value
+      setDisableButton(true)      // Reset disabled status of save button
+      setSessionData({...sessionData, selectedOptionPosition: undefined }); // Reset selected option position value
+      dialogProps.onClose(false)  // Close edit dialog
+    };
 
   useEffect(
     () => {
@@ -35,77 +42,110 @@ export default function EditDialog({ geolocations, geolocation, dialogProps }) {
       <DialogContentArea
         title={'Edit location'}
         open={dialogProps.open}
-        onClose={() => {
-          setLocation(0) // Reset the value
-          dialogProps.onClose(false)
-        }}
+        onClose={resetProps}
       >
+        <ListItem disablePadding>
+          <Grid
+            container
+            spacing={1}
+            columns={12}
+            wrap='nowrap'
+          >
+
             {/* Placename */}
-            <TextField
-              disabled
-              variant='filled'
-              label='Placename'
-              defaultValue={geolocation?.name}
-              fullWidth
-            />
+            <Grid item xs={4}>
+              <TextField
+                disabled
+                fullWidth
+                variant='filled'
+                label='Placename'
+                defaultValue={geolocation?.name}
+              />
+            </Grid>
 
             {/* Position */}
-            <FormControl variant='filled' sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="editdialog-position-select-label">Position</InputLabel>
-              <Select
-                labelId="editdialog-position-select-label"
-                id="editdialog-position-select"
-                value={location}
-                onChange={(event) => setLocation(event.target.value)}
-              >
-                <MenuItem key={geolocation?.name} value={0} children={`(${geolocation?.position[0]}, ${geolocation?.position[1]})`} />
-                {
-                  optionalCoordinates?.map((coordinates, index) => (
-                    <MenuItem
-                      key={coordinates.name + index} 
-                      value={coordinates.position.toString() /* See below */} 
-                      children={
-                        coordinates.continent
-                        +
-                        (coordinates.country ? `, ${coordinates.country}` : '') 
-                        +
-                        (coordinates.state   ? `, ${coordinates.state  }` : '')
-                        +
-                        (coordinates.name   ? `, ${coordinates.name  }` : '')
-                      }
-                    />
-                  ))
-                }
-              </Select>
-            </FormControl>
+            <Grid item xs={8}>
+              <FormControl variant='filled' sx={{ width: "100%" }}>
+                <InputLabel id="editdialog-position-select-label">Position</InputLabel>
+                <Select
+                  labelId="editdialog-position-select-label"
+                  id="editdialog-position-select"
+                  value={location}
+                  onChange={(event) => {
+                    event.preventDefault(); // Prevent the default rerendering of the dialog
+                    let value = event.target?.value, isDefault = value === 0;
+                    if(value) {
+                      setLocation(value);
+                      // When the value changes, enable or disable the corresponding button, depending whether it is the same value as before (default value)
+                      setDisableButton(isDefault);
+                      // Set the focus on to the selected marker position
+                      setSessionData({...sessionData, selectedOptionPosition: isDefault ? geolocation?.position : JSON.parse(`[${value}]`) });
+                    }
+                  }}
+                >
+                  {/* Default value */} <MenuItem key={geolocation?.name} value={0} children={`(${geolocation?.position[0]}, ${geolocation?.position[1]})`} />
+                  {
+                    // Optional values
+                    optionalCoordinates?.map((coordinates, index) => (
+                      <MenuItem
+                        key={coordinates.name + index} 
+                        value={coordinates.position.toString()} 
+                        children={
+                          // Label of each option
+                          (coordinates.continent  ? `${coordinates.continent}`  : '')
+                          +
+                          (coordinates.country    ? `, ${coordinates.country}`  : '') 
+                          +
+                          (coordinates.state      ? `, ${coordinates.state  }`  : '')
+                          +
+                          (coordinates.name       ? `, ${coordinates.name   }`  : '')
+                          +
+                          ` (${coordinates.position})`
+                        }
+                      />
+                    ))
+                  }
+                </Select>
+              </FormControl>
+            </Grid>
 
-            {/* Mapping */}
-            <Box sx={{ width: '100%', height: '15rem', marginBottom: 4 }}>
-              <Mapping 
-                geolocations={optionalCoordinates.concat([geolocation])} // Add current geolocation, sothat all locations + the optional ones are displayed
-                markerClickHandler={(event) => {
-                  let latlng = event.latlng, position = [latlng['lat'], latlng['lng']];
-                  setLocation(position.toString()); // Convert it into a string, sothat JS doesn't compare by reference, but by value (In this case, only with primitive values)
-                }}
-              />
-              <Typography fontSize={10}>Double click the respective marker to change the corresponding position</Typography>
-            </Box>
+          </Grid>
+        </ListItem>
 
-            {/* Save Button */}
-            <SaveButton
-              onClick={() => {
-                // If changes were made, pass the updated geolocation to the high order component "MainArea" and enable the save changes button
-                if(location) {
-                  dialogProps.enableSaveChangesButton();
-                  setSessionData({...sessionData, updatedGeolocations: geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) })});
-                }
-                setLocation(0); // Reset the value for future changes
-                dialogProps.onClose(false); 
+        <ListItem disablePadding sx={{ mt: 1 }}>
+          {/* Mapping */}
+          <Box sx={{ width: '100%', height: '15rem' }}>
+            <DialogMapping 
+              geolocations={optionalCoordinates?.concat([geolocation])} // Add current geolocation, sothat all locations + the optional ones are displayed
+              // FIXME: When dblclicking the default marker, an error occurs ('Reading property of undefined is not possible (reading value when Array.map)')
+              markerClickHandler={(event) => {
+                let latlng = event.latlng, position = [latlng['lat'], latlng['lng']];
+                setLocation(position.toString()); // Convert it into a string, sothat JS doesn't compare by reference, but by value (In this case, only with primitive values)
+                setDisableButton(position.toString() === geolocation?.position.toString());  
+                setSessionData({...sessionData, selectedOptionPosition: position });
               }}
-            >
-              Save
-            </SaveButton>
+            />
+            <Typography fontSize={10}>Double click the respective marker to change the corresponding position (BETA)</Typography>
+          </Box>
+        </ListItem>
 
+        <ListItem disablePadding sx={{ mt: 2 }}>
+          {/* Save Button */}
+          <SaveButton
+            variant='contained'
+            disabled={disableButton}
+            onClick={() => {
+              // If changes were made, pass the updated geolocation to the high order component "MainArea" and enable the save changes button
+              if(location) {
+                dialogProps.enableSaveChangesButton();
+                setSessionData({...sessionData, updatedGeolocations: geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) })});
+              }
+              resetProps()
+            }}
+          >
+            Save
+          </SaveButton>
+        </ListItem>
       </DialogContentArea>
   )
 }
