@@ -48,8 +48,12 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                         />
                         {/* Placename + Position */}
                         <ListItemText 
-                            primary={
-                                `${geo.name}\t(${geo.position})`
+                            children={
+                                <>
+                                    {geo.name}
+                                    <br />
+                                    {`(${geo.position})`}
+                                </>
                             }
                         />
                         {/* Menu of Geolocation */}

@@ -22,6 +22,7 @@ export default function EditDialog({ geolocations, geolocation, dialogProps }) {
     resetProps = () => {
       setLocation(0)              // Reset the location value
       setDisableButton(true)      // Reset disabled status of save button
+      setOptionalCoordinates(undefined) // Reset the optional values
       setSessionData({...sessionData, selectedOptionPosition: undefined }); // Reset selected option position value
       dialogProps.onClose(false)  // Close edit dialog
     };

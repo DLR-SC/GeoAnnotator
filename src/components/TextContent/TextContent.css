@@ -1,0 +1,11 @@
+.Selected {
+    background-color: yellow;
+}
+
+.Selecting {
+    background-color: yellow;
+}
+
+.TextItem::selection {
+    background-color: transparent; 
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { SelectableTextItem } from "../customComponents"
 
 /**
  * 
@@ -17,17 +17,16 @@ export function highlightDetectedLocations(textContent, geolocations) {
  */
 function highlightText (text, wordsToHighlight) {
     const
-        regex = new RegExp(`(${wordsToHighlight.join('|')})`, 'gi'),
-        parts = text.split(regex);
-  
+        regexPattern = `(${wordsToHighlight.join('|')})|[\\w']+|[.,!?;:()\\-"]`,
+        regex = new RegExp(regexPattern, 'gi'), //`(${wordsToHighlight.join('|')})`
+        parts = text.match(regex);
+    
     return (
         parts.map((part, index) =>
             wordsToHighlight.includes(part) ? (
-                <Typography component='span' key={index} sx={{ backgroundColor: '#2587be', color: 'white', padding: 0.5, borderRadius: 3 }}>
-                    {part}
-                </Typography>
+                <SelectableTextItem key={index} props={{ text: part, isHighlighted: true }} />
             ) : (
-                <Typography component='span' key={index} children={part} />
+                <SelectableTextItem key={index} props={{ text: part, isHighlighted: false}} />
             )
         )
     )

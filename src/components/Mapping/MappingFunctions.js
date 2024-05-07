@@ -32,7 +32,7 @@ export const FocusOnClickedMarker = () => {
 
   useEffect(() => {
       if (geolocation) {
-          map.setView(geolocation.position, 12);  
+          map.setView(geolocation.position, 10);  
       }
     }, [geolocation, map]);
 
@@ -49,7 +49,7 @@ export const FocusOnSelectedMarker = () => {
 
   useEffect(() => {
       if (selectedOptionPosition) {
-          map.setView(selectedOptionPosition, 12);
+          map.setView(selectedOptionPosition, 10);
       }
     }, [selectedOptionPosition, map]);
 
