@@ -2,7 +2,6 @@ import './TextContent.css'
 import { pipe } from '../../utils/utilFunctions'
 import { SaveButton } from '../customComponents'
 import { Box, Button, Grid } from "@mui/material"
-import { MdKeyboardReturn } from 'react-icons/md'
 import { useEffect, useRef, useState } from "react"
 import { SelectableGroup } from "react-selectable-fast"
 import LocationDialog from '../Geolocation/Dialogs/LocationDialog'
@@ -78,7 +77,7 @@ export function TextContent({ textContent, geolocations }) {
                 
                 {/* Info-Text for clearing selection */}
                 <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-                    <p>or press <MdKeyboardReturn size={24} /></p>
+                    <p>or press ESC</p>
                 </Grid>
 
                 {/* Add location button */}
