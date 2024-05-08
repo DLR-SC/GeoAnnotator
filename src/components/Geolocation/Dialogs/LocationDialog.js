@@ -10,7 +10,7 @@ import { TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography, 
  * @param {Object} param
  * @param {{ name: string, position: float[] }} param.geolocation
  * @param {{ name: string, position: float[] }[]} param.geolocations
- * @param {{ open: Boolean, onClose: Function }} param.dialogProps
+ * @param {{ open: Boolean, onClose: Function, dialogUsage: 'add' | 'edit' }} param.dialogProps
  * @returns {React.JSX.Element}
  */
 export default function LocationDialog({ geolocations, geolocation, dialogProps }) {
@@ -140,12 +140,18 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
               // If changes were made, pass the updated geolocation to the high order component "MainArea" and enable the save changes button
               if(location) {
                 if(dialogProps.enableSaveChangesButton) dialogProps.enableSaveChangesButton();
-                setSessionData({...sessionData, updatedGeolocations: geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) })});
+                setSessionData({
+                  ...sessionData,
+                  updatedGeolocations: 
+                  dialogProps.dialogUsage === 'edit' ? geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) }) : 
+                  dialogProps.dialogUsage === 'add'  ? geolocations.push({ ...geolocation, position: JSON.parse(`[${location}]`) }) :
+                  undefined
+                });
               }
               resetProps()
             }}
           >
-            Save
+            { dialogProps.dialogUsage === 'add' ? 'Add' : 'Save' }
           </SaveButton>
           { 
             optionalCoordinates === undefined || optionalCoordinates?.length === 0 ? 

@@ -1,11 +1,12 @@
 import './TextContent.css'
-import { Box, Button, Grid } from "@mui/material"
 import { pipe } from '../../utils/utilFunctions'
 import { SaveButton } from '../customComponents'
+import { Box, Button, Grid } from "@mui/material"
+import { MdKeyboardReturn } from 'react-icons/md'
 import { useEffect, useRef, useState } from "react"
 import { SelectableGroup } from "react-selectable-fast"
-import { highlightDetectedLocations } from "./TextContentFunctions"
 import LocationDialog from '../Geolocation/Dialogs/LocationDialog'
+import { highlightDetectedLocations } from "./TextContentFunctions"
 
 export function TextContent({ textContent, geolocations }) {
     const 
@@ -75,6 +76,11 @@ export function TextContent({ textContent, geolocations }) {
                     </Button>
                 </Grid>
                 
+                {/* Info-Text for clearing selection */}
+                <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                    <p>or press <MdKeyboardReturn size={24} /></p>
+                </Grid>
+
                 {/* Add location button */}
                 <Grid item xs={'auto'}>
                     <SaveButton
@@ -82,6 +88,7 @@ export function TextContent({ textContent, geolocations }) {
                         disabled={disableButton}
                         onClick={() => {
                             setGeolocation({...geolocation, name: selectedItems.join(' ')});
+                            refSelectableGroup.current.clearSelection();
                             setOpen(true);
                         }}
                     >
@@ -97,7 +104,8 @@ export function TextContent({ textContent, geolocations }) {
                 dialogProps={{
                     title: 'Add new location',
                     open: open,
-                    onClose: setOpen
+                    onClose: setOpen,
+                    dialogUsage: 'add'
                 }}
             />                
         </Box>

@@ -35,6 +35,10 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
     // When a new json-file is chosen, disable the save changes button
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => disableSaveChangesButton(true), [session.sessionData?.fileData])
+    
+    // When a new location is added, enable save changes button
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => disableSaveChangesButton(false), [session.sessionData?.updatedGeolocations])
 
     return (
         <Box>
@@ -90,7 +94,6 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                                     onClick={() =>{
                                         // When a geolocation is deleted, re-map through the changed geolocations array and rerender
                                         setAnchorEl(null);
-                                        disableSaveChangesButton(false);
                                         // High-order components are being 'informed' about the deletion
                                         session.setSessionData({ ...session.sessionData, updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name) })
                                 }}>Delete</MenuItem>
@@ -106,6 +109,7 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                     title: 'Edit location',
                     open: open,
                     onClose: setOpen,
+                    dialogUsage: 'edit',
                     enableSaveChangesButton: () => disableSaveChangesButton(false)
                 }}
             />
