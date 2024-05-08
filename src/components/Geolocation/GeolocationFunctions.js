@@ -13,7 +13,7 @@ import {
     Place,
     MenuRounded
 } from '@mui/icons-material';
-import EditDialog from './Dialogs/EditDialog';
+import LocationDialog from './Dialogs/LocationDialog'
 
 /** 
  * Location list: Geolocation entries
@@ -99,10 +99,11 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                     </ListItem>
                 ))
             }
-            <EditDialog
+            <LocationDialog
                 geolocation={geolocation}
                 geolocations={geolocations}
                 dialogProps={{
+                    title: 'Edit location',
                     open: open,
                     onClose: setOpen,
                     enableSaveChangesButton: () => disableSaveChangesButton(false)

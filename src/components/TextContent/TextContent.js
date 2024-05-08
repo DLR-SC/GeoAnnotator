@@ -1,25 +1,27 @@
 import './TextContent.css'
-import { Box } from "@mui/material"
+import { Box, Button, Grid } from "@mui/material"
+import { pipe } from '../../utils/utilFunctions'
+import { SaveButton } from '../customComponents'
 import { useEffect, useRef, useState } from "react"
 import { SelectableGroup } from "react-selectable-fast"
 import { highlightDetectedLocations } from "./TextContentFunctions"
-import { SaveButton } from '../customComponents'
-import { pipe } from '../../utils/utilFunctions'
+import LocationDialog from '../Geolocation/Dialogs/LocationDialog'
 
 export function TextContent({ textContent, geolocations }) {
     const 
         // eslint-disable-next-line no-unused-vars
+        refSelectableGroup = useRef(null),
+        [open, setOpen] = useState(false),
         [selectedItems, setSelectedItems] = useState([]),
         [disableButton, setDisableButton] = useState(true),
-        refSelectableGroup = useRef(null),
-        /* HandleFunctions */
+        [geolocation, setGeolocation] = useState({ name: undefined, position: [] }),
         handleSelectionFinish = (selectedItems) => {
             let processOutput = pipe(
                 items => items.filter(item => !item.props.props.isHighlighted),
                 items => items.map(item => item.props.props.text)
             ), output = processOutput(selectedItems);
             setSelectedItems(output);
-            setDisableButton(false);
+            setDisableButton(output.length === 0);
         };
 
     // When another file is loaded, clear the selected items
@@ -50,23 +52,54 @@ export function TextContent({ textContent, geolocations }) {
             >
                 <SelectableGroup
                     ref={refSelectableGroup}
-                    resetOnStart
                     deselectOnEsc
+                    enableDeselect
                     onSelectionFinish={handleSelectionFinish}
                     style={{ display: 'flex', flexWrap: 'wrap' }}
                 >
                     {highlightDetectedLocations(textContent, geolocations)}
                 </SelectableGroup>
             </Box>
-            {/* Add location button */}
-            <SaveButton
-                variant='contained'
-                disabled={disableButton}
-                onClick={() => console.log(selectedItems)}
-            >
-                Add new Location
-            </SaveButton>
 
+            <Grid container spacing={1} className='grid-container-textcontent-buttons'>
+                
+                {/* Clear selection button */}
+                <Grid item xs={'auto'}>
+                    <Button
+                        variant='contained'
+                        disabled={disableButton}
+                        sx={{ fontWeight: 'bold' }}
+                        onClick={() => refSelectableGroup.current.clearSelection()}
+                    >
+                        Clear selection
+                    </Button>
+                </Grid>
+                
+                {/* Add location button */}
+                <Grid item xs={'auto'}>
+                    <SaveButton
+                        variant='contained'
+                        disabled={disableButton}
+                        onClick={() => {
+                            setGeolocation({...geolocation, name: selectedItems.join(' ')});
+                            setOpen(true);
+                        }}
+                    >
+                        Add new location
+                    </SaveButton>
+                </Grid>
+
+            </Grid>
+
+            <LocationDialog
+                geolocations={geolocations}
+                geolocation={geolocation}
+                dialogProps={{
+                    title: 'Add new location',
+                    open: open,
+                    onClose: setOpen
+                }}
+            />                
         </Box>
     )
 }

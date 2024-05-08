@@ -17,7 +17,7 @@ import {
  * @param {{ name: string, position: float[] }[]} param.geolocations
  * @param {Function} param.markerClickHandler
  */
-export default function DialogMapping({ geolocations, markerClickHandler }) {
+export default function DialogMapping({ geolocations, markerDblClickHandler }) {
     return (
         <MapContainer 
             zoom={12}
@@ -31,21 +31,28 @@ export default function DialogMapping({ geolocations, markerClickHandler }) {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {
-                geolocations ? geolocations?.map((marker, index) => (
-                    <Marker 
-                        key={index} 
-                        position={marker.position}
-                        eventHandlers={{
-                            'dblclick': markerClickHandler ? markerClickHandler : () => undefined
-                        }}
-                    >
-                        <Popup>
-                            {marker.name}
-                            <br/>
-                            {`(${marker.position})`}
-                        </Popup>
-                    </Marker>
-                )) : null
+                geolocations ? geolocations?.map((marker, index) => {
+                    if(
+                        marker.name === undefined       ||  
+                        marker.position === undefined   ||
+                        marker.position.length === 0
+                    ) return null;
+                    return (
+                        <Marker 
+                            key={index} 
+                            position={marker.position}
+                            eventHandlers={{
+                                'dblclick': markerDblClickHandler ? markerDblClickHandler : () => undefined
+                            }}
+                        >
+                            <Popup>
+                                {marker.name}
+                                <br/>
+                                {`(${marker.position})`}
+                            </Popup>
+                        </Marker>
+                    )
+                }) : null
             }
             <FocusOnLatest markers={geolocations}/>
             <FocusOnSelectedMarker/>

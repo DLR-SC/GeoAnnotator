@@ -9,3 +9,18 @@
 .TextItem::selection {
     background-color: transparent; 
 }
+
+.TextItem[ishighlighted='true'].Selected {
+    background-color: defaultColor;
+}
+
+.TextItem[ishighlighted='true'].Selecting {
+    background-color: defaultColor;
+}
+
+.grid-container-textcontent-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+}
