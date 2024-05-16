@@ -5,7 +5,6 @@ import {
     ListItemButton,
     ListItemSecondaryAction
 } from '@mui/material';
-import axios from 'axios';
 
 /**
  * Extract the respective JSONObjects from the JSON-file and
