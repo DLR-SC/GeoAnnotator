@@ -8,7 +8,7 @@ import { ExtractEntries, ExtractNewEntries, hasKey, downloadFile } from './FileE
 export default function FileExplorer({ handleFileItemClick }) {
     // Data from file
     const 
-        { sessionData } = useSession(),
+        { sessionData, setSessionData } = useSession(),
         [anchorEl, setAnchorEl] = useState(null),
         [fileData, setFileData] = useState(),
         [fileDataset, setFileDataset] = useState([]),
@@ -42,7 +42,10 @@ export default function FileExplorer({ handleFileItemClick }) {
             />
             <List
                 sx={{
-                    paddingX: 1,
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
                     marginTop: 2,
                     height: '75vh',
                     overflowY: 'auto',
@@ -65,9 +68,6 @@ export default function FileExplorer({ handleFileItemClick }) {
                 <Menu 
                     anchorEl={anchorEl} 
                     open={Boolean(anchorEl)}
-                    sx={{
-                        boxShadow: 'none'
-                    }}
                     onClose={() => setAnchorEl(null)}
                 >
                     {/* Download */}
@@ -75,7 +75,9 @@ export default function FileExplorer({ handleFileItemClick }) {
                         variant="outlined" 
                         onClick={() => {
                             setAnchorEl(null);
-                            downloadFile(fileData).then((mess) => console.log(mess)).catch(err => console.log(err));
+                            downloadFile(fileData)
+                                .then()
+                                .catch(err => console.log(err));
                         }}
                     >
                         Download
@@ -83,8 +85,9 @@ export default function FileExplorer({ handleFileItemClick }) {
                     {/* Delete */}
                     <MenuItem 
                         onClick={() =>{
-                            // When a geolocation is deleted, re-map through the changed geolocations array and rerender
                             setAnchorEl(null);
+                            // High-order components are being 'informed' about the deletion TODO:
+                            // setSessionData({ ...sessionData, updatedFileDataset: geolocations.filter((geo) => geo.name !== geolocation.name) })
                         }}
                     >
                         Delete

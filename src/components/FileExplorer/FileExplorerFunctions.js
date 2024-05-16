@@ -64,10 +64,6 @@ export function ExtractNewEntries({ data, handleClick, handleMenuClick }) {
         data.map((object) => (
             <ListItem 
                 key={object?.key + 0.1}
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                }}
             >
                 <ListItemIcon 
                     sx={{
@@ -86,7 +82,7 @@ export function ExtractNewEntries({ data, handleClick, handleMenuClick }) {
                     {/* Menu-Icon */}
                     <MenuRounded 
                         edge="end" 
-                        onClick={handleMenuClick}
+                        onClick={event => handleMenuClick(event, object)}
                         sx={{
                             '&:hover': { cursor: 'pointer' }
                         }}
