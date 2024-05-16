@@ -74,6 +74,7 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                                 }}
                             />
                             {/* Menu */}
+                            {/* FIXME: Outsource the Menu, sothat performance gets better */}
                             <Menu 
                                 anchorEl={anchorEl} 
                                 open={Boolean(anchorEl)} 

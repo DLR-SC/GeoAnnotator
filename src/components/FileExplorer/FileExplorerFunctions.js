@@ -1,9 +1,11 @@
-import { MapRounded } from '@mui/icons-material';
+import { MapRounded, MenuRounded } from '@mui/icons-material';
 import {
+    ListItem,
+    ListItemIcon,
     ListItemButton,
-    ListItemText,
-    ListItemIcon
+    ListItemSecondaryAction
 } from '@mui/material';
+import axios from 'axios';
 
 /**
  * Extract the respective JSONObjects from the JSON-file and
@@ -12,16 +14,39 @@ import {
  * @param {Function} handleClick
  * @returns {React.JSX.Element[]}
  */
-export function ExtractEntries({data, handleClick}) {
+export function ExtractEntries({data, handleClick, handleMenuClick}) {
+
     return (
         data.map((object, index) => (
-            <ListItemButton
+            <ListItem 
                 key={index}
-                onClick={() => handleClick(object, index)}
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}
             >
-                <ListItemIcon children={<MapRounded sx={{ color: 'limegreen' }}/>} />
-                <ListItemText primary={`file_${index}.json`} />
-            </ListItemButton>
+                <ListItemIcon 
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                    children={<MapRounded sx={{ color: 'limegreen' }}/>} 
+                />
+                <ListItemButton onClick={() => handleClick(object, index)}>
+                    {`file_${index}.json`}
+                </ListItemButton>
+                {/* Menu of json file */}
+                <ListItemSecondaryAction>
+                    {/* Menu-Icon */}
+                    <MenuRounded 
+                        edge="end" 
+                        onClick={event => handleMenuClick(event, object)}
+                        sx={{
+                            '&:hover': { cursor: 'pointer' }
+                        }}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
         ))
     )
 }
@@ -32,19 +57,43 @@ export function ExtractEntries({data, handleClick}) {
  * @param {{ text: string, locations: Object, key: number }} param.data 
  * @param {Function} param.handleClick 
  */
-export function ExtractNewEntries({ data, handleClick }) {
+export function ExtractNewEntries({ data, handleClick, handleMenuClick }) {
     // If data is undefined, return nothing
     if(!data) return;
 
     return (
         data.map((object) => (
-            <ListItemButton
+            <ListItem 
                 key={object?.key + 0.1}
-                onClick={() => handleClick(object, object?.key)}
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}
             >
-                <ListItemIcon children={<MapRounded sx={{ color: 'red' }}/>} />
-                <ListItemText primary={`file_${object?.key}.edt.json`} />
-            </ListItemButton>
+                <ListItemIcon 
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                    children={<MapRounded sx={{ color: 'red' }}/>} 
+                />
+                <ListItemButton
+                    onClick={() => handleClick(object, object?.key)}
+                >
+                    {`file_${object?.key}.edt.json`}
+                </ListItemButton>
+                {/* Menu of json file */}
+                <ListItemSecondaryAction>
+                    {/* Menu-Icon */}
+                    <MenuRounded 
+                        edge="end" 
+                        onClick={handleMenuClick}
+                        sx={{
+                            '&:hover': { cursor: 'pointer' }
+                        }}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
         ))
     )
 }
@@ -58,4 +107,21 @@ export function ExtractNewEntries({ data, handleClick }) {
 export function hasKey(dataset, fileData) {
     for(let data of dataset) if(data.key === fileData?.key) return true;
     return false;
+}
+
+/**
+ * 
+ * @param {*} fileData 
+ */
+export async function downloadFile(fileData) {
+    let 
+        blob = new Blob([JSON.stringify(fileData, null, 4)], { type: 'application/json' }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement('a');
+    a.href = url;
+    a.download = "file.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
 }
