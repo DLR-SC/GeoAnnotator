@@ -1,42 +1,45 @@
 import FileUploader from './FileUploader'
+import { Save } from '@mui/icons-material'
 import { useSession } from '../SessionProvider'
 import { SaveButton } from '../customComponents'
 import React, { useEffect, useState } from 'react'
 import { List, Menu, MenuItem } from '@mui/material'
+import { addFileWithoutDupe } from '../../utils/utilFunctions'
 import { convertFileToJSONArray } from '../../utils/jsonFunctions'
-import { ExtractEntries, ExtractNewEntries, hasKey, downloadFile, downloadFiles } from './FileExplorerFunctions'
-import { Save } from '@mui/icons-material'
+import { ExtractEntries, downloadFile, downloadFiles } from './FileExplorerFunctions'
 
 export default function FileExplorer({ handleFileItemClick }) {
     // Data from file
     const 
-        { sessionData } = useSession(),
+        { sessionData, setSessionData } = useSession(),
         [anchorEl, setAnchorEl] = useState(null),
         [disabledSaveButton, setDisabledSaveButton] = useState(true),
         [fileData, setFileData] = useState(),
         [fileDataset, setFileDataset] = useState([]),
-        [newFileDataset, setNewFileDataset] = useState(),
         handleMenuClick = (event, object) => {
                 setAnchorEl(event.currentTarget);
                 setFileData(object);
         };
 
-    // When changes are saved, it should be added to the "newFileDataset" list
+    // Apply changes to the corresponding files
     useEffect(
         () => {
-            const fileData = sessionData?.newFileData;
-            if(fileData) {
-                if(newFileDataset === undefined) setNewFileDataset([fileData]) 
-                else if(hasKey(newFileDataset, fileData)) /* TODO: When editing the same file, try to add a sub_index to it or overwrite the existing json-entry */; 
-                else newFileDataset.push(fileData);
+            const newFileData = sessionData?.newFileData;
+            if(newFileData) {
+                // Overwrite location attribute in corresponding file in the dataset
+                fileDataset[newFileData.key] = { ...fileDataset[newFileData.key], locations: newFileData.locations };
+                setSessionData({ ...sessionData, changedFiles : sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.key) : [newFileData.key]});
             }
         }, 
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [sessionData?.newFileData]
     )
 
-    // Enable 'Save all files'-button, when 'fileDataset' changes (e.b. local file chosen)
-    useEffect(() => { if(fileDataset.length) setDisabledSaveButton(false) }, [fileDataset])
+    // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
+    useEffect(() => {if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false)}, 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [fileDataset]
+    )
 
     return (
         <>
@@ -64,12 +67,6 @@ export default function FileExplorer({ handleFileItemClick }) {
                     handleClick={handleFileItemClick} 
                     handleMenuClick={handleMenuClick}
                     />
-                {/* Dynamically add new entries (by saving changes) */}
-                <ExtractNewEntries 
-                    data={newFileDataset} 
-                    handleClick={handleFileItemClick} 
-                    handleMenuClick={handleMenuClick}
-                />
                 {/* Menu */}
                 <Menu 
                     anchorEl={anchorEl} 

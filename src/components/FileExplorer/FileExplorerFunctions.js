@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MapRounded, MenuRounded } from '@mui/icons-material';
 import {
     ListItem,
@@ -5,6 +6,7 @@ import {
     ListItemButton,
     ListItemSecondaryAction
 } from '@mui/material';
+import { useSession } from '../SessionProvider';
 
 /**
  * Extract the respective JSONObjects from the JSON-file and
@@ -14,6 +16,15 @@ import {
  * @returns {React.JSX.Element[]}
  */
 export function ExtractEntries({data, handleClick, handleMenuClick}) {
+    const
+        { sessionData } = useSession(),
+        // State to track the selected index
+        [selectedIndex, setSelectedIndex] = useState(null),
+        // Handler to set selected index
+        handleListItemClick = (object, index) => {
+            setSelectedIndex(index); // Update the selected index state
+            handleClick(object, index); // Additional handling function
+        };
 
     return (
         data.map((object, index) => (
@@ -21,7 +32,8 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
                 key={index}
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    bgcolor: selectedIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
                 }}
             >
                 <ListItemIcon 
@@ -29,9 +41,9 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
                         display: 'flex',
                         justifyContent: 'center'
                     }}
-                    children={<MapRounded sx={{ color: 'limegreen' }}/>} 
+                    children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
                 />
-                <ListItemButton onClick={() => handleClick(object, index)}>
+                <ListItemButton onClick={() => handleListItemClick(object, index)}>
                     {`file_${index}.json`}
                 </ListItemButton>
                 {/* Menu of json file */}
@@ -51,53 +63,9 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
 }
 
 /**
- * Save changes as new entries in FileExplorer-list
- * @param {Object} param 
- * @param {{ text: string, locations: Object, key: number }} param.data 
- * @param {Function} param.handleClick 
- */
-export function ExtractNewEntries({ data, handleClick, handleMenuClick }) {
-    // If data is undefined, return nothing
-    if(!data) return;
-
-    return (
-        data.map((object) => (
-            <ListItem 
-                key={object?.key + 0.1}
-            >
-                <ListItemIcon 
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}
-                    children={<MapRounded sx={{ color: 'red' }}/>} 
-                />
-                <ListItemButton
-                    onClick={() => handleClick(object, object?.key)}
-                >
-                    {`file_${object?.key}.edt.json`}
-                </ListItemButton>
-                {/* Menu of json file */}
-                <ListItemSecondaryAction>
-                    {/* Menu-Icon */}
-                    <MenuRounded 
-                        edge="end" 
-                        onClick={event => handleMenuClick(event, object)}
-                        sx={{
-                            '&:hover': { cursor: 'pointer' }
-                        }}
-                    />
-                </ListItemSecondaryAction>
-            </ListItem>
-        ))
-    )
-}
-
-/**
  * Check, if the new file is already added to the list
- * @param {{text: string, locations: { location: [float, float] }, key: number}[]} dataset 
+ * @param {{text: string, locations: { location: [float, float] }, key?: number}[]} dataset 
  * @param {{text: string, locations: { location: [float, float] }, key: number}} fileData 
- * @returns 
  */
 export function hasKey(dataset, fileData) {
     for(let data of dataset) if(data.key === fileData?.key) return true;
@@ -106,7 +74,7 @@ export function hasKey(dataset, fileData) {
 
 /**
  * Trigger Download-Event of corresponding json file
- * @param {{text: string, locations: { location: [float, float] }, key: number}} fileData 
+ * @param {{text: string, locations: { location: [float, float] }}} fileData 
  */
 export function downloadFile(fileData) {
     let 
@@ -123,7 +91,7 @@ export function downloadFile(fileData) {
 
 /**
  * Trigger Download-Event of all json-files
- * @param {{text: string, locations: { location: [float, float] }, key: number}[]} fileDataset 
+ * @param {{text: string, locations: { location: [float, float] }}[]} fileDataset 
  */
 export function downloadFiles(fileDataset) {
     let 

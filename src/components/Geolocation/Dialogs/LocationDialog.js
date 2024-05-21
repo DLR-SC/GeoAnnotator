@@ -30,11 +30,10 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
   useEffect(
     () => {
       if(geolocation)
+      // Retrieve data
         getOptionalCoordinates(geolocation?.name)
-          // Retrieve data
           .then(data => setOptionalCoordinates(data))
-          // TODO: Exception handling when request fails
-          .catch(error => null)
+          .catch(error => alert(error))
     },
     [geolocation]
   );
@@ -139,14 +138,8 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
             onClick={() => {
               // If changes were made, pass the updated geolocation to the high order component "MainArea" and enable the save changes button
               if(location) {
-                if(dialogProps.enableSaveChangesButton) dialogProps.enableSaveChangesButton();
-                setSessionData({
-                  ...sessionData,
-                  updatedGeolocations: 
-                  dialogProps.dialogUsage === 'edit' ? geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) }) : 
-                  dialogProps.dialogUsage === 'add'  ? geolocations.push({ ...geolocation, position: JSON.parse(`[${location}]`) }) :
-                  undefined
-                });
+                if(dialogProps.dialogUsage === 'edit')     geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) }); 
+                else if(dialogProps.dialogUsage === 'add') geolocations.push({ ...geolocation, position: JSON.parse(`[${location}]`) });
               }
               resetProps()
             }}

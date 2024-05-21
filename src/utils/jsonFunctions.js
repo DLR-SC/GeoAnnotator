@@ -1,5 +1,6 @@
 /**
  * Checks, if the file is of type 'application/json'
+ * 
  * @param {FileList} files 
  * @returns {boolean}
  */
@@ -11,6 +12,7 @@ export function checkFileType(files) {
 
 /**
  * Convert a File into a JSONArray
+ * 
  * @param {File} file
  * @param {React.Dispatch<React.SetStateAction>} setFileData
  * @returns {JSONArray} Array of JSON-Objects with following attributes: source, location and text
@@ -28,7 +30,6 @@ export function convertFileToJSONArray(file, setFileData) {
  * - position: Coordinates of Location
  * 
  * @param {{ location: [float, float] }} locations 
- * @returns 
  */
 export function structureLocationAttribute(locations) {
     return locations ? Object.entries(locations).map(([placename, [lat, long]]) => ({
@@ -41,6 +42,8 @@ export function structureLocationAttribute(locations) {
  * Restructure the location attribute and turn it into a JSONObject with following attributes:
  * - location: Placename of coordinate
  *      - position: Coordinates (lat, long)
+ * 
+ * @param {{ name: string, position: [float, float] }[]} geolocations 
  */
 export function restructureLocationAttribute(geolocations) { 
     return Object.fromEntries(geolocations.map(geolocation => [geolocation.name, geolocation.position]));

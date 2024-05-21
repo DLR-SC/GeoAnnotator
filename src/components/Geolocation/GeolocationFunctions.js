@@ -19,11 +19,10 @@ import LocationDialog from './Dialogs/LocationDialog'
  * Location list: Geolocation entries
  * @param {Object} param
  * @param {{ position: float[], name: string }[]} param.data
- * @param {Function} param.disableSaveChangesButton
  */
-export function GeolocationItems({ data, disableSaveChangesButton }) {
+export function GeolocationItems({ data }) {
     const 
-        session = useSession(),
+        { sessionData, setSessionData } = useSession(),
         [open, setOpen] = useState(false),
         [anchorEl, setAnchorEl] = useState(null),
         [geolocation, setGeolocation] = useState(),
@@ -32,14 +31,6 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
     // When the geolocations are updated (Not necessarily a new json-file chosen), rerender the location list
     useEffect(() => setGeolocations(data), [data])
 
-    // When a new json-file is chosen, disable the save changes button
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => disableSaveChangesButton(true), [session.sessionData?.fileData])
-    
-    // When a new location is added, enable save changes button
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => disableSaveChangesButton(false), [session.sessionData?.updatedGeolocations])
-
     return (
         <Box>
             {
@@ -47,7 +38,7 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                     <ListItem key={index}>
                         {/* Place-Icon */}
                         <ListItemIcon 
-                            onClick={() => session.setSessionData({ ...session.sessionData, geolocation: geo })} // Exchange data with MapContainer
+                            onClick={() => setSessionData({ ...sessionData, geolocation: geo })} // Exchange data with MapContainer
                             children={<Place sx={{ color: '#2587be', '&:hover': { cursor: 'pointer' } }} />} 
                         />
                         {/* Placename + Position */}
@@ -73,36 +64,43 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                                     '&:hover': { cursor: 'pointer' }
                                 }}
                             />
-                            {/* Menu */}
-                            {/* FIXME: Outsource the Menu, sothat performance gets better */}
-                            <Menu 
-                                anchorEl={anchorEl} 
-                                open={Boolean(anchorEl)} 
-                                onClose={() => setAnchorEl(null)}
-                            >
-                                {/* Edit */}
-                                <MenuItem 
-                                    variant="outlined" 
-                                    onClick={() => {
-                                        setOpen(true);
-                                        setAnchorEl(null);
-                                    }}
-                                >
-                                    Edit
-                                </MenuItem>
-                                {/* Delete */}
-                                <MenuItem 
-                                    onClick={() =>{
-                                        // When a geolocation is deleted, re-map through the changed geolocations array and rerender
-                                        setAnchorEl(null);
-                                        // High-order components are being 'informed' about the deletion
-                                        session.setSessionData({ ...session.sessionData, updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name) })
-                                }}>Delete</MenuItem>
-                            </Menu>
+                            
                         </ListItemSecondaryAction>
                     </ListItem>
                 ))
             }
+            {/* Menu */}
+            <Menu 
+                anchorEl={anchorEl} 
+                open={Boolean(anchorEl)} 
+                onClose={() => setAnchorEl(null)}
+            >
+                {/* Edit */}
+                <MenuItem 
+                    variant="outlined" 
+                    onClick={() => {
+                        setOpen(true);
+                        setAnchorEl(null);
+                    }}
+                >
+                    Edit
+                </MenuItem>
+                {/* Delete */}
+                <MenuItem 
+                    onClick={() =>{
+                        // When a geolocation is deleted, re-map through the changed geolocations array and rerender
+                        setAnchorEl(null);
+                        // High-order components are being 'informed' about the deletion
+                        setSessionData({ 
+                            ...sessionData, 
+                            updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name),
+                            disableSaveChangesButton: false
+                        })
+                    }}
+                >
+                    Delete
+                </MenuItem>
+            </Menu>
             <LocationDialog
                 geolocation={geolocation}
                 geolocations={geolocations}
@@ -110,8 +108,7 @@ export function GeolocationItems({ data, disableSaveChangesButton }) {
                     title: 'Edit location',
                     open: open,
                     onClose: setOpen,
-                    dialogUsage: 'edit',
-                    enableSaveChangesButton: () => disableSaveChangesButton(false)
+                    dialogUsage: 'edit'
                 }}
             />
         </Box>

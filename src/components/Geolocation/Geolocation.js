@@ -1,10 +1,23 @@
-import { useState } from 'react';
 import { List } from '@mui/material';
+import { useState, useEffect } from 'react';
 import { SaveButton } from '../customComponents';
 import { GeolocationItems } from './GeolocationFunctions';
+import { useSession } from '../SessionProvider';
 
 export default function Geolocation({ geolocations, handleSaveButtonClick }) {
-    const [disabledButton, setDisabledButton] = useState(true);
+    const
+        { sessionData } = useSession(),
+        [disabledButton, setDisabledButton] = useState(true);
+
+    // When a new json-file is chosen, disable the save changes button
+    useEffect(() => {
+        setDisabledButton(true);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sessionData?.fileData])
+    
+    // When a new location is added or deleted, enable save changes button
+    useEffect(() => setDisabledButton(false), [sessionData?.updatedGeolocations])
 
     return (
         <>
@@ -20,7 +33,6 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
                     geolocations ?  (
                         <GeolocationItems
                             data={geolocations}
-                            disableSaveChangesButton={setDisabledButton}
                         />
                     ) : null
                 }
