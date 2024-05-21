@@ -105,16 +105,33 @@ export function hasKey(dataset, fileData) {
 }
 
 /**
- * 
- * @param {*} fileData 
+ * Trigger Download-Event of corresponding json file
+ * @param {{text: string, locations: { location: [float, float] }, key: number}} fileData 
  */
-export async function downloadFile(fileData) {
+export function downloadFile(fileData) {
     let 
         blob = new Blob([JSON.stringify(fileData, null, 4)], { type: 'application/json' }),
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
     a.href = url;
-    a.download = "file.json";
+    a.download = "file.edt.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+}
+
+/**
+ * Trigger Download-Event of all json-files
+ * @param {{text: string, locations: { location: [float, float] }, key: number}[]} fileDataset 
+ */
+export function downloadFiles(fileDataset) {
+    let 
+        blob = new Blob([JSON.stringify(fileDataset, null, 4)], { type: 'application/json' }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement('a');
+    a.href = url;
+    a.download = "files.edt.json";
     document.body.appendChild(a);
     a.click();
     a.remove();

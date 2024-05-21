@@ -1,15 +1,18 @@
-import FileUploader from './FileUploader';
-import { useSession } from '../SessionProvider';
-import React, { useEffect, useState } from 'react';
-import { List, Menu, MenuItem } from '@mui/material';
-import { convertFileToJSONArray } from '../../utils/jsonFunctions';
-import { ExtractEntries, ExtractNewEntries, hasKey, downloadFile } from './FileExplorerFunctions';
+import FileUploader from './FileUploader'
+import { useSession } from '../SessionProvider'
+import { SaveButton } from '../customComponents'
+import React, { useEffect, useState } from 'react'
+import { List, Menu, MenuItem } from '@mui/material'
+import { convertFileToJSONArray } from '../../utils/jsonFunctions'
+import { ExtractEntries, ExtractNewEntries, hasKey, downloadFile, downloadFiles } from './FileExplorerFunctions'
+import { Save } from '@mui/icons-material'
 
 export default function FileExplorer({ handleFileItemClick }) {
     // Data from file
     const 
-        { sessionData, setSessionData } = useSession(),
+        { sessionData } = useSession(),
         [anchorEl, setAnchorEl] = useState(null),
+        [disabledSaveButton, setDisabledSaveButton] = useState(true),
         [fileData, setFileData] = useState(),
         [fileDataset, setFileDataset] = useState([]),
         [newFileDataset, setNewFileDataset] = useState(),
@@ -32,6 +35,9 @@ export default function FileExplorer({ handleFileItemClick }) {
         [sessionData?.newFileData]
     )
 
+    // Enable 'Save all files'-button, when 'fileDataset' changes (e.b. local file chosen)
+    useEffect(() => { if(fileDataset.length) setDisabledSaveButton(false) }, [fileDataset])
+
     return (
         <>
             <FileUploader 
@@ -46,8 +52,8 @@ export default function FileExplorer({ handleFileItemClick }) {
                     flexWrap: 'nowrap',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    marginTop: 2,
-                    height: '75vh',
+                    mt: 2, mb: 2,
+                    height: '70vh',
                     overflowY: 'auto',
                     borderRadius: '0.5rem',
                     backgroundColor: 'white'
@@ -75,9 +81,7 @@ export default function FileExplorer({ handleFileItemClick }) {
                         variant="outlined" 
                         onClick={() => {
                             setAnchorEl(null);
-                            downloadFile(fileData)
-                                .then()
-                                .catch(err => console.log(err));
+                            downloadFile(fileData);
                         }}
                     >
                         Download
@@ -94,6 +98,20 @@ export default function FileExplorer({ handleFileItemClick }) {
                     </MenuItem>
                 </Menu>
             </List>
+            <SaveButton
+                disabled={disabledSaveButton}
+                variant='contained'
+                startIcon={<Save />}
+                sx={{
+                    backgroundColor: 'blue',
+                    '&:hover': {
+                        backgroundColor: 'darkblue',
+                    }
+                }}
+                onClick={() => downloadFiles(fileDataset)}
+            >
+                Save all files
+            </SaveButton>
         </>
     )
 }
