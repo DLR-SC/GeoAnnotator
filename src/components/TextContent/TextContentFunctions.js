@@ -17,8 +17,8 @@ export function highlightDetectedLocations(textContent, geolocations) {
  */
 function highlightText (text, wordsToHighlight) {
     const
-        regexPattern = `${wordsToHighlight.length ? `(${wordsToHighlight.join('|')})|` : ''}[\\w']+|[.,!?;:()\\-"]`,
-        regex = new RegExp(regexPattern, 'gi'), //`(${wordsToHighlight.join('|')})`
+        regexPattern = `${wordsToHighlight.length ? `(${wordsToHighlight.join('|')})|` : ''}[\\wäöüß']+|[.,!?;:()\\-"]`,
+        regex = new RegExp(regexPattern, 'gi'),
         parts = text.match(regex);
     
     return (

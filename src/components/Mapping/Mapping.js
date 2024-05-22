@@ -16,7 +16,6 @@ import {
  * @param {Object} param 
  * @param {{ name: string, position: float[] }[]} param.geolocations
  * @param {Function} param.clickHandler
- * @returns 
  */
 export default function Mapping({ geolocations }) {
     return (

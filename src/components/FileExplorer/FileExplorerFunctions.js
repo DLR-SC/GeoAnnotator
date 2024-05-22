@@ -22,8 +22,8 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
         [selectedIndex, setSelectedIndex] = useState(null),
         // Handler to set selected index
         handleListItemClick = (object, index) => {
-            setSelectedIndex(index); // Update the selected index state
-            handleClick(object, index); // Additional handling function
+            setSelectedIndex(index);    
+            handleClick(object, index);
         };
 
     return (

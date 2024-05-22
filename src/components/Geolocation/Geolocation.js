@@ -6,18 +6,15 @@ import { useSession } from '../SessionProvider';
 
 export default function Geolocation({ geolocations, handleSaveButtonClick }) {
     const
-        { sessionData } = useSession(),
+        { sessionData, setSessionData } = useSession(),
         [disabledButton, setDisabledButton] = useState(true);
 
     // When a new json-file is chosen, disable the save changes button
-    useEffect(() => {
-        setDisabledButton(true);
-    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [sessionData?.fileData])
+    useEffect(() => setSessionData({ ...sessionData, disableSaveChangesButton: true }), [sessionData?.fileData])
     
-    // When a new location is added or deleted, enable save changes button
-    useEffect(() => setDisabledButton(false), [sessionData?.updatedGeolocations])
+    // When a new location is added, deleted or edited, enable save changes button
+    useEffect(() => setDisabledButton(sessionData?.disableSaveChangesButton), [sessionData?.disableSaveChangesButton])
 
     return (
         <>

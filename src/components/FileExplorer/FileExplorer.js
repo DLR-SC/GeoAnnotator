@@ -9,7 +9,6 @@ import { convertFileToJSONArray } from '../../utils/jsonFunctions'
 import { ExtractEntries, downloadFile, downloadFiles } from './FileExplorerFunctions'
 
 export default function FileExplorer({ handleFileItemClick }) {
-    // Data from file
     const 
         { sessionData, setSessionData } = useSession(),
         [anchorEl, setAnchorEl] = useState(null),
@@ -36,10 +35,8 @@ export default function FileExplorer({ handleFileItemClick }) {
     )
 
     // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
-    useEffect(() => {if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false)}, 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [fileDataset]
-    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false)}, [fileDataset])
 
     return (
         <>
@@ -87,7 +84,7 @@ export default function FileExplorer({ handleFileItemClick }) {
                     <MenuItem 
                         onClick={() =>{
                             setAnchorEl(null);
-                            // High-order components are being 'informed' about the deletion TODO:
+                            // TODO: High-order components are being 'informed' about the deletion 
                             // setSessionData({ ...sessionData, updatedFileDataset: geolocations.filter((geo) => geo.name !== geolocation.name) })
                         }}
                     >
@@ -100,7 +97,7 @@ export default function FileExplorer({ handleFileItemClick }) {
                 variant='contained'
                 startIcon={<Save />}
                 sx={{
-                    backgroundColor: 'blue',
+                    backgroundColor: 'lightgrey',
                     '&:hover': {
                         backgroundColor: 'darkblue',
                     }

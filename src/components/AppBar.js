@@ -17,7 +17,7 @@ import Button from '@mui/material/Button';
 const
     pageTitle = 'Geo Annotator V1',
     drawerWidth = 160,
-    navItems = ['Models'];
+    navItems = [];
 
 export default function DrawerAppBar() {
   const [mobileOpen, setMobileOpen] = React.useState(false);

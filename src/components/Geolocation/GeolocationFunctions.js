@@ -87,7 +87,7 @@ export function GeolocationItems({ data }) {
                 </MenuItem>
                 {/* Delete */}
                 <MenuItem 
-                    onClick={() =>{
+                    onClick={() => {
                         // When a geolocation is deleted, re-map through the changed geolocations array and rerender
                         setAnchorEl(null);
                         // High-order components are being 'informed' about the deletion
@@ -95,7 +95,7 @@ export function GeolocationItems({ data }) {
                             ...sessionData, 
                             updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name),
                             disableSaveChangesButton: false
-                        })
+                        });
                     }}
                 >
                     Delete

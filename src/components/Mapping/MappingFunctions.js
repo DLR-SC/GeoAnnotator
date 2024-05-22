@@ -51,7 +51,9 @@ export const FocusOnSelectedMarker = () => {
       if (selectedOptionPosition) {
           map.setView(selectedOptionPosition, 10);
       }
-    }, [selectedOptionPosition, map]);
+    }, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedOptionPosition, map]);
 
   return null;
 }
