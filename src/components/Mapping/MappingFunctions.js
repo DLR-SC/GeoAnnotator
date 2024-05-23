@@ -45,15 +45,15 @@ export const FocusOnClickedMarker = () => {
 export const FocusOnSelectedMarker = () => {
   const 
     map = useMap(),
-    session = useSession(), selectedOptionPosition = session.sessionData?.selectedOptionPosition;
+    session = useSession(), selectedOptionalCoordinate = session.sessionData?.selectedOptionalCoordinate;
 
   useEffect(() => {
-      if (selectedOptionPosition) {
-          map.setView(selectedOptionPosition, 10);
+      if (selectedOptionalCoordinate) {
+          map.setView(selectedOptionalCoordinate, 10);
       }
     }, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedOptionPosition, map]);
+    [selectedOptionalCoordinate, map]);
 
   return null;
 }

@@ -21,7 +21,9 @@ export function DialogContentArea(props) {
       title, 
       open, 
       onClose, 
-      children 
+      children,
+      fullWidth=false,
+      backdropIntensity
   } = props;
 
   return (
@@ -37,7 +39,8 @@ export function DialogContentArea(props) {
         </Draggable>
       )}
       aria-labelledby='draggable-dialog-title'
-      fullWidth
+      fullWidth={fullWidth}
+      slotProps={{backdrop:{ style: { backgroundColor: `rgba(0, 0, 0, ${backdropIntensity})` } }}}
     >
       <DialogTitle 
         id='draggable-dialog-title'
@@ -72,7 +75,7 @@ DialogContentArea.propTypes = {
 /**
  * Return 5 possible coordinates for given placename
  * @param {string} placename
- * @returns {[float, float][]}
+ * @returns {Promise<[float, float][]>}
  */
 export async function getOptionalCoordinates(placename) {
   let 
@@ -81,6 +84,6 @@ export async function getOptionalCoordinates(placename) {
       responseType: 'json'
     },
     data = await axios.get(`/geolocations?placename=${placename}`, config);
-  
+
   return data.data;
 }

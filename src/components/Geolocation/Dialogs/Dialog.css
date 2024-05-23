@@ -1,0 +1,16 @@
+#Open-OptionalPositionsDialog-Button {
+    background-color: cornflowerblue;
+    color: white;
+    font-size: small;
+    font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: left;
+}
+
+#Open-OptionalPositionsDialog-Button:hover {
+    background-color: #195cad;
+}
+
+.OptionalCoordinatesDialog-List {
+    border: 2px dotted;
+}
