@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
 import { DialogContentArea } from "./DialogFunctions";
 import { PlaceTwoTone } from "@mui/icons-material";
 import { useSession } from "../../SessionProvider";
@@ -28,31 +28,37 @@ export default function OptionalCoordinatesDialog(props) {
                     optionalCoordinates.map((coordinates, index) => (
                         <ListItem 
                             key={index}
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between'
+                            }}
                         >
                             <ListItemIcon children={<PlaceTwoTone />}/>
                             <ListItemText 
                                 primary={
-                                    (coordinates.continent  ? `${coordinates.continent}`  : '')
+                                    (coordinates.continent  ? `${coordinates.continent}, `  : '')
                                     +
-                                    (coordinates.country    ? `, ${coordinates.country}`  : '') 
+                                    (coordinates.country    ? `${coordinates.country}, `  : '') 
                                     +
-                                    (coordinates.state      ? `, ${coordinates.state  }`  : '')
+                                    (coordinates.state      ? `${coordinates.state  }, `  : '')
                                     +
-                                    (coordinates.name       ? `, ${coordinates.name   }`  : '')
+                                    (coordinates.name       ? `${coordinates.name   }, `  : '')
                                     +
-                                    ` (${coordinates.position})`
+                                    `(${coordinates.position})`
                                 }
                             />
-                            <ListItemButton
-                                onClick={() => {
-                                    let coordinate = JSON.parse(`[${coordinates.position}]`);
-                                    setCoordinate({ lat: coordinate[0], long: coordinate[1] });
-                                    setSessionData({...sessionData, selectedOptionalCoordinate: coordinate });
-                                    onClose();
-                                }}
-                            >
-                                +
-                            </ListItemButton>
+                            <ListItemSecondaryAction>
+                                <ListItemButton
+                                    onClick={() => {
+                                        let coordinate = JSON.parse(`[${coordinates.position}]`);
+                                        setCoordinate({ lat: coordinate[0], long: coordinate[1] });
+                                        setSessionData({...sessionData, selectedOptionalCoordinate: coordinate });
+                                        onClose();
+                                    }}
+                                >
+                                    +
+                                </ListItemButton>
+                            </ListItemSecondaryAction>
                         </ListItem>
                     ))
                 }

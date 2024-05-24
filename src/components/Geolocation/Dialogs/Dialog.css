@@ -13,4 +13,5 @@
 
 .OptionalCoordinatesDialog-List {
     border: 2px dotted;
+    border-radius: 1rem;
 }

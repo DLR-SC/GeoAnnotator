@@ -1,5 +1,5 @@
 import './Dialog.css';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSession } from '../../SessionProvider';
 import { SaveButton } from '../../customComponents';
 import DialogMapping from '../../Mapping/DialogMapping';
@@ -16,35 +16,40 @@ import { TextField, Box, Typography, Grid, ListItem, Button } from '@mui/materia
  * @returns {React.JSX.Element}
  */
 export default function LocationDialog({ geolocations, geolocation, dialogProps }) {
-  // Input value variables (No re-rendering)
   var 
-    location = { lat: null, long: null },
+    // Input value variables (No re-rendering) for manual modification of location
+    location = { lat: geolocation?.position[0] ?? null, long: geolocation?.position[1] ?? null },
     placename = geolocation?.name;
 
   const
+    // References, to access the current value of inputFields for Latitude and Longitude
+    latInputRef = useRef(null), longInputRef = useRef(null),
+    // Access to global data
     { sessionData, setSessionData } = useSession(),
+    // Error message, when no location is available
     [errorMessage, setErrorMessage] = useState(),
+    // Add/Save-button accessability
     [disableButton, setDisableButton] = useState(true),
-    [optionalCoordinates, setOptionalCoordinates] = useState([]),
+    // Coordinate, which is chosen in secondary dialog
     [coordinate, setCoordinate] = useState(),
+    [optionalCoordinates, setOptionalCoordinates] = useState([]),
     [optionalPositionDialogOpen, setOptionalPositionDialogOpen] = useState(false),
     // Reset properties, when dialog is closed
     resetProps = () => {
       location = { lat: null, long: null }
       setDisableButton(true)
-      setErrorMessage(undefined)      
+      setCoordinate(undefined)
+      setErrorMessage(undefined)
+      setOptionalCoordinates([])
       dialogProps.onClose(false)
     };
 
   // useEffect(
   //   () => {
-  //     if(geolocation)
-  //       getOptionalCoordinates(geolocation?.name)
-  //         .then(data => setOptionalCoordinates(data))
-  //         .catch(error => alert(error))
+  //     setDisableButton(latInputRef.current?.value && longInputRef.current?.value)
   //   },
-  //   [geolocation]
-  // );
+  //   [latInputRef.current?.value, longInputRef.current?.value]
+  // )
 
   return (
     <>
@@ -69,6 +74,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                 fullWidth
                 variant='filled'
                 label='Placename'
+                inputRef={latInputRef}
                 defaultValue={placename}
                 onBlur={event => placename = event.target.value}
               />
@@ -101,7 +107,8 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                   fullWidth
                   variant='filled'
                   label="Longitude"
-                  defaultValue={coordinate.long ? coordinate.long : location.long}
+                  inputRef={longInputRef}
+                  defaultValue={coordinate?.long ? coordinate?.long : location.long}
                   onBlur={(event) => {
                     location = { ...location, long: event.target.value };
                   }}
@@ -125,28 +132,6 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
               </Button>
             </Grid>
 
-            {/* Checkbox */}
-            {/* <Grid item xs>
-              <FormControlLabel 
-                control={
-                  <Checkbox 
-                    color="default"
-                    sx={{ 
-                      '& .MuiSvgIcon-root': { fontSize: 18 },
-                      ':hover': { backgroundColor: 'transparent' }
-                    }}
-                    onChange={() => {
-
-                    }}
-                  />
-                } 
-                label="Enter position manually"
-                sx={{
-                  '& .MuiFormControlLabel-label': { fontSize: 13 }
-                }}
-              />
-            </Grid> */}
-
           </Grid>
         </ListItem>
 
@@ -156,15 +141,14 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
             <DialogMapping
               // Add current geolocation, sothat all locations + the optional ones are displayed
               geolocations={optionalCoordinates?.concat([geolocation])}
-              // FIXME: When dblclicking the default marker, an error occurs ('Reading property of undefined is not possible (reading value when Array.map)')
               markerDblClickHandler={(event) => {
-                let latlng = event.latlng, position = [latlng['lat'], latlng['lng']];
-                // setLocation(position.toString()); // Convert it into a string, sothat JS doesn't compare by reference, but by value (In this case, only with primitive values)
-                setDisableButton(position.toString() === geolocation?.position.toString());  
-                setSessionData({...sessionData, selectedOptionalCoordinate: position });
+                let latlng = event.latlng, position = { lat: latlng['lat'], long: latlng['lng'] };
+                setCoordinate(position);
+                setDisableButton(position);  
+                setSessionData({...sessionData, selectedOptionalCoordinate: [position.lat, position.long] });
               }}
             />
-            <Typography fontSize={10}>Double click the respective marker to select the position (BETA)</Typography>
+            <Typography fontSize={10}>Double click the respective marker to select the position</Typography>
           </Box>
         </ListItem>
 
@@ -176,8 +160,9 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
             onClick={() => {
               // If changes were made, pass the updated geolocation to the high order component "MainArea" and enable the save changes button
               if(location) {
-                if(dialogProps.dialogUsage === 'edit')     geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = JSON.parse(`[${location}]`) }); 
-                else if(dialogProps.dialogUsage === 'add') geolocations.push({ ...geolocation, position: JSON.parse(`[${location}]`) });
+                let geolocationPos = coordinate?.lat && coordinate?.long ? [coordinate?.lat,coordinate?.long] : JSON.parse(`[${location}]`)
+                if(dialogProps.dialogUsage === 'edit')     geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = geolocationPos }); 
+                else if(dialogProps.dialogUsage === 'add') geolocations.push({ ...geolocation, position: geolocationPos });
               }
               setSessionData({ ...sessionData, disableSaveChangesButton: false })
               resetProps()

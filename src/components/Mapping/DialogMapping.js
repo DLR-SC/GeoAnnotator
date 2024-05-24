@@ -20,7 +20,7 @@ import {
 export default function DialogMapping({ geolocations, markerDblClickHandler }) {
     return (
         <MapContainer 
-            zoom={12}
+            zoom={1}
             center={[21.41, 39.81]} // Mekka 
             style={{
                 height: '100%'
@@ -31,7 +31,7 @@ export default function DialogMapping({ geolocations, markerDblClickHandler }) {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {
-                geolocations ? geolocations?.map((marker, index) => {
+                geolocations?.map((marker, index) => {
                     if(
                         marker.name === undefined       ||  
                         marker.position === undefined   ||
@@ -52,7 +52,7 @@ export default function DialogMapping({ geolocations, markerDblClickHandler }) {
                             </Popup>
                         </Marker>
                     )
-                }) : null
+                })
             }
             <FocusOnLatest markers={geolocations}/>
             <FocusOnSelectedMarker/>
