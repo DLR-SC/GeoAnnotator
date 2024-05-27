@@ -45,7 +45,7 @@ export const FocusOnSelectedMarker = () => {
     session = useSession(), selectedOptionalCoordinate = session.sessionData?.selectedOptionalCoordinate;
 
   useEffect(() => {
-    if(selectedOptionalCoordinate) map.setView(selectedOptionalCoordinate, 10);
+    if(selectedOptionalCoordinate) map.setView(selectedOptionalCoordinate, 8);
   }, [selectedOptionalCoordinate, map]);
 
   return null;

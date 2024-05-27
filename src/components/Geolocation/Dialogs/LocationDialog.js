@@ -38,8 +38,8 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
     [optionalPositionDialogOpen, setOptionalPositionDialogOpen] = useState(false),
     // Reset properties, when dialog is closed
     resetProps = () => {
-      setPlacename()
-      setCoordinate({ lat: undefined, lng: undefined })
+      // setPlacename()
+      // setCoordinate({ lat: undefined, lng: undefined })
       setErrorMessage(undefined)
       setOptionalCoordinates([])
       setDisableButton(true)
@@ -94,7 +94,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                         let lat = Number(event.target.value);
                         if(!isNaN(lat)) {
                           setCoordinate({ ...coordinate, lat: lat });
-                          setDisableButton( typeof coordinate.lng === 'number' )
+                          if(coordinate?.lng) setDisableButton( false )
                         }
                       }}
                     />
@@ -111,7 +111,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                         let lng = Number(event.target.value);
                         if(!isNaN(lng)) {
                           setCoordinate({ ...coordinate, lng: lng });
-                          setDisableButton( typeof coordinate.lat == 'number' )
+                          if(coordinate?.lat) setDisableButton( false )
                         }
                       }}
                     />
@@ -143,7 +143,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
               <Box sx={{ width: '100%', height: '15rem' }}>
                 <DialogMapping
                   // Display current geolocation + optional coordinates
-                  geolocations={[geolocation, ...optionalCoordinates]}
+                  geolocations={[geolocation, { name: placename, position: [coordinate?.lat, coordinate?.lng] }, ...optionalCoordinates]}
                   // Double clicking a marker should be selected
                   markerDblClickHandler={(event) => {
                     let latlng = event.latlng, position = { lat: latlng['lat'], lng: latlng['lng'] };

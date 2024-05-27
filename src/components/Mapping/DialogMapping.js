@@ -6,7 +6,7 @@ import {
     TileLayer,
     MapContainer,
 } from 'react-leaflet';
-import { FocusOnSelectedMarker } from './MappingFunctions';
+import { FocusOnDyanmicMarker, FocusOnSelectedMarker } from './MappingFunctions';
 
 /**
  * Mapping of locations in a dialog
@@ -32,7 +32,8 @@ export default function DialogMapping({ geolocations, markerDblClickHandler }) {
                     if(
                         marker.name === undefined       ||  
                         marker.position === undefined   ||
-                        marker.position.length === 0
+                        marker.position.length === 0    ||
+                        marker.position[0] === undefined||marker.position[1] === undefined   
                     ) return null;
                     return (
                         <Marker 
@@ -51,6 +52,7 @@ export default function DialogMapping({ geolocations, markerDblClickHandler }) {
                     )
                 })
             }
+            <FocusOnDyanmicMarker />
             <FocusOnSelectedMarker/>
         </MapContainer>
     );
