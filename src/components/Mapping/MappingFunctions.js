@@ -7,7 +7,6 @@ import { useSession } from '../SessionProvider';
  * Focus on latest added marker
  * @param {Object} param 
  * @param {{name: string, position: [float, float]}[]} param.markers 
- * @returns 
  */
 export const FocusOnLatest = ({ markers }) => {
   const map = useMap();
@@ -15,12 +14,11 @@ export const FocusOnLatest = ({ markers }) => {
   useEffect(() => {
     if (markers && markers.length > 0) {
       const lastMarker = markers[markers.length - 1];  // Get the last marker
-      console.log(lastMarker)
-      if(lastMarker.position.length) map.setView(lastMarker.position, 8);  // Set view to the last marker
+      if(lastMarker?.position.length) map.setView(lastMarker.position, 8)
     }
-  }, [markers, map]);  // Effect depends on markers changing
+  }, [markers, map]);  
 
-  return null;  // No direct rendering
+  return null;  
 };
 
 /**
@@ -32,10 +30,8 @@ export const FocusOnClickedMarker = () => {
     session = useSession(), geolocation = session.sessionData?.geolocation;
 
   useEffect(() => {
-      if (geolocation) {
-          map.setView(geolocation.position, 10);  
-      }
-    }, [geolocation, map]);
+    if (geolocation) map.setView(geolocation.position, 10);  
+  }, [geolocation, map]);
 
   return null;
 };
@@ -49,12 +45,8 @@ export const FocusOnSelectedMarker = () => {
     session = useSession(), selectedOptionalCoordinate = session.sessionData?.selectedOptionalCoordinate;
 
   useEffect(() => {
-      if (selectedOptionalCoordinate) {
-          map.setView(selectedOptionalCoordinate, 10);
-      }
-    }, 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedOptionalCoordinate, map]);
+    if(selectedOptionalCoordinate) map.setView(selectedOptionalCoordinate, 10);
+  }, [selectedOptionalCoordinate, map]);
 
   return null;
 }

@@ -64,7 +64,6 @@ export function GeolocationItems({ data }) {
                                     '&:hover': { cursor: 'pointer' }
                                 }}
                             />
-                            
                         </ListItemSecondaryAction>
                     </ListItem>
                 ))

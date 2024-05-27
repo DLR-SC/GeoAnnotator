@@ -20,7 +20,7 @@ import {
 export default function Mapping({ geolocations }) {
     return (
         <MapContainer 
-            zoom={12}
+            zoom={1}
             center={[21.41, 39.81]} // Mekka 
             style={{
                 height: '100%'

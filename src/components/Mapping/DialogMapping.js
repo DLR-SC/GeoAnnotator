@@ -6,22 +6,19 @@ import {
     TileLayer,
     MapContainer,
 } from 'react-leaflet';
-import {
-    FocusOnLatest,
-    FocusOnSelectedMarker
-} from './MappingFunctions';
+import { FocusOnSelectedMarker } from './MappingFunctions';
 
 /**
  * Mapping of locations in a dialog
  * @param {Object} param 
  * @param {{ name: string, position: float[] }[]} param.geolocations
- * @param {Function} param.markerClickHandler
+ * @param {Function} param.markerDblClickHandler
  */
 export default function DialogMapping({ geolocations, markerDblClickHandler }) {
     return (
         <MapContainer 
             zoom={1}
-            center={[21.41, 39.81]} // Mekka 
+            center={[21.41, 39.81]} // Mekka
             style={{
                 height: '100%'
             }}
@@ -54,7 +51,6 @@ export default function DialogMapping({ geolocations, markerDblClickHandler }) {
                     )
                 })
             }
-            <FocusOnLatest markers={geolocations}/>
             <FocusOnSelectedMarker/>
         </MapContainer>
     );

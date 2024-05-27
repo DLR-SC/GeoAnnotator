@@ -50,9 +50,8 @@ export default function OptionalCoordinatesDialog(props) {
                             <ListItemSecondaryAction>
                                 <ListItemButton
                                     onClick={() => {
-                                        let coordinate = JSON.parse(`[${coordinates.position}]`);
-                                        setCoordinate({ lat: coordinate[0], long: coordinate[1] });
-                                        setSessionData({...sessionData, selectedOptionalCoordinate: coordinate });
+                                        setCoordinate({ lat: coordinates.position[0], lng: coordinates.position[1] });
+                                        setSessionData({...sessionData, selectedOptionalCoordinate: coordinates.position });
                                         onClose();
                                     }}
                                 >
