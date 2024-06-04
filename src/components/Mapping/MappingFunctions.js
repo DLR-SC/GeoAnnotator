@@ -14,7 +14,7 @@ export const FocusOnLatest = ({ markers }) => {
   useEffect(() => {
     if (markers && markers.length > 0) {
       const lastMarker = markers[markers.length - 1];  // Get the last marker
-      if(lastMarker?.position.length) map.setView(lastMarker.position, 8)
+      if(lastMarker?.position.length) map.setView(lastMarker.position, 6)
     }
   }, [markers, map]);  
 

@@ -94,7 +94,10 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                         let lat = Number(event.target.value);
                         if(!isNaN(lat)) {
                           setCoordinate({ ...coordinate, lat: lat });
-                          if(coordinate?.lng) setDisableButton( false )
+                          if(coordinate?.lng) {
+                            setSessionData({...sessionData, selectedOptionalCoordinate: [lat, coordinate?.lng] });
+                            setDisableButton( false )
+                          }
                         }
                       }}
                     />
@@ -111,7 +114,10 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                         let lng = Number(event.target.value);
                         if(!isNaN(lng)) {
                           setCoordinate({ ...coordinate, lng: lng });
-                          if(coordinate?.lat) setDisableButton( false )
+                          if(coordinate?.lat) {
+                            setSessionData({...sessionData, selectedOptionalCoordinate: [coordinate?.lat, lng] });
+                            setDisableButton( false )
+                          }
                         }
                       }}
                     />
