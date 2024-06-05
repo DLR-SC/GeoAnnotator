@@ -87,7 +87,7 @@ export function downloadFile(fileData) {
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
     a.href = url;
-    a.download = "file.edt.json";
+    a.download = `file_${fileData.key}.edt.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
