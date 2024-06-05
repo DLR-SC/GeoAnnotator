@@ -1,3 +1,5 @@
+/** The main text content area */
+
 import './TextContent.css'
 import { pipe } from '../../utils/utilFunctions'
 import { SaveButton } from '../customComponents'

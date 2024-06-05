@@ -1,3 +1,4 @@
+/** File system with the list entries */
 import { useState } from 'react';
 import { MapRounded, MenuRounded } from '@mui/icons-material';
 import {

@@ -1,3 +1,5 @@
+/** Main location system with list of location */
+
 import { List } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { SaveButton } from '../customComponents';

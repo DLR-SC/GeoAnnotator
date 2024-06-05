@@ -1,3 +1,5 @@
+/** Main content area of the page - grid with 4 cells */
+
 import Mapping from './Mapping/Mapping';
 import { Box, Grid } from '@mui/material';
 import { Item } from './customComponents';

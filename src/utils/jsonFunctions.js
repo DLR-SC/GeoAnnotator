@@ -1,4 +1,8 @@
 /**
+ * Functions to process json-related objects
+ */
+
+/**
  * Checks, if the file is of type 'application/json'
  * 
  * @param {FileList} files 
