@@ -80,7 +80,7 @@ DialogContentArea.propTypes = {
 export async function getOptionalCoordinates(placename) {
   let 
     config = {
-      baseURL: 'http://localhost:8001/api',
+      baseURL: 'http://localhost:8000/api',
       responseType: 'json'
     },
     data = await axios.get(`/geolocations?placename=${placename}`, config);
