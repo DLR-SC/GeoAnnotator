@@ -28,38 +28,42 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
         };
 
     return (
-        data.map((object, index) => (
-            <ListItem 
-                key={index}
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    bgcolor: selectedIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
-                }}
-            >
-                <ListItemIcon 
+        data.map((object, index) => {
+            if(object === undefined) return null;
+
+            return (
+                <ListItem 
+                    key={index}
                     sx={{
                         display: 'flex',
-                        justifyContent: 'center'
+                        justifyContent: 'space-between',
+                        bgcolor: selectedIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
                     }}
-                    children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
-                />
-                <ListItemButton onClick={() => handleListItemClick(object, index)}>
-                    {`file_${index}.json`}
-                </ListItemButton>
-                {/* Menu of json file */}
-                <ListItemSecondaryAction>
-                    {/* Menu-Icon */}
-                    <MenuRounded 
-                        edge="end" 
-                        onClick={event => handleMenuClick(event, object)}
+                >
+                    <ListItemIcon 
                         sx={{
-                            '&:hover': { cursor: 'pointer' }
+                            display: 'flex',
+                            justifyContent: 'center'
                         }}
+                        children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
                     />
-                </ListItemSecondaryAction>
-            </ListItem>
-        ))
+                    <ListItemButton onClick={() => handleListItemClick(object, index)}>
+                        {`file_${index}.json`}
+                    </ListItemButton>
+                    {/* Menu of json file */}
+                    <ListItemSecondaryAction>
+                        {/* Menu-Icon */}
+                        <MenuRounded 
+                            edge="end" 
+                            onClick={event => handleMenuClick(event, object, index)}
+                            sx={{
+                                '&:hover': { cursor: 'pointer' }
+                            }}
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+            )
+        })
     )
 }
 
@@ -96,7 +100,7 @@ export function downloadFile(fileData) {
  */
 export function downloadFiles(fileDataset) {
     let 
-        blob = new Blob([JSON.stringify(fileDataset, null, 4)], { type: 'application/json' }),
+        blob = new Blob([JSON.stringify(fileDataset.filter(file => file), null, 4)], { type: 'application/json' }),
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
     a.href = url;

@@ -8,11 +8,9 @@ import { UploadButton } from '../customComponents';
 import { checkFileType } from '../../utils/jsonFunctions';
 
 export default function FolderUploader({ onFilesSelect }) {
-  const fileInputRef = useRef(null);
-
-  const handleFileInputClick = () => {
-    fileInputRef.current.click();
-  };
+  const 
+    fileInputRef = useRef(null),
+    handleFileInputClick = () => fileInputRef.current.click();
 
   return (
     <Box>

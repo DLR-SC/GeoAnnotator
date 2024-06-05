@@ -17,9 +17,9 @@ export default function FileExplorer({ handleFileItemClick }) {
         [disabledSaveButton, setDisabledSaveButton] = useState(true),
         [fileData, setFileData] = useState(),
         [fileDataset, setFileDataset] = useState([]),
-        handleMenuClick = (event, object) => {
-                setAnchorEl(event.currentTarget);
-                setFileData(object);
+        handleMenuClick = (event, object, index) => {
+            setAnchorEl(event.currentTarget);
+            setFileData({ ...object, key: index });
         };
 
     // Apply changes to the corresponding files
@@ -38,7 +38,10 @@ export default function FileExplorer({ handleFileItemClick }) {
 
     // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => {if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false)}, [fileDataset])
+    useEffect(() => { if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false) }, [fileDataset])
+
+    // Rerender when the fileDataset changes
+    // useEffect(() => { if(sessionData?.newFileDataset?.length) setFileData(sessionData?.newFileDataset) }, [sessionData?.newFileDataset])
 
     return (
         <>
@@ -84,10 +87,11 @@ export default function FileExplorer({ handleFileItemClick }) {
                     </MenuItem>
                     {/* Delete */}
                     <MenuItem 
-                        onClick={() =>{
+                        onClick={() => {
                             setAnchorEl(null);
-                            // TODO: High-order components are being 'informed' about the deletion 
-                            // setSessionData({ ...sessionData, updatedFileDataset: geolocations.filter((geo) => geo.name !== geolocation.name) })
+                            // TODO: Deletion functionality for each list entry
+                            // setFileDataset(fileDataset.filter((file, index) => index !== fileData?.key ));
+                            setFileDataset(fileDataset.map((file, index) => { if(index === fileData?.key) return undefined; else return file; }));
                         }}
                     >
                         Delete
