@@ -9,7 +9,8 @@ export default function OptionalCoordinatesDialog(props) {
             open,
             onClose,
             setCoordinate,
-            optionalCoordinates=[],
+            setDisableButton,
+            optionalCoordinates=[]
         } = props,
         { sessionData, setSessionData } = useSession();
 
@@ -52,6 +53,7 @@ export default function OptionalCoordinatesDialog(props) {
                                     onClick={() => {
                                         setCoordinate({ lat: coordinates.position[0], lng: coordinates.position[1] });
                                         setSessionData({...sessionData, selectedOptionalCoordinate: coordinates.position });
+                                        setDisableButton(false);
                                         onClose();
                                     }}
                                 >

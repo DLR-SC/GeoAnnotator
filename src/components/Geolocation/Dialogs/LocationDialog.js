@@ -170,8 +170,6 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                 onClick={() => {
                   let geolocationPos = [ coordinate.lat, coordinate.lng ];
                                     
-                  console.log(geolocationPos);
-
                   if(dialogProps.dialogUsage === 'edit')     geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = geolocationPos }); 
                   else if(dialogProps.dialogUsage === 'add') geolocations.push({ ...geolocation, position: geolocationPos });
                   
@@ -193,6 +191,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
         onClose={() => setOptionalPositionDialogOpen(false)}
         optionalCoordinates={optionalCoordinates}
         setCoordinate={setCoordinate}
+        setDisableButton={setDisableButton}
       />
     </>
   )
