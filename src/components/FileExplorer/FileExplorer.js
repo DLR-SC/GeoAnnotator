@@ -108,7 +108,7 @@ export default function FileExplorer({ handleFileItemClick }) {
                         backgroundColor: 'darkblue',
                     }
                 }}
-                onClick={() => downloadFiles(fileDataset)}
+                onClick={() => downloadFiles(fileDataset, sessionData)}
             >
                 Save all files
             </SaveButton>

@@ -87,6 +87,7 @@ export function downloadFile(fileData, sessionData) {
         blob = new Blob([JSON.stringify(fileData, null, 4)], { type: 'application/json' }),
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
+        
     a.href = url;
     a.download = `file_${fileData.key ?? 'unregistered'}${sessionData?.changedFiles?.includes(fileData.key) ? '.edt' : ''}.json`;
     document.body.appendChild(a);
@@ -101,12 +102,14 @@ export function downloadFile(fileData, sessionData) {
  * @param {JSON} sessionData
  */
 export function downloadFiles(fileDataset, sessionData) {
-    let 
-        blob = new Blob([JSON.stringify(fileDataset.filter(file => file), null, 4)], { type: 'application/json' }),
+    let
+        newFileDataset = fileDataset.filter(file => file),
+        blob = new Blob([JSON.stringify(newFileDataset, null, 4)], { type: 'application/json' }),
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
+
     a.href = url;
-    a.download = `files${sessionData?.changedFiles?.length ? '.edt' : ''}.json`;
+    a.download = `files${newFileDataset.length !== fileDataset.length || sessionData?.changedFiles ? '.edt' : ''}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
