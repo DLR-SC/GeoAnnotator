@@ -83,7 +83,7 @@ A json object could look like this:
 ]
 ```
 
-Afterwards, the textcontent, including with the highlighted locations, the mapping of each location and the locations will be shown on the page.
+Afterwards, the textcontent, including the highlighted locations, the mapping of each location and the locations will be shown on the page.
 
 ## Project status
 Project finished.
