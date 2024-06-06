@@ -58,4 +58,4 @@ Choose a json-file, that contains a JSON-Array with JSON-Objects, each with foll
 Afterwards, the textcontent, with the highlighted locations, the mapping of each location and the locations themselfs will be shown on the page. 
 
 ## Project status
-Still in development.
+Project finished.
