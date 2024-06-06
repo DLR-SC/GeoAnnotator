@@ -12,7 +12,7 @@ conda create -n GeoAnnotator nodejs=20.9.0 && conda activate GeoAnnotator
 ```
 
 (RECOMMENDED)
-To simply install all packages, run (Nodejs is required. If not installed, see below)
+To simply install all packages, run:
 ```bash 
 npm install
 ```
@@ -48,12 +48,40 @@ npm install @fontsource/roboto@^5.0.13
 ```bash
 npm install axios@^1.6.8
 ```
+- and more...
 
 ## Usage
 Choose a json-file, that contains a JSON-Array with JSON-Objects, each with following attributes:
-- "locations": The locations, including their geolocations/coordinates (Latitude, Longitude)
-- "text": Text content, from which the locations have been detected and extracted
-- ...
+- *locations*: The locations, including their geolocations/coordinates (Latitude, Longitude)
+- *text*: Text content, from which the locations have been detected and extracted
+
+Other attributes could also be included, but they won't be considered relevant for this project
+
+## Example
+A json object could look like this:
+```json
+[
+    {
+        "id": 0,
+        "text": "The Philippine Department of Agriculture (DA), local health and agricultural teams Sunday have started slaughtering, burning and burying roughly 6,500 hogs at a farm in Pandi, Bulacan in Central Luzon on Sunday after three farm workers became infected with Reston ebolavirus (ERV) of the virus group Ebola, as a precautionary measure and to protect the local livestock industry. \"We culled around 300 heads\u2014piglets and growers\u2014in two and a half hours; we tried to start the process at 5 p.m. Sunday; after three hours we disposed of 442 hogs; that includes transporting the hogs to an area in the farm where they will be disposed of; with this rate and with some improvements in the procedure tomorrow, we expect to complete the depopulation by Wednesday,\u201d Bureau of Animal Industry (BAI) head Davinio Catbagan said. \"With the problems we encountered last night, we may go beyond Thursday,\" he added.",
+        "locations": {
+            "Pandi": [
+                14.87,
+                120.95
+            ],
+            "Bulacan": [
+                15,
+                121.08
+            ],
+            "Central Luzon": [
+                15.47,
+                120.75
+            ]
+        }
+    },
+    ...
+]
+```
 
 Afterwards, the textcontent, with the highlighted locations, the mapping of each location and the locations themselfs will be shown on the page. 
 
