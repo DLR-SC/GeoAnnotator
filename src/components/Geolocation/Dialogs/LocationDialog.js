@@ -90,7 +90,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                       variant='filled'
                       label="Latitude"
                       defaultValue={coordinate?.lat}
-                      onBlur={(event) => {
+                      onBlur={event => {
                         let lat = Number(event.target.value);
                         if(!isNaN(lat)) {
                           setCoordinate({ ...coordinate, lat: lat });
@@ -110,7 +110,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                       variant='filled'
                       label="Longitude"
                       defaultValue={coordinate?.lng}
-                      onBlur={(event) => {
+                      onBlur={event => {
                         let lng = Number(event.target.value);
                         if(!isNaN(lng)) {
                           setCoordinate({ ...coordinate, lng: lng });
@@ -151,7 +151,7 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                   // Display current geolocation + optional coordinates
                   geolocations={[geolocation, { name: placename, position: [coordinate?.lat, coordinate?.lng] }, ...optionalCoordinates]}
                   // Double clicking a marker should be selected
-                  markerDblClickHandler={(event) => {
+                  markerDblClickHandler={event => {
                     let latlng = event.latlng, position = { lat: latlng['lat'], lng: latlng['lng'] };
                     setCoordinate(position);
                     setDisableButton(false);  

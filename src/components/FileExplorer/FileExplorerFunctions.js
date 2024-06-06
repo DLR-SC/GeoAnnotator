@@ -79,15 +79,16 @@ export function hasKey(dataset, fileData) {
 
 /**
  * Trigger Download-Event of corresponding json file
- * @param {{text: string, locations: { location: [float, float] }}} fileData 
+ * @param {{text: string, locations: { location: [float, float] }}} fileData
+ * @param {JSON} sessionData
  */
-export function downloadFile(fileData) {
+export function downloadFile(fileData, sessionData) {
     let 
         blob = new Blob([JSON.stringify(fileData, null, 4)], { type: 'application/json' }),
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
     a.href = url;
-    a.download = `file_${fileData.key}.edt.json`;
+    a.download = `file_${fileData.key ?? 'unregistered'}${sessionData?.changedFiles?.includes(fileData.key) ? '.edt' : ''}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -97,14 +98,15 @@ export function downloadFile(fileData) {
 /**
  * Trigger Download-Event of all json-files
  * @param {{text: string, locations: { location: [float, float] }}[]} fileDataset 
+ * @param {JSON} sessionData
  */
-export function downloadFiles(fileDataset) {
+export function downloadFiles(fileDataset, sessionData) {
     let 
         blob = new Blob([JSON.stringify(fileDataset.filter(file => file), null, 4)], { type: 'application/json' }),
         url = window.URL.createObjectURL(blob),
         a = document.createElement('a');
     a.href = url;
-    a.download = "files.edt.json";
+    a.download = `files${sessionData?.changedFiles?.length ? '.edt' : ''}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();

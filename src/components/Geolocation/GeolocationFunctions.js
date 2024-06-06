@@ -56,7 +56,7 @@ export function GeolocationItems({ data }) {
                             {/* Menu-Icon */}
                             <MenuRounded 
                                 edge="end" 
-                                onClick={(event) => {
+                                onClick={event => {
                                     setGeolocation(geo);
                                     setAnchorEl(event.currentTarget);
                                 }}
@@ -92,7 +92,7 @@ export function GeolocationItems({ data }) {
                         // High-order components are being 'informed' about the deletion
                         setSessionData({ 
                             ...sessionData, 
-                            updatedGeolocations: geolocations.filter((geo) => geo.name !== geolocation.name),
+                            updatedGeolocations: geolocations.filter(geo => geo.name !== geolocation.name),
                             disableSaveChangesButton: false
                         });
                     }}

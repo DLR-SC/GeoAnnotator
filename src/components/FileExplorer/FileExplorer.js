@@ -37,18 +37,20 @@ export default function FileExplorer({ handleFileItemClick }) {
     )
 
     // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
+    useEffect(() => { 
+        if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false);
+    }, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => { if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false) }, [fileDataset])
-
-    // Rerender when the fileDataset changes
-    // useEffect(() => { if(sessionData?.newFileDataset?.length) setFileData(sessionData?.newFileDataset) }, [sessionData?.newFileDataset])
+    [fileDataset])
 
     return (
         <>
             <FileUploader 
-                onFilesSelect={(files) => { 
+                onFilesSelect={files => { 
                     // FIXME: We assume, that we only have selected one file. Thus we expect only one element in the array
-                    convertFileToJSONArray(files[0], setFileDataset)
+                    convertFileToJSONArray(files[0], setFileDataset);
+                    // Reset the changeFiles-stat
+                    setSessionData({ ...sessionData, changedFiles: undefined });
                 }}
             />
             <List
@@ -68,7 +70,7 @@ export default function FileExplorer({ handleFileItemClick }) {
                     data={fileDataset} 
                     handleClick={handleFileItemClick} 
                     handleMenuClick={handleMenuClick}
-                    />
+                />
                 {/* Menu */}
                 <Menu 
                     anchorEl={anchorEl} 
@@ -80,7 +82,7 @@ export default function FileExplorer({ handleFileItemClick }) {
                         variant="outlined" 
                         onClick={() => {
                             setAnchorEl(null);
-                            downloadFile(fileData);
+                            downloadFile(fileData, sessionData);
                         }}
                     >
                         Download
@@ -89,8 +91,6 @@ export default function FileExplorer({ handleFileItemClick }) {
                     <MenuItem 
                         onClick={() => {
                             setAnchorEl(null);
-                            // TODO: Deletion functionality for each list entry
-                            // setFileDataset(fileDataset.filter((file, index) => index !== fileData?.key ));
                             setFileDataset(fileDataset.map((file, index) => { if(index === fileData?.key) return undefined; else return file; }));
                         }}
                     >

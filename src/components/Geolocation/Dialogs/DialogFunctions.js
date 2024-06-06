@@ -30,7 +30,7 @@ export function DialogContentArea(props) {
     <Dialog 
       open={open}
       onClose={onClose} 
-      PaperComponent={(props) => (
+      PaperComponent={props => (
         <Draggable
           handle="#draggable-dialog-title"
           cancel={'[class*="MuiDialogContent-root"]'}
@@ -50,7 +50,7 @@ export function DialogContentArea(props) {
         <IconButton
           aria-label='close'
           onClick={onClose}
-          sx={{ color: (theme) => theme.palette.grey[500] }}
+          sx={{ color: theme => theme.palette.grey[500] }}
         > 
           <Close />
         </IconButton>
