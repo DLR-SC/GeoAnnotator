@@ -1,7 +1,7 @@
 # Geo Annotator V1
 
 ## What is the Geo Annotator used for?
-The Geo Annotator (GA) is used for managing annotated data, which has been parsed with a specific geoparser like CamCoder, Edinburgh Geoparser or more.
+The Geo Annotator (GA) is a Content-Management-Tool, used for annotating data and managing annotated data.
 
 ![Geo Annotator - Example](./src/example.png "Geo Annotator")
 
@@ -35,7 +35,6 @@ npm install react-draggable@^4.4.6
 ```bash
 npm install react-leaflet@^4.2.1 leaflet@^1.9.4
 ```
-- 
 - emotion.js (for custom react-components)
 ```bash
 npm install @emotion/react@^11.11.4 @emotion/styled@^11.11.5
@@ -50,15 +49,15 @@ npm install axios@^1.6.8
 ```
 - and more...
 
-After installing, simply run:
+## Usage
+After installing, run the server with following command (GeoAnnotator env needs to be active and you have to be in the respective directory):
 ```bash
-npm start
+(GeoAnnotator) npm start
 ```
 
-## Usage
 Choose a json-file, that contains a JSON-Array with JSON-Objects, each with following attributes:
-- *locations*: The locations, including their geolocations/coordinates (Latitude, Longitude)
 - *text*: Text content, from which the locations have been detected and extracted
+- *locations*: The locations, including their geolocations/coordinates (Latitude, Longitude)
 
 Other attributes could also be included, but they won't be considered relevant for this project
 
