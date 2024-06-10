@@ -50,6 +50,11 @@ npm install axios@^1.6.8
 ```
 - and more...
 
+After installing, simply run:
+```bash
+npm start
+```
+
 ## Usage
 Choose a json-file, that contains a JSON-Array with JSON-Objects, each with following attributes:
 - *locations*: The locations, including their geolocations/coordinates (Latitude, Longitude)
