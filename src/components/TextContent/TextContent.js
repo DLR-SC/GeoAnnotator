@@ -82,11 +82,23 @@ export function TextContent({ textContent, geolocations }) {
                     <p>or press ESC</p>
                 </Grid>
 
+                {/* Geoparse button */}
+                <Grid item xs={'auto'}>
+                    <Button
+                        variant='contained'
+                        disabled={disableButton}
+                        sx={{ fontWeight: 'bold' }}
+                        onClick={() => null}
+                    >
+                        Geoparse
+                    </Button>
+                </Grid>
+
                 {/* Add location button */}
                 <Grid item xs={'auto'}>
                     <SaveButton
                         variant='contained'
-                        disabled={disableButton}
+                        // disabled={disableButton} disable, when no file is selected
                         onClick={() => {
                             setGeolocation({...geolocation, name: selectedItems.join(' ')});
                             refSelectableGroup.current.clearSelection();
