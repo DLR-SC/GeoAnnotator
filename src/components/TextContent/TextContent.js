@@ -86,9 +86,8 @@ export function TextContent({ textContent, geolocations }) {
                 <Grid item xs={'auto'}>
                     <Button
                         variant='contained'
-                        disabled={disableButton}
                         sx={{ fontWeight: 'bold' }}
-                        onClick={() => null}
+                        onClick={() => console.log(textContent)}
                     >
                         Geoparse
                     </Button>
@@ -98,7 +97,7 @@ export function TextContent({ textContent, geolocations }) {
                 <Grid item xs={'auto'}>
                     <SaveButton
                         variant='contained'
-                        // disabled={disableButton} disable, when no file is selected
+                        disabled={disableButton}
                         onClick={() => {
                             setGeolocation({...geolocation, name: selectedItems.join(' ')});
                             refSelectableGroup.current.clearSelection();

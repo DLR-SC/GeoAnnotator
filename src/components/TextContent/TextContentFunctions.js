@@ -42,3 +42,19 @@ function getPlacenamesOfGeolocations(geolocations) {
     }
     return placenames;
 }
+
+/**
+ * Geoparse given textcontent
+ * @param {} textContent
+ * @returns {}
+ */
+async function geoparseTextContent(textContent) {
+    let 
+    config = {
+      baseURL: 'http://localhost:8000/api',
+      responseType: 'json'
+    },
+    data = await axios.get(`/geolocations/geoparse?textContent=${textContent}`, config);
+
+  return data.data;
+}
