@@ -8,7 +8,7 @@ The Geo Annotator (GA) is a Content-Management-Tool, used for annotating data an
 ## Installation
 If you haven't Node.js (Version 20.9.0) already installed on your local system, do the following:
 ```bash
-conda create -n GeoAnnotator nodejs=20.9.0 && conda activate GeoAnnotator
+conda create -n GeoAnnotator -c conda-forge nodejs=20.9.0 && conda activate GeoAnnotator
 ```
 
 (RECOMMENDED)
