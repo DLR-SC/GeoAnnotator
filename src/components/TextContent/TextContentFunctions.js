@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import { SelectableTextItem } from "../customComponents"
 
 /**
@@ -45,16 +47,18 @@ function getPlacenamesOfGeolocations(geolocations) {
 
 /**
  * Geoparse given textcontent
- * @param {} textContent
- * @returns {}
+ * @param {string} textContent
+ * @param {string} model
  */
-async function geoparseTextContent(textContent) {
+export async function geoparseTextContent(textContent, model) {
     let 
     config = {
-      baseURL: 'http://localhost:8000/api',
-      responseType: 'json'
+        baseURL: 'http://localhost:8000/api',
+        headers: {
+        'Content-Type': 'application/json'
+        }
     },
-    data = await axios.get(`/geolocations/geoparse?textContent=${textContent}`, config);
+    data = await axios.post(`/geoparse`, { "text": textContent, "model": "gpt" }, config);
 
   return data.data;
 }

@@ -7,7 +7,7 @@ import { Box, Button, Grid } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
 import { SelectableGroup } from "react-selectable-fast"
 import LocationDialog from '../Geolocation/Dialogs/LocationDialog'
-import { highlightDetectedLocations } from "./TextContentFunctions"
+import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 
 export function TextContent({ textContent, geolocations }) {
     const 
@@ -87,7 +87,12 @@ export function TextContent({ textContent, geolocations }) {
                     <Button
                         variant='contained'
                         sx={{ fontWeight: 'bold' }}
-                        onClick={() => console.log(textContent)}
+                        onClick={() => {
+                            geoparseTextContent(textContent).then(data => {
+                                console.log(data)
+                                // ToDo: Open a dialog, sothat the user confirms/discards the changes
+                            })
+                        }}
                     >
                         Geoparse
                     </Button>
