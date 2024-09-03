@@ -1,7 +1,7 @@
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
 import { DialogContentArea } from "./DialogFunctions";
 import { PlaceTwoTone } from "@mui/icons-material";
-import { useSession } from "../../SessionProvider";
+import { useSession } from "../SessionProvider";
 
 export default function OptionalCoordinatesDialog(props) {
     const 

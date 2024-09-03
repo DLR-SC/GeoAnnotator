@@ -13,7 +13,7 @@ import {
     Place,
     MenuRounded
 } from '@mui/icons-material';
-import LocationDialog from './Dialogs/LocationDialog'
+import LocationDialog from '../Dialogs/LocationDialog'
 
 /** 
  * Location list: Geolocation entries

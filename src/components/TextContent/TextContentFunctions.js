@@ -52,13 +52,13 @@ function getPlacenamesOfGeolocations(geolocations) {
  */
 export async function geoparseTextContent(textContent, model) {
     let 
-    config = {
-        baseURL: 'http://localhost:8000/api',
-        headers: {
-        'Content-Type': 'application/json'
-        }
-    },
-    data = await axios.post(`/geoparse`, { "text": textContent, "model": "gpt" }, config);
+        config = {
+            baseURL: 'http://localhost:8000/api',
+            headers: {
+            'Content-Type': 'application/json'
+            }
+        },
+        data = await axios.post(`/geoparse`, { "text": textContent, "model": "bert" }, config);
 
-  return data.data;
+    return data.data;
 }

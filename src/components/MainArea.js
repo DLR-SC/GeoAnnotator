@@ -84,6 +84,7 @@ export default function MainArea() {
                                     <TextContent
                                         textContent ={textContent }
                                         geolocations={geolocations}
+                                        setGeolocations={setGeolocations}
                                     />
                                 }
                             />

@@ -1,8 +1,8 @@
 import './Dialog.css';
 import React, { useEffect, useState } from 'react';
-import { useSession } from '../../SessionProvider';
-import { SaveButton } from '../../customComponents';
-import DialogMapping from '../../Mapping/DialogMapping';
+import { useSession } from '../SessionProvider';
+import { SaveButton } from '../customComponents';
+import DialogMapping from '../Mapping/DialogMapping';
 import OptionalPositionsDialog from './OptionalCoordinatesDialog';
 import { DialogContentArea, getOptionalCoordinates } from './DialogFunctions';
 import { 
