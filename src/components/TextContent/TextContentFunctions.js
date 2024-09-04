@@ -56,7 +56,8 @@ export async function geoparseTextContent(textContent, model) {
             baseURL: 'http://localhost:8000/api',
             headers: {
             'Content-Type': 'application/json'
-            }
+            },
+            timeout: 60000
         },
         data = await axios.post(`/geoparse`, { "text": textContent, "model": "bert" }, config);
 

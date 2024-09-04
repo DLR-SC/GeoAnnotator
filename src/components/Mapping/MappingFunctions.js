@@ -50,3 +50,18 @@ export const FocusOnSelectedMarker = () => {
 
   return null;
 }
+
+/**
+ * Focus on selected marker in georeference dialog
+ */
+export const FocusOnSelectedIconMarker = () => {
+  const 
+    map = useMap(),
+    session = useSession(), georeferencePosition = session.sessionData?.georeferencePosition;
+
+  useEffect(() => {
+    if(georeferencePosition) map.setView(georeferencePosition, 8);
+  }, [georeferencePosition, map]);
+
+  return null;
+}

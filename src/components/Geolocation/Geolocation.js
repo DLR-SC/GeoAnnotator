@@ -15,7 +15,7 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => setSessionData({ ...sessionData, disableSaveChangesButton: true }), [sessionData?.fileData])
     
-    // When a new location is added, deleted or edited, enable save changes button
+    // Enable save changes button when changes are made to the geolocations list
     useEffect(() => setDisabledButton(sessionData?.disableSaveChangesButton), [sessionData?.disableSaveChangesButton])
 
     return (
@@ -39,7 +39,10 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
             <SaveButton
                 variant='contained'
                 disabled={disabledButton}
-                onClick={handleSaveButtonClick}
+                onClick={() => {
+                    handleSaveButtonClick();
+                    setDisabledButton(true);
+                }}
             >
                 Save changes
             </SaveButton>

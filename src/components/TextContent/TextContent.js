@@ -14,15 +14,15 @@ export function TextContent({ textContent, geolocations, setGeolocations }) {
     const 
         // eslint-disable-next-line no-unused-vars
         refSelectableGroup = useRef(null),
-
+        // Open-States for dialogs
         [openLocationDialog, setOpenLocationDialog] = useState(false),
         [openGeoparseDialog, setOpenGeoparseDialog] = useState(false),
-
+        // Selected entities in text content
         [selectedItems, setSelectedItems] = useState([]),
-
+        // Disable 'Add location' and 'Geoparse' button
         [disableButton, setDisableButton] = useState(true),
         [disableGeoparseButton, setDisableGeoparseButton] = useState(false),
-
+        // The georeferences from the geoparsed text content and the new geolocation
         [detectedGeoreferences, setDetectedGeoreferences] = useState(),
         [geolocation, setGeolocation] = useState({ name: undefined, position: [] }),
 
@@ -102,11 +102,11 @@ export function TextContent({ textContent, geolocations, setGeolocations }) {
                             setDisableGeoparseButton(true);
                             geoparseTextContent(textContent)
                                 .then(data => {
-                                    console.log(data);
                                     setDetectedGeoreferences(data);
                                     setOpenGeoparseDialog(true);
                                 })
                                 .catch(error => {
+                                    setDisableGeoparseButton(false);
                                     alert(error)
                                 })
                         }}
@@ -149,7 +149,10 @@ export function TextContent({ textContent, geolocations, setGeolocations }) {
                 dialogProps={{
                     title: 'Detected Georeferences',
                     open: openGeoparseDialog,
-                    onClose: setOpenGeoparseDialog
+                    onClose: () => {
+                        setDetectedGeoreferences(null);
+                        setOpenGeoparseDialog(false);
+                    }
                 }}         
             />               
         </Box>

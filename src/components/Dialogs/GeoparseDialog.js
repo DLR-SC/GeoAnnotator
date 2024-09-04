@@ -11,7 +11,9 @@ import {
     ListItem, 
     ListItemText, 
     ListItemIcon, 
-    Typography, 
+    Typography,
+    Grid,
+    Checkbox, 
 } from '@mui/material';
 import { PlaceTwoTone } from "@mui/icons-material";
 
@@ -27,13 +29,10 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
   const
     // Access to global data
     { sessionData, setSessionData } = useSession(),
-    // Placename of current toponym
-    [placename, setPlacename] = useState(),
-    // Coordinate, which is chosen in secondary dialog
-    [coordinate, setCoordinate] = useState(),
+    [disableSaveButton, setDisableSaveButton] = useState(true),
     // Reset properties, when dialog is closed
     resetProps = () => {
-      dialogProps.onClose(false)
+      dialogProps.onClose()
     };
 
   return (
@@ -55,7 +54,9 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
                     flexDirection: 'column', 
                     justifyContent: 'space-between',
                     maxHeight: '10rem',
-                    overflowY: 'auto'
+                    overflowY: 'auto',
+                    border: '4px solid #2587be',
+                    borderRadius: '0.5rem'
                 }}
             >
             {
@@ -67,10 +68,13 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
                             justifyContent: 'space-between'
                         }}
                     >
-                        <ListItemIcon children={<PlaceTwoTone />}/>
+                        <ListItemIcon 
+                          children={<PlaceTwoTone sx={{ color: '#2587be', '&:hover': { cursor: 'pointer' } }} />}
+                          onClick={() => setSessionData({ ...sessionData, georeferencePosition: georeference.position })}
+                        />
                         <ListItemText 
                             primary={
-                                (georeference.name       ? `${georeference.name   }, `  : '')
+                                (georeference.name ? `${georeference.name}, `  : '')
                                 +
                                 `(${georeference.position})`
                             }
@@ -79,7 +83,6 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
                 ))
             }
             </List>
-            
 
             {/* Mapping  */}
             <ListItem disablePadding sx={{ mt: 1 }}>
@@ -92,18 +95,37 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
 
             {/* Save Button */}
             <ListItem disablePadding sx={{ mt: 2, display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
-              <SaveButton
-                variant='contained'
-                // disabled={disableButton}
-                // onClick={() => {
-                  
-                // }}
+              <Grid 
+                container
+                spacing={1}
+                columns={12}
+                wrap='nowrap'
+                sx={{
+                  padding: 2
+                }}
               >
-                Save georeferences
-              </SaveButton>
-              <Typography paragraph={true}>
-                Attention: The existing georeferences will be overwritten!
-              </Typography> 
+
+                <Grid item xs={10}>
+                  <Typography paragraph={true}>
+                    Attention: The existing georeferences will be overwritten!
+                  </Typography> 
+                </Grid>
+
+                <Grid item xs={2}>
+                  <SaveButton
+                    variant='contained'
+                    disabled={disableSaveButton}
+                    onClick={() => {
+                      setSessionData({ ...sessionData, disableSaveChangesButton: false })
+                      setGeolocations(georeferences);
+                      resetProps();
+                    }}
+                  >
+                    Save
+                  </SaveButton>
+                </Grid>
+
+              </Grid>
             </ListItem>
           </>
         }
