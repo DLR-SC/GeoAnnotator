@@ -13,14 +13,13 @@ import {
     ListItemIcon, 
     Typography,
     Grid,
-    Checkbox, 
 } from '@mui/material';
 import { PlaceTwoTone } from "@mui/icons-material";
 
 /**
  * Dialog for editing location
  * @param {Object} param
- * @param {{ name: string, position: float[] }[]} param.geolocations
+ * @param {{ name: string, position: float[] }[]} param.georeferences
  * @param {React.Dispatch<any>} param.setGeolocations
  * @param {{ open: Boolean, onClose: Function }} dialogProps
  * @returns {React.JSX.Element}
@@ -29,7 +28,6 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
   const
     // Access to global data
     { sessionData, setSessionData } = useSession(),
-    [disableSaveButton, setDisableSaveButton] = useState(true),
     // Reset properties, when dialog is closed
     resetProps = () => {
       dialogProps.onClose()
@@ -97,7 +95,7 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
             <ListItem disablePadding sx={{ mt: 2, display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
               <Grid 
                 container
-                spacing={1}
+                spacing={3}
                 columns={12}
                 wrap='nowrap'
                 sx={{
@@ -107,14 +105,13 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
 
                 <Grid item xs={10}>
                   <Typography paragraph={true}>
-                    Attention: The existing georeferences will be overwritten!
+                    The existing georeferences will be overwritten!
                   </Typography> 
                 </Grid>
 
                 <Grid item xs={2}>
                   <SaveButton
                     variant='contained'
-                    disabled={disableSaveButton}
                     onClick={() => {
                       setSessionData({ ...sessionData, disableSaveChangesButton: false })
                       setGeolocations(georeferences);

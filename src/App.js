@@ -2,8 +2,10 @@ import './App.css';
 import L from 'leaflet';
 import { Toolbar } from '@mui/material';
 import MainArea from './components/MainArea';
-import DrawerAppBar from './components/AppBar';
+import HeaderArea from './components/HeaderArea';
+import Provider from './components/Provider/Provider';
 import { SessionProvider } from './components/SessionProvider';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Set correct URLs for default Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;  // Remove old icon paths
@@ -20,9 +22,16 @@ function App() {
     <SessionProvider
       children={
         <>
-          <DrawerAppBar />
-          <Toolbar />
-          <MainArea />
+          <Router>
+            {/* AppBar */}
+            <HeaderArea />
+            <Toolbar />
+            {/* Pages */}
+            <Routes>
+              <Route path='/' element={<MainArea />} />
+              <Route path='/provider' element={<Provider />} />
+            </Routes>
+          </Router>  
         </>
       }
     />
