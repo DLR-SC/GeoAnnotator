@@ -1,5 +1,5 @@
 import './Dialog.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
 import { DialogContentArea, getOpenAIModels } from './DialogFunctions';
@@ -11,9 +11,15 @@ import {
   MenuItem,
   TextField,
   Button,
-  Box
+  Box,
+  CircularProgress
 } from '@mui/material';
-import { AccountBalance, VpnKey, Computer, ExpandMore, Refresh, AddCircle } from '@mui/icons-material';
+import { 
+  VpnKey, 
+  Computer, 
+  Refresh, 
+  AddCircle 
+} from '@mui/icons-material';
 
 /**
  * Dialog for adding or editing providers
@@ -25,10 +31,17 @@ export default function ProviderDialog({ dialogProps }) {
     { sessionData, setSessionData } = useSession(),
 
     [selectedOption, setSelectedOption] = useState(''),
+
     [apiKey, setApiKey] = useState(''),
+    [isApiKeyValid, setIsApiKeyValid] = useState(true),
+
     [hostserver, setHostserver] = useState(''),
+    [isURLValid, setIsURLValid] = useState(true),
+
     [model, setModel] = useState(),
     [models, setModels] = useState(),
+    [loading, setLoading] = useState(false),
+
     [instanceName, setInstanceName] = useState(),
     
     options = [ 
@@ -60,8 +73,8 @@ export default function ProviderDialog({ dialogProps }) {
         backdropIntensity={0.4}
         children={
           <>
+            {/* Auswahl einer Option */}
             <ListItem>
-                {/* Auswahl einer Option */}
                 <FormControl fullWidth margin="normal">
                     <InputLabel id="option-select-label">Option</InputLabel>
                     <Select
@@ -85,26 +98,41 @@ export default function ProviderDialog({ dialogProps }) {
                 </FormControl>
             </ListItem>
 
+            {/* API Key  */}
             <ListItem>
               <TextField
-                fullWidth
-                margin="normal"
+                disabled={selectedOption !== 'openai'}
+                required={selectedOption === 'openai'}
+                error={!isApiKeyValid}
                 label="API Key"
                 defaultValue={apiKey}
-                disabled={selectedOption !== 'openai'}
                 onBlur={event => setApiKey(event.target.value)}
+                fullWidth
+                margin="normal"
                 InputProps={{
                   startAdornment: <VpnKey style={{ marginRight: 8 }} />,
                 }}
               />
             </ListItem>
 
+            {/* Hostserver */}
             <ListItem>
               <TextField
                 disabled={selectedOption !== 'selfhosted'}
-                label="Hostname"
+                required={selectedOption === 'selfhosted'}
+                error={!isURLValid}
+                label="Hostserver-URL"
                 defaultValue={hostserver}
-                onChange={event => setHostserver(event.target.value)}
+                onBlur={event => {
+                  let url = event.target.value
+                  try {
+                    new URL(url);
+                    setIsURLValid(true);
+                  } catch(_) {
+                    setIsURLValid(false);
+                  }
+                  setHostserver(url);
+                }}
                 fullWidth
                 margin="normal"
                 InputProps={{
@@ -113,6 +141,7 @@ export default function ProviderDialog({ dialogProps }) {
               />
             </ListItem>
 
+            {/* Choosing a model when OpenAI is chosen */}
             <ListItem>
               <Box 
                 sx={{ 
@@ -125,18 +154,35 @@ export default function ProviderDialog({ dialogProps }) {
                 <Button 
                   disabled={apiKey.length === 0}
                   variant="contained" 
-                  startIcon={<Refresh />}
-                  sx={{ mr: 2 }}
-                  onClick={() => 
-                    getOpenAIModels(apiKey)
-                      .then(data => {
-                        console.log(data)
-                        setModels(data)
-                      })
-                      .catch(error => alert(error))
+                  startIcon={
+                    loading ? (
+                    <CircularProgress
+                      size={24}
+                      style={{
+                        color: 'white',
+                        position: 'relative',
+                        top: '50%',
+                        left: '50%',
+                        marginTop: -12,
+                        marginLeft: -12,
+                      }}
+                    />) : <Refresh />
                   }
+                  sx={{ mr: 2, height: 40 }}
+                  onClick={async () => {
+                    setLoading(true); 
+                    try {
+                      setModels(await getOpenAIModels(apiKey));
+                      setIsApiKeyValid(true);
+                    } catch (error) {
+                      setIsApiKeyValid(false);
+                      alert(error.response.data.error.message);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
                 >
-                  Load
+                  {!loading ? 'Load' : null}
                 </Button>
                 <FormControl fullWidth margin="normal">
                   <InputLabel id='model-select-label'>Model</InputLabel>
@@ -159,8 +205,10 @@ export default function ProviderDialog({ dialogProps }) {
               </Box>
             </ListItem>
 
+            {/* Instance name for provider */}
             <ListItem>
               <TextField
+                required
                 fullWidth
                 label="Instance Name"
                 defaultValue={instanceName}
@@ -171,19 +219,24 @@ export default function ProviderDialog({ dialogProps }) {
                 }}
               />
             </ListItem>
+
+            {/* Add button to save provider */}
             <ListItem>
-              <SaveButton>
+              <SaveButton
+                variant='contained'
+                disabled={
+                  (
+                    selectedOption === 'openai' ? apiKey.length === 0 || model.length === 0
+                  : selectedOption === 'selfhosted' ? hostserver.length === 0 || !isURLValid
+                  : true
+                  ) 
+                  || instanceName.length === 0
+                }
+                onClick={() => null}
+              >
                 Add
               </SaveButton>
             </ListItem>
-          </>
-        }
-        dialogActions={
-          <>
-          
-          <Button onClick={() => null} color="primary" variant="contained">
-            Add
-          </Button>
           </>
         }
       />
