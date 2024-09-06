@@ -1,8 +1,8 @@
 import './Dialog.css';
-import React, { useEffect, useState } from 'react';
-import { useSession } from '../SessionProvider';
+import React, { useState } from 'react';
+// import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
-import { DialogContentArea, getOpenAIModels } from './DialogFunctions';
+import { DialogContentArea, getOpenAIModels, saveProviderData } from './DialogFunctions';
 import { 
   ListItem, 
   InputLabel,
@@ -28,7 +28,7 @@ import {
 export default function ProviderDialog({ dialogProps }) {
   const
     // Access to global data
-    { sessionData, setSessionData } = useSession(),
+    // { sessionData, setSessionData } = useSession(),
 
     [selectedOption, setSelectedOption] = useState(''),
 
@@ -232,7 +232,20 @@ export default function ProviderDialog({ dialogProps }) {
                   ) 
                   || instanceName.length === 0
                 }
-                onClick={() => null}
+                onClick={() => 
+                  saveProviderData(
+                    {
+                      'option': selectedOption,
+                      'instance_name': instanceName,
+                      'data': selectedOption === 'openai' ? {
+                        'api_key': apiKey,
+                        'model': model
+                      } : { 'hostserver_url': hostserver }
+                    }
+                  )
+                    .then(data => resetProps())
+                    .catch(error => alert(error.response.data.detail))
+                }
               >
                 Add
               </SaveButton>

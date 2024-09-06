@@ -108,3 +108,20 @@ export async function getOpenAIModels(apiKey) {
 
     return response.data.data;
 }
+
+/**
+ * Save provider data
+ */
+export async function saveProviderData(data) {
+  let 
+    config = {
+      baseURL: 'http://localhost:8000/api',
+      headers: {
+        'Content-Type': 'application/json'
+        },
+      timeout: 60000
+    },
+    response = await axios.post('/provider/save', data, config);
+
+  return response.data.data;
+}
