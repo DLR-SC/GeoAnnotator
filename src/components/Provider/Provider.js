@@ -22,9 +22,9 @@ export default function Provider() {
     { sessionData, setSessionData } = useSession(),
     [selectedLLM, setSelectedLLM] = useState(),
     llmOptions = [
-        { value: 'gpt-4o-mini', label: 'gpt-4o-mini' },
-        { value: 'llama-3.1-8B', label: 'LLaMA 3.1 8B' },
-        { value: 'self-hosted', label: 'Self-hosted' }
+        // { value: 'gpt-4o-mini', label: 'gpt-4o-mini' },
+        // { value: 'llama-3.1-8B', label: 'LLaMA 3.1 8B' },
+        // { value: 'self-hosted', label: 'Self-hosted' }
       ];
 
   return (

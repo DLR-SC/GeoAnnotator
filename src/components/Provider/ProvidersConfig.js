@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ProviderDialog from '../Dialogs/ProviderDialog';
 import {
   Accordion,
   AccordionSummary,
@@ -14,16 +15,18 @@ import {
   Paper,
   IconButton,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function ProvidersConfig() {
   // Beispielhafte Daten (kann später durch dynamische Daten ersetzt werden)
-  const providers = [];
+  const
+    [openProviderDialog, setOpenProviderDialog] = useState(false), 
+    providers = [];
 
   return (
     <Paper elevation={3} style={{ margin: '20px', padding: '20px' }}>
-      <Accordion defaultExpanded>
+      <Accordion /*defaultExpanded*/>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -78,11 +81,19 @@ export default function ProvidersConfig() {
             color="primary"
             startIcon={<AddIcon />}
             style={{ marginTop: '20px' }}
+            onClick={() => setOpenProviderDialog(true)}
           >
             Add Provider
           </Button>
+          <ProviderDialog 
+            dialogProps={{
+              title: 'Add provider',
+              open: openProviderDialog,
+              onClose: setOpenProviderDialog
+            }}
+          />
         </AccordionDetails>
       </Accordion>
     </Paper>
-  );
-};
+  )
+}

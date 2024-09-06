@@ -5,7 +5,8 @@ import {
     DialogContent,
     Paper,
     List,
-    IconButton
+    IconButton,
+    DialogActions
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import PropTypes from 'prop-types';
@@ -23,7 +24,8 @@ export function DialogContentArea(props) {
       onClose, 
       children,
       fullWidth=false,
-      backdropIntensity
+      backdropIntensity,
+      dialogActions
   } = props;
 
   return (
@@ -61,6 +63,9 @@ export function DialogContentArea(props) {
             children={children}
           />
       </DialogContent>
+      <DialogActions>
+        {dialogActions}
+      </DialogActions>
     </Dialog>
   );
 }
@@ -86,4 +91,20 @@ export async function getOptionalCoordinates(placename) {
     data = await axios.get(`/geolocations?placename=${placename}`, config);
 
   return data.data;
+}
+
+/**
+ * Load the models of OpenAI
+ */
+export async function getOpenAIModels(apiKey) {
+  let 
+    config = {
+      baseURL: 'https://api.openai.com/v1',
+      headers: {
+        Authorization: `Bearer ${apiKey}`
+      }
+    },
+    response = await axios.get('/models', config);
+
+    return response.data.data;
 }
