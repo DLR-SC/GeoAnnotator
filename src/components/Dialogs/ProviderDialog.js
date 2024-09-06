@@ -20,6 +20,7 @@ import {
   Refresh, 
   AddCircle 
 } from '@mui/icons-material';
+import { loadProviders } from '../Provider/ProviderFunctions';
 
 /**
  * Dialog for adding or editing providers
@@ -59,8 +60,8 @@ export default function ProviderDialog({ dialogProps }) {
     // Reset properties, when dialog is closed
     resetProps = () => {
       setSelectedOption('');
-      resetStates('');
-      dialogProps.onClose(false);
+      resetStates();
+      dialogProps.onClose();
     };
 
   return (

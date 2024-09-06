@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession } from '../SessionProvider';
 import { 
     List, 
@@ -12,6 +12,7 @@ import {
     Typography
 } from '@mui/material';
 import ProvidersConfig from './ProvidersConfig';
+import { loadProviders } from './ProviderFunctions';
 
 /**
  * Provider to manage LLMs
@@ -20,12 +21,13 @@ export default function Provider() {
   const
     // Access to global data
     { sessionData, setSessionData } = useSession(),
-    [selectedLLM, setSelectedLLM] = useState(),
-    llmOptions = [
-        // { value: 'gpt-4o-mini', label: 'gpt-4o-mini' },
-        // { value: 'llama-3.1-8B', label: 'LLaMA 3.1 8B' },
-        // { value: 'self-hosted', label: 'Self-hosted' }
-      ];
+    [providers, setProviders] = useState();
+
+    useEffect(() => {
+        loadProviders()
+            .then(data => setProviders(data))
+            .catch(error => alert(error))
+    }, [])  
 
   return (
     <Grid 
@@ -36,7 +38,10 @@ export default function Provider() {
         }}
     >
         <Grid item>
-            <ProvidersConfig />
+            <ProvidersConfig 
+                providers={providers}
+                setProviders={setProviders}
+            />
         </Grid>
         <Grid item>
             <Paper elevation={3} style={{ margin: '20px', padding: '20px' }}>
@@ -47,18 +52,18 @@ export default function Provider() {
                     <ListItem>
                         {/* Auswahl des LLMs */}
                         <FormControl fullWidth margin="normal">
-                            <InputLabel id="llm-select-label">Wähle einen Provider</InputLabel>
+                            <InputLabel id="provider-select-label">Provider</InputLabel>
                             <Select
-                                labelId="llm-select-label"
-                                label="LLM"
-                                value={selectedLLM}
-                                onChange={(event) => setSelectedLLM(event.target.value)}
+                                label="Provider"
+                                labelId="provider-select-label"
+                                value={sessionData?.provider.instance_name}
+                                onChange={(event) => setSessionData({ ...sessionData, provider: event.target.value })}
                                 fullWidth
                             >
                                 {
-                                    llmOptions.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
+                                    providers?.map((provider) => (
+                                        <MenuItem key={provider.instance_name} value={{provider: provider}}>
+                                            {provider.instance_name}
                                         </MenuItem>
                                     ))
                                 }
