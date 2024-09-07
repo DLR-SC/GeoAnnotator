@@ -10,31 +10,29 @@ import { addFileWithoutDupe } from '../../utils/utilFunctions'
 import { convertFileToJSONArray } from '../../utils/jsonFunctions'
 import { ExtractEntries, downloadFile, downloadFiles } from './FileExplorerFunctions'
 
-export default function FileExplorer({ handleFileItemClick }) {
-    const 
+export default function FileExplorer({ dataProps, handleFileItemClick }) {
+    const
+        { fileDataset, setFileDataset } = dataProps,
         { sessionData, setSessionData } = useSession(),
         [anchorEl, setAnchorEl] = useState(null),
         [disabledSaveButton, setDisabledSaveButton] = useState(true),
         [fileData, setFileData] = useState(),
-        [fileDataset, setFileDataset] = useState([]),
         handleMenuClick = (event, object, index) => {
             setAnchorEl(event.currentTarget);
             setFileData({ ...object, key: index });
         };
 
     // Apply changes to the corresponding files
-    useEffect(
-        () => {
-            const newFileData = sessionData?.newFileData;
-            if(newFileData) {
-                // Overwrite location attribute in corresponding file in the dataset
-                fileDataset[newFileData.key] = { ...fileDataset[newFileData.key], locations: newFileData.locations };
-                setSessionData({ ...sessionData, changedFiles : sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.key) : [newFileData.key]});
-            }
-        }, 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [sessionData?.newFileData]
-    )
+    useEffect(() => {
+        const newFileData = sessionData?.newFileData;
+        if(newFileData) {
+            // Overwrite location attribute in corresponding file in the dataset
+            fileDataset[newFileData.key] = { ...fileDataset[newFileData.key], locations: newFileData.locations };
+            setSessionData({ ...sessionData, changedFiles : sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.key) : [newFileData.key]});
+        }
+    }, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sessionData?.newFileData])
 
     // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
     useEffect(() => { 

@@ -10,22 +10,13 @@ import {
 import { useSession } from '../SessionProvider';
 
 /**
- * Extract the respective JSONObjects from the JSON-file and
- * construct a List out of it
+ * Extract the respective JSONObjects from the JSON-file and construct a List out of it
  * @param {JSON[]} data
  * @param {Function} handleClick
  * @returns {React.JSX.Element[]}
  */
 export function ExtractEntries({data, handleClick, handleMenuClick}) {
-    const
-        { sessionData } = useSession(),
-        // State to track the selected index
-        [selectedIndex, setSelectedIndex] = useState(null),
-        // Handler to set selected index
-        handleListItemClick = (object, index) => {
-            setSelectedIndex(index);    
-            handleClick(object, index);
-        };
+    const { sessionData } = useSession();
 
     return (
         data.map((object, index) => {
@@ -37,7 +28,7 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
                     sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        bgcolor: selectedIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
+                        bgcolor: sessionData?.fileIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
                     }}
                 >
                     <ListItemIcon 
@@ -47,7 +38,7 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
                         }}
                         children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
                     />
-                    <ListItemButton onClick={() => handleListItemClick(object, index)}>
+                    <ListItemButton onClick={() => handleClick(object, index)}>
                         {`file_${index}.json`}
                     </ListItemButton>
                     {/* Menu of json file */}

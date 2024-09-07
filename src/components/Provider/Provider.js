@@ -12,22 +12,14 @@ import {
     Typography
 } from '@mui/material';
 import ProvidersConfig from './ProvidersConfig';
-import { loadProviders } from './ProviderFunctions';
 
 /**
  * Provider to manage LLMs
  */
-export default function Provider() {
-  const
-    // Access to global data
-    { sessionData, setSessionData } = useSession(),
-    [providers, setProviders] = useState();
-
-    useEffect(() => {
-        loadProviders()
-            .then(data => setProviders(data))
-            .catch(error => alert(error))
-    }, [])  
+export default function Provider({ dataProps }) {
+  const 
+    { providers, setProviders } = dataProps,
+    { sessionData, setSessionData } = useSession();
 
   return (
     <Grid 
@@ -56,7 +48,7 @@ export default function Provider() {
                             <Select
                                 label="Provider"
                                 labelId="provider-select-label"
-                                value={sessionData?.provider.instance_name}
+                                value={sessionData?.provider?.instance_name}
                                 onChange={(event) => setSessionData({ ...sessionData, provider: event.target.value })}
                                 fullWidth
                             >

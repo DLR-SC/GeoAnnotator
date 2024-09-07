@@ -6,6 +6,7 @@ import {
   AccordionDetails,
   Typography,
   Button,
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -18,6 +19,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { loadProviders } from './ProviderFunctions';
+import { Refresh } from '@mui/icons-material';
 
 export default function ProvidersConfig({ providers, setProviders }) {
   const [openProviderDialog, setOpenProviderDialog] = useState(false);
@@ -35,10 +37,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography variant="h5" gutterBottom>
-            Configured Providers
-          </Typography>
-          <TableContainer component={Paper}>
+          <TableContainer >
             <Table>
               <TableHead>
                 <TableRow>
@@ -51,39 +50,60 @@ export default function ProvidersConfig({ providers, setProviders }) {
               </TableHead>
               <TableBody>
                 {
-                  providers === undefined ? (
-                    <TableRow>
-                      <TableCell colSpan={5} align="center">
-                        No providers configured yet.
-                      </TableCell>
-                    </TableRow>
-                  ) : (
+                  providers ? (
                     providers?.map((provider, index) => (
                       <TableRow key={index + 1}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{provider.instance_name}</TableCell>
-                        <TableCell>{provider.option}</TableCell>
-                        <TableCell>{provider.data.model}</TableCell>
+                        <TableCell>{provider?.instance_name}</TableCell>
+                        <TableCell>{provider?.option}</TableCell>
+                        <TableCell>{provider?.data.model}</TableCell>
                         <TableCell>
                           <IconButton color="primary">✏️</IconButton>
                           <IconButton color="secondary">🗑️</IconButton>
                         </TableCell>
                       </TableRow>
                     ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} align="center">
+                        No providers configured yet.
+                      </TableCell>
+                    </TableRow>
                   )
                 }
               </TableBody>
             </Table>
           </TableContainer>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            style={{ marginTop: '20px' }}
-            onClick={() => setOpenProviderDialog(true)}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
           >
-            Add Provider
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              style={{ marginTop: '20px' }}
+              onClick={() => setOpenProviderDialog(true)}
+            >
+              Add Provider
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<Refresh />}
+              style={{ marginTop: '20px' }}
+              onClick={() => 
+                loadProviders()
+                  .then(data => setProviders(data))
+                  .catch(error => alert(error))
+              }
+            >
+              Load Provider
+            </Button>
+          </Box>
           <ProviderDialog 
             dialogProps={{
               title: 'Add provider',

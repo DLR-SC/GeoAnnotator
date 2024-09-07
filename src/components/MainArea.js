@@ -3,32 +3,22 @@
 import Mapping from './Mapping/Mapping';
 import { Box, Grid } from '@mui/material';
 import { Item } from './customComponents';
-import { useEffect, useState } from 'react';
 import { useSession } from './SessionProvider';
 import Geolocation from './Geolocation/Geolocation';
 import FileExplorer from './FileExplorer/FileExplorer';
 import { TextContent } from './TextContent/TextContent';
 import { restructureLocationAttribute, structureLocationAttribute } from '../utils/jsonFunctions';
+import { useEffect } from 'react';
 
-export default function MainArea() {
+export default function MainArea({ dataProps }) {
     const 
-        // eslint-disable-next-line no-unused-vars
-        { sessionData, setSessionData } = useSession(),
-        // Data from json-file
-        [currentData, setCurrentData] = useState(),
-        // TextContent of currentData
-        [textContent, setTextContent] = useState(),
-        // Geolocations of currentData
-        [geolocations, setGeolocations] = useState();
-
-    /**  
-     * When a new json-file is chosen, set the value and rerender MainArea
-     * FIXME: Attributes "text" and "locations" may vary due to the reason, that it depends on the imported json-file
-     */
-    useEffect(() => {
-        setTextContent(currentData?.text);
-        setGeolocations(structureLocationAttribute(currentData?.locations));
-    }, [currentData]);
+        {
+            fileDataset, setFileDataset,
+            currentData, setCurrentData,
+            textContent, setTextContent,
+            geolocations, setGeolocations
+        } = dataProps,
+        { sessionData, setSessionData } = useSession();
     
     // When the attribute "updatedGeolocations" changes (e.g. Deletion of a location), the MainArea should be rerendered
     useEffect(() => {if(sessionData?.updatedGeolocations) setGeolocations(sessionData?.updatedGeolocations)}, [sessionData?.updatedGeolocations]);
@@ -59,6 +49,10 @@ export default function MainArea() {
                                 handleFileItemClick={(jsonData, key) => {
                                     setCurrentData(jsonData);
                                     setSessionData({ ...sessionData, fileData: jsonData, fileIndex: key });
+                                }}
+                                dataProps={{
+                                    fileDataset: fileDataset,
+                                    setFileDataset: setFileDataset
                                 }}
                             />
                         }
