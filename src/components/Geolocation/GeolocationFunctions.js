@@ -93,7 +93,7 @@ export function GeolocationItems({ data }) {
                         setSessionData({ 
                             ...sessionData, 
                             updatedGeolocations: geolocations.filter(geo => geo.name !== geolocation.name),
-                            disableSaveChangesButton: false
+                            disableSaveGeolocationChangesButton: false
                         });
                     }}
                 >

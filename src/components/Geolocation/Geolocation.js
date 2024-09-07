@@ -12,12 +12,8 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
         [disabledButton, setDisabledButton] = useState(true);
 
     // When a new json-file is chosen, disable the save changes button
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => setSessionData({ ...sessionData, disableSaveChangesButton: true }), [sessionData?.fileData])
+    useEffect(() => setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: true }), [sessionData?.fileData])
     
-    // Enable save changes button when changes are made to the geolocations list
-    useEffect(() => setDisabledButton(sessionData?.disableSaveChangesButton), [sessionData?.disableSaveChangesButton])
-
     return (
         <>
             <List
@@ -38,11 +34,8 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
             />
             <SaveButton
                 variant='contained'
-                disabled={disabledButton}
-                onClick={() => {
-                    handleSaveButtonClick();
-                    setDisabledButton(true);
-                }}
+                disabled={sessionData?.disableSaveGeolocationChangesButton}
+                onClick={() => handleSaveButtonClick()}
             >
                 Save changes
             </SaveButton>

@@ -106,7 +106,11 @@ export default function MainArea({ dataProps }) {
                             <Geolocation
                                 geolocations={geolocations}
                                 handleSaveButtonClick={() => {
-                                    setSessionData({...sessionData, newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), key: sessionData?.fileIndex }})
+                                    setSessionData({
+                                        ...sessionData, 
+                                        newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), key: sessionData?.fileIndex },
+                                        disableSaveGeolocationChangesButton: true                                        
+                                    })
                                 }}
                             />
                         }
