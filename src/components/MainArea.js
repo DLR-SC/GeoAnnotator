@@ -13,14 +13,15 @@ import { useEffect } from 'react';
 export default function MainArea({ dataProps }) {
     const 
         {
-            fileDataset, setFileDataset,
-            currentData, setCurrentData,
-            textContent, setTextContent,
-            geolocations, setGeolocations
+            provider,
+            fileDataset,        setFileDataset,
+            /*currentData,*/    setCurrentData,
+            textContent,        /*setTextContent,*/
+            geolocations,       setGeolocations
         } = dataProps,
         { sessionData, setSessionData } = useSession();
     
-    // When the attribute "updatedGeolocations" changes (e.g. Deletion of a location), the MainArea should be rerendered
+    // Rerender Geolocation list, when changes are made
     useEffect(() => {if(sessionData?.updatedGeolocations) setGeolocations(sessionData?.updatedGeolocations)}, [sessionData?.updatedGeolocations]);
 
     return (
@@ -51,7 +52,7 @@ export default function MainArea({ dataProps }) {
                                     setSessionData({ ...sessionData, fileData: jsonData, fileIndex: key });
                                 }}
                                 dataProps={{
-                                    fileDataset: fileDataset,
+                                    fileDataset:    fileDataset,
                                     setFileDataset: setFileDataset
                                 }}
                             />
@@ -76,9 +77,10 @@ export default function MainArea({ dataProps }) {
                             <Item
                                 children={
                                     <TextContent
-                                        textContent ={textContent }
-                                        geolocations={geolocations}
-                                        setGeolocations={setGeolocations}
+                                        provider        ={provider      }
+                                        textContent     ={textContent   }
+                                        geolocations    ={geolocations  }
+                                        setGeolocations ={setGeolocations}
                                     />
                                 }
                             />
@@ -105,13 +107,13 @@ export default function MainArea({ dataProps }) {
                         children={
                             <Geolocation
                                 geolocations={geolocations}
-                                handleSaveButtonClick={() => {
+                                handleSaveButtonClick={() => 
                                     setSessionData({
                                         ...sessionData, 
                                         newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), key: sessionData?.fileIndex },
                                         disableSaveGeolocationChangesButton: true                                        
                                     })
-                                }}
+                                }
                             />
                         }
                     />

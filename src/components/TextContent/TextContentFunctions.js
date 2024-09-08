@@ -47,19 +47,32 @@ function getPlacenamesOfGeolocations(geolocations) {
 
 /**
  * Geoparse given textcontent
+ * @param {{ 
+ *  option: "openai" | "selfhosted", 
+ *  instance_name: string, 
+ *  data: { 
+ *      apiKey?: string, 
+ *      model?: string, 
+ *      hostserver_url?: string 
+ *  } 
+ * }} provider
  * @param {string} textContent
  * @param {string} model
  */
-export async function geoparseTextContent(textContent, model) {
+export async function geoparseTextContent(provider, textContent) {
     let 
         config = {
             baseURL: 'http://localhost:8000/api',
             headers: {
             'Content-Type': 'application/json'
             },
-            timeout: 60000
+            timeout: 60_000
         },
-        data = await axios.post(`/geoparse`, { "text": textContent, "model": "bert" }, config);
+        data = await axios.post(
+            `/geoparse`, 
+            { "text": textContent, "provider": provider }, 
+            config
+        );
 
     return data.data;
 }

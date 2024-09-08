@@ -10,7 +10,7 @@ import LocationDialog from '../Dialogs/LocationDialog'
 import GeoparseDialog from '../Dialogs/GeoparseDialog'
 import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 
-export function TextContent({ textContent, geolocations, setGeolocations }) {
+export function TextContent({ provider, textContent, geolocations, setGeolocations }) {
     const 
         // eslint-disable-next-line no-unused-vars
         refSelectableGroup = useRef(null),
@@ -100,14 +100,14 @@ export function TextContent({ textContent, geolocations, setGeolocations }) {
                         sx={{ fontWeight: 'bold' }}
                         onClick={() => {
                             setDisableGeoparseButton(true);
-                            geoparseTextContent(textContent)
+                            geoparseTextContent(provider, textContent)
                                 .then(data => {
                                     setDetectedGeoreferences(data);
                                     setOpenGeoparseDialog(true);
                                 })
                                 .catch(error => {
                                     setDisableGeoparseButton(false);
-                                    alert(error)
+                                    alert(error?.response.data?.detail)
                                 })
                         }}
                     >

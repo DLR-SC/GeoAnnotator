@@ -1,5 +1,5 @@
 import './Dialogs/Dialog.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -9,13 +9,16 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function HeaderArea() {
   const
-    navigate = useNavigate(),
-    [openProviderDialog, setOpenProviderDialog] = useState(),
-    navItems = [{ label: 'Main', path: '/' }, { label: 'Provider', path: '/provider' }];
+    navigate = useNavigate(), location = useLocation(),
+    navItems = [{ label: 'Main', path: '/main' }, { label: 'Provider', path: '/provider' }],
+    [selectedItem, setSelectedItem] = useState();
+
+  // When the GeoAnnotator is started, check on which page it starts and highlight the path
+  useEffect(() => setSelectedItem(location.pathname), [])
 
   return (
     <Box sx={{ display: 'flex', minWidth: '50rem' }}>
@@ -37,11 +40,23 @@ export default function HeaderArea() {
           </Typography>
           <Divider />
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
+            {
+            navItems.map((item) => (
               <Button 
                 key={item.label} 
-                sx={{ color: '#fff' }}
-                onClick={() => navigate(item.path)}
+                sx={{
+                  m: 1,
+                  color: selectedItem === item.path ? '#2587be' : '#fff', 
+                  backgroundColor: selectedItem === item.path ? '#fff' : '#2587be',
+                  '&:hover': {
+                    backgroundColor: selectedItem === item.path ? 'lightgrey' : 'transparent',
+                  }
+                }}
+                onClick={() => {
+                  navigate(item.path);
+                  setSelectedItem(item.path);
+                }}
+
               >
                 {item.label}
               </Button>

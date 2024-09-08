@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSession } from '../SessionProvider';
 import { 
     List, 
@@ -18,8 +18,10 @@ import ProvidersConfig from './ProvidersConfig';
  */
 export default function Provider({ dataProps }) {
   const 
-    { providers, setProviders } = dataProps,
-    { sessionData, setSessionData } = useSession();
+    { 
+        provider, setProvider,
+        providers, setProviders
+    } = dataProps;
 
   return (
     <Grid 
@@ -48,13 +50,13 @@ export default function Provider({ dataProps }) {
                             <Select
                                 label="Provider"
                                 labelId="provider-select-label"
-                                value={sessionData?.provider?.instance_name}
-                                onChange={(event) => setSessionData({ ...sessionData, provider: event.target.value })}
+                                value={provider?.instance_name}
+                                onChange={(event) => setProvider(providers.find((p) => p.instance_name === event.target.value))}
                                 fullWidth
                             >
                                 {
-                                    providers?.map((provider) => (
-                                        <MenuItem key={provider.instance_name} value={{provider: provider}}>
+                                    providers?.map((provider, index) => (
+                                        <MenuItem key={index} value={provider.instance_name}>
                                             {provider.instance_name}
                                         </MenuItem>
                                     ))

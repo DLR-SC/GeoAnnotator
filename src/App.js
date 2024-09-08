@@ -19,11 +19,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-
-
 function App() {
   const
-    [providers, setProviders] = useState(),
+    [provider, setProvider] = useState(), [providers, setProviders] = useState(),
     // Dataset from uploaded file
     [fileDataset, setFileDataset] = useState([]),
     // Data from json-file
@@ -52,28 +50,31 @@ function App() {
             <Toolbar />
             {/* Pages */}
             <Routes>
-              <Route path='/' element={
+              <Route path='/main' element={
                 <MainArea 
                   dataProps={{
+                    provider: provider,
                     fileDataset, fileDataset,
                     setFileDataset, setFileDataset,
-                    currentData: currentData,
+                    // currentData: currentData,
                     setCurrentData: setCurrentData,
                     textContent: textContent,
-                    setTextContent: setTextContent,
+                    // setTextContent: setTextContent,
                     geolocations: geolocations,
                     setGeolocations: setGeolocations,
                   }}
                 />
-                } />
+              } />
               <Route path='/provider' element={
                 <Provider 
                   dataProps={{
+                    provider: provider,
+                    setProvider: setProvider,
                     providers: providers,
                     setProviders: setProviders
                   }}
                 />
-                } />
+              } />
             </Routes>
           </Router>  
         </>
