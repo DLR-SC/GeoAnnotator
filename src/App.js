@@ -19,8 +19,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-function App() {
+export default function App() {
   const
+    // Provider
     [provider, setProvider] = useState(), [providers, setProviders] = useState(),
     // Dataset from uploaded file
     [fileDataset, setFileDataset] = useState([]),
@@ -32,13 +33,14 @@ function App() {
     [geolocations, setGeolocations] = useState();
   
   /**  
-   * When a new json-file is chosen, set the value and rerender MainArea
+   * Set data when new file is chosen
    * Hint: Attributes "text" and "locations" may vary due
    */
-    useEffect(() => {
-      setTextContent(currentData?.text);
-      setGeolocations(structureLocationAttribute(currentData?.locations));
+  useEffect(() => {
+    setTextContent(currentData?.text);
+    setGeolocations(structureLocationAttribute(currentData?.locations));
   }, [currentData]);
+
 
   return (
     <SessionProvider
@@ -51,20 +53,22 @@ function App() {
             {/* Pages */}
             <Routes>
               <Route path='/main' element={
-                <MainArea 
-                  dataProps={{
-                    provider: provider,
-                    fileDataset, fileDataset,
-                    setFileDataset, setFileDataset,
-                    // currentData: currentData,
-                    setCurrentData: setCurrentData,
-                    textContent: textContent,
-                    // setTextContent: setTextContent,
-                    geolocations: geolocations,
-                    setGeolocations: setGeolocations,
-                  }}
-                />
-              } />
+                  <MainArea 
+                    dataProps={{
+                      provider: provider,
+                      fileDataset: fileDataset,
+                      setFileDataset: setFileDataset,
+                      // currentData: currentData,
+                      setCurrentData: setCurrentData,
+                      textContent: textContent,
+                      // setTextContent: setTextContent,
+                      geolocations: geolocations,
+                      setGeolocations: setGeolocations,
+                    }}
+                  />
+                } 
+                replace
+              />
               <Route path='/provider' element={
                 <Provider 
                   dataProps={{
@@ -82,5 +86,3 @@ function App() {
     />
   );
 }
-
-export default App;

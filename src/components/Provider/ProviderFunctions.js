@@ -13,3 +13,22 @@ export async function loadProviders() {
 
     return response.data;
 }
+
+/**
+ * Delete a specific provider
+ * @param {string} instance_name 
+ */
+export async function deleteProvider(instance_name) {
+    let 
+        config = {
+            baseURL: 'http://localhost:8000/api',
+            params: { instance_name },
+            timeout: 60_000
+        },
+        response = await axios.delete(
+            `/provider/delete`,
+            config
+        );
+
+    return response.data;
+}

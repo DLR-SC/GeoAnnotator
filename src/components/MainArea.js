@@ -7,7 +7,7 @@ import { useSession } from './SessionProvider';
 import Geolocation from './Geolocation/Geolocation';
 import FileExplorer from './FileExplorer/FileExplorer';
 import { TextContent } from './TextContent/TextContent';
-import { restructureLocationAttribute, structureLocationAttribute } from '../utils/jsonFunctions';
+import { restructureLocationAttribute } from '../utils/jsonFunctions';
 import { useEffect } from 'react';
 
 export default function MainArea({ dataProps }) {

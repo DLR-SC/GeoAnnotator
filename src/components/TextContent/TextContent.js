@@ -14,14 +14,18 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
     const 
         // eslint-disable-next-line no-unused-vars
         refSelectableGroup = useRef(null),
+
         // Open-States for dialogs
         [openLocationDialog, setOpenLocationDialog] = useState(false),
         [openGeoparseDialog, setOpenGeoparseDialog] = useState(false),
+
         // Selected entities in text content
         [selectedItems, setSelectedItems] = useState([]),
+
         // Disable 'Add location' and 'Geoparse' button
         [disableButton, setDisableButton] = useState(true),
-        [disableGeoparseButton, setDisableGeoparseButton] = useState(false),
+        [disableGeoparseButton, setDisableGeoparseButton] = useState(),
+
         // The georeferences from the geoparsed text content and the new geolocation
         [detectedGeoreferences, setDetectedGeoreferences] = useState(),
         [geolocation, setGeolocation] = useState({ name: undefined, position: [] }),
@@ -41,6 +45,9 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
         setDisableButton(true);
         setDisableGeoparseButton(false);
     }, [geolocations])
+
+    // Disable GeoparseButton when no provider is selected
+    useEffect(() => setDisableGeoparseButton(provider === undefined), [])
 
     return (
         <Box
@@ -107,7 +114,8 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
                                 })
                                 .catch(error => {
                                     setDisableGeoparseButton(false);
-                                    alert(error?.response.data?.detail)
+                                    console.log(error)
+                                    alert(error?.response?.data?.detail)
                                 })
                         }}
                     >

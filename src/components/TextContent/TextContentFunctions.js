@@ -64,15 +64,15 @@ export async function geoparseTextContent(provider, textContent) {
         config = {
             baseURL: 'http://localhost:8000/api',
             headers: {
-            'Content-Type': 'application/json'
-            },
-            timeout: 60_000
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
         },
-        data = await axios.post(
+        response = await axios.post(
             `/geoparse`, 
             { "text": textContent, "provider": provider }, 
             config
         );
 
-    return data.data;
+    return response.data;
 }

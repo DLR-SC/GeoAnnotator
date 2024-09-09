@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
+import { deleteProvider, loadProviders } from './ProviderFunctions';
 import ProviderDialog from '../Dialogs/ProviderDialog';
 import {
   Accordion,
-  AccordionSummary,
   AccordionDetails,
-  Typography,
-  Button,
+  AccordionSummary,
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Button,
   IconButton,
+  Table,
+  TableRow,
+  TableBody,
+  TableHead,
+  TableCell,
+  Typography,
+  TableContainer,
+  Paper,
 } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { loadProviders } from './ProviderFunctions';
-import { Refresh } from '@mui/icons-material';
 
 export default function ProvidersConfig({ providers, setProviders }) {
-  const [openProviderDialog, setOpenProviderDialog] = useState(false);
-
+  const 
+    [openProviderDialog, setOpenProviderDialog] = useState(false),
+    handleLoadProvider = async () => {
+      try {
+        setProviders(await loadProviders())
+      } catch (e) { alert(e) }
+    };
+      
   return (
     <Paper elevation={3} style={{ margin: '20px', padding: '20px' }}>
       <Accordion defaultExpanded>
@@ -58,8 +64,22 @@ export default function ProvidersConfig({ providers, setProviders }) {
                         <TableCell>{provider?.option}</TableCell>
                         <TableCell>{provider?.data.model}</TableCell>
                         <TableCell>
-                          <IconButton color="primary">✏️</IconButton>
-                          <IconButton color="secondary">🗑️</IconButton>
+                          <IconButton 
+                            color="primary"
+                            // onClick={() => 
+                            //   deleteProvider(provider?.instance_name)
+                            //     .then(async () => await handleLoadProvider())
+                            //     .catch(e => alert(e))
+                            // }
+                          >✏️</IconButton>
+                          <IconButton 
+                            color="secondary"
+                            onClick={() => 
+                              deleteProvider(provider?.instance_name)
+                                .then(async () => await handleLoadProvider())
+                                .catch(e => alert(e.response?.data.detail))
+                            }
+                          >🗑️</IconButton>
                         </TableCell>
                       </TableRow>
                     ))
@@ -95,11 +115,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
               color="secondary"
               startIcon={<Refresh />}
               style={{ marginTop: '20px' }}
-              onClick={() => 
-                loadProviders()
-                  .then(data => setProviders(data))
-                  .catch(error => alert(error))
-              }
+              onClick={handleLoadProvider}
             >
               Load Provider
             </Button>
@@ -112,7 +128,6 @@ export default function ProvidersConfig({ providers, setProviders }) {
                 try {
                   setProviders(await loadProviders());
                 } catch(e) { alert(e) }
-
                 setOpenProviderDialog(false);
               }
             }}

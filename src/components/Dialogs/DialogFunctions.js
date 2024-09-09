@@ -110,6 +110,15 @@ export async function getOpenAIModels(apiKey) {
 }
 
 /**
+ * Load the models of selhosted LLMs
+ */
+export async function getSelfhostedModels(hostserver_url) {
+  let response = await axios.get(`${hostserver_url}/models`);
+
+  return response.data.data;
+}
+
+/**
  * Save provider data
  */
 export async function saveProviderData(data) {

@@ -1,8 +1,7 @@
 import './Dialog.css';
 import React, { useState } from 'react';
-// import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
-import { DialogContentArea, getOpenAIModels, saveProviderData } from './DialogFunctions';
+import { DialogContentArea, getOpenAIModels, getSelfhostedModels, saveProviderData } from './DialogFunctions';
 import { 
   ListItem, 
   InputLabel,
@@ -20,7 +19,6 @@ import {
   Refresh, 
   AddCircle 
 } from '@mui/icons-material';
-import { loadProviders } from '../Provider/ProviderFunctions';
 
 /**
  * Dialog for adding or editing providers
@@ -142,10 +140,13 @@ export default function ProviderDialog({ dialogProps }) {
               />
             </ListItem>
 
-            {/* Choosing a model when OpenAI is chosen */}
+            {/* Model */}
             <ListItem>
               <Box 
-                sx={{ 
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  boxSizing: 'border-box',
                   display: 'flex',
                   flexWrap: 'nowrap',
                   alignItems: 'center', 
@@ -153,7 +154,10 @@ export default function ProviderDialog({ dialogProps }) {
                 }}
               >
                 <Button 
-                  disabled={apiKey.length === 0}
+                  disabled={
+                    selectedOption === 'openai'     ? apiKey.length === 0 :
+                    selectedOption === 'selfhosted' ? hostserver.length === 0 : true
+                  }
                   variant="contained" 
                   startIcon={
                     loading ? (
@@ -173,11 +177,11 @@ export default function ProviderDialog({ dialogProps }) {
                   onClick={async () => {
                     setLoading(true); 
                     try {
-                      setModels(await getOpenAIModels(apiKey));
-                      setIsApiKeyValid(true);
+                      setModels(selectedOption === 'openai' ? await getOpenAIModels(apiKey) : await getSelfhostedModels(hostserver));
+                      if(selectedOption === 'openai') setIsApiKeyValid(true);
                     } catch (error) {
-                      setIsApiKeyValid(false);
-                      alert(error.response.data.error.message);
+                      if(selectedOption === 'openai') setIsApiKeyValid(false);
+                      alert(error.response?.data.error.message);
                     } finally {
                       setLoading(false);
                     }
@@ -188,7 +192,6 @@ export default function ProviderDialog({ dialogProps }) {
                 <FormControl fullWidth margin="normal">
                   <InputLabel id='model-select-label'>Model</InputLabel>
                   <Select
-                    disabled={selectedOption !== "openai"}
                     label='Model'
                     labelId='model-select-label'
                     defaultValue={model}
@@ -236,16 +239,19 @@ export default function ProviderDialog({ dialogProps }) {
                 onClick={() => 
                   saveProviderData(
                     {
-                      'option': selectedOption,
-                      'instance_name': instanceName,
-                      'data': selectedOption === 'openai' ? {
-                        'api_key': apiKey,
-                        'model': model
-                      } : { 'hostserver_url': hostserver }
+                      "option": selectedOption,
+                      "'instance_name": instanceName,
+                      "data": selectedOption === 'openai' ? {
+                        "api_key": apiKey,
+                        "model": model
+                      } : {
+                        "hostserver_url": hostserver,
+                        "model": model
+                      }
                     }
                   )
-                    .then(data => resetProps())
-                    .catch(error => alert(error.response.data.detail))
+                    .then(() => resetProps())
+                    .catch(error => alert(error.response?.data.detail))
                 }
               >
                 Add

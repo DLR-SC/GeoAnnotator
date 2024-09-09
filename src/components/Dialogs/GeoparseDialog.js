@@ -29,9 +29,7 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
     // Access to global data
     { sessionData, setSessionData } = useSession(),
     // Reset properties, when dialog is closed
-    resetProps = () => {
-      dialogProps.onClose()
-    };
+    resetProps = () => dialogProps.onClose();
 
   return (
       <DialogContentArea
