@@ -111,7 +111,7 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
                   <SaveButton
                     variant='contained'
                     onClick={() => {
-                      setSessionData({ ...sessionData, disableSaveChangesButton: false })
+                      setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: false })
                       setGeolocations(georeferences);
                       resetProps();
                     }}

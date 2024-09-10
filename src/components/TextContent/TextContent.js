@@ -114,7 +114,6 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
                                 })
                                 .catch(error => {
                                     setDisableGeoparseButton(false);
-                                    console.log(error)
                                     alert(error?.response?.data?.detail)
                                 })
                         }}
@@ -158,7 +157,7 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
                     title: 'Detected Georeferences',
                     open: openGeoparseDialog,
                     onClose: () => {
-                        setDetectedGeoreferences(null);
+                        setDetectedGeoreferences();
                         setOpenGeoparseDialog(false);
                     }
                 }}         

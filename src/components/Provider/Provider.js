@@ -1,19 +1,17 @@
 import React from 'react';
 import { 
-    List, 
-    ListItem,
     FormControl,
     FormHelperText,
+    Grid,
     InputLabel,
-    Select,
+    List, 
+    ListItem,
     MenuItem,
     Paper,
-    Grid,
+    Select,
     Typography,
-    TextField,
 } from '@mui/material';
 import ProvidersConfig from './ProvidersConfig';
-import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
 
 /**
  * Provider to manage LLMs
@@ -66,22 +64,6 @@ export default function Provider({ dataProps }) {
                             </Select>
                             <FormHelperText>Choose a provider</FormHelperText>
                         </FormControl>
-                    </ListItem>
-                    <ListItem>
-                    <TextField
-                        required
-                        fullWidth
-                        label="Threshold for Retrain-Job"
-                        defaultValue={'0'}
-                        onBlur={event => {
-                            try { setProvider({ ...provider, retrain_job_threshold: Number(event.target.value) }) } 
-                            catch (e) { alert(e) }
-                        }}
-                        margin="normal"
-                        InputProps={{
-                            startAdornment: <TuneTwoToneIcon style={{ marginRight: 4 }} />,
-                        }}
-                    />
                     </ListItem>
                 </List>
             </Paper>

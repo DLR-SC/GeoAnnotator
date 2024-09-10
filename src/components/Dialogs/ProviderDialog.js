@@ -1,7 +1,8 @@
 import './Dialog.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SaveButton } from '../customComponents';
-import { DialogContentArea, getOpenAIModels, getSelfhostedModels, saveProviderData } from './DialogFunctions';
+import { DialogContentArea } from './DialogFunctions';
+import { getOpenAIModels, getSelfhostedModels, saveProviderData } from '../Provider/ProviderFunctions';
 import { 
   ListItem, 
   InputLabel,
@@ -17,7 +18,8 @@ import {
   VpnKey, 
   Computer, 
   Refresh, 
-  AddCircle 
+  AddCircle, 
+  TuneTwoTone
 } from '@mui/icons-material';
 
 /**
@@ -26,8 +28,7 @@ import {
  */
 export default function ProviderDialog({ dialogProps }) {
   const
-    // Access to global data
-    // { sessionData, setSessionData } = useSession(),
+    provider = dialogProps.provider,
 
     [selectedOption, setSelectedOption] = useState(''),
 
@@ -43,6 +44,9 @@ export default function ProviderDialog({ dialogProps }) {
 
     [instanceName, setInstanceName] = useState(),
     
+    [threshold, setThreshold] = useState(),
+    [isThresholdValid, setIsThresholdValid] = useState(true),
+
     options = [ 
       { label: 'OPEN_AI', value: 'openai' },
       { label: 'SELF_HOSTED', value: 'selfhosted' },
@@ -50,22 +54,41 @@ export default function ProviderDialog({ dialogProps }) {
     // Reset states
     resetStates = () => {
       setApiKey('');
+      setIsApiKeyValid(true);
+      
       setHostserver('');
+      setIsURLValid(true);
+
       setModel('');
       setModels();
+
       setInstanceName('');
+
+      setThreshold();
+      setIsThresholdValid(true);
     },
     // Reset properties, when dialog is closed
     resetProps = () => {
-      setSelectedOption('');
       resetStates();
+      setSelectedOption('');
       dialogProps.onClose();
     };
+
+  useEffect(() => {
+    if(provider) {
+      setSelectedOption(provider?.option);
+      setApiKey(provider?.data?.api_key ?? '');
+      setHostserver(provider?.data?.hostserver_url ?? '');
+      setModel(provider?.data?.model);
+      setInstanceName(provider?.instance_name);
+      setThreshold(provider?.data?.threshold_retrain_job);
+    }
+  }, [provider])
 
   return (
     <>
       <DialogContentArea
-        title={dialogProps.title}
+        title={dialogProps.usage + ' provider'}
         open={dialogProps.open}
         onClose={resetProps}
         fullWidth={true}
@@ -194,7 +217,7 @@ export default function ProviderDialog({ dialogProps }) {
                   <Select
                     label='Model'
                     labelId='model-select-label'
-                    defaultValue={model}
+                    value={model}
                     onChange={event => setModel(event.target.value)}
                   >
                     {
@@ -204,58 +227,118 @@ export default function ProviderDialog({ dialogProps }) {
                           </MenuItem>
                       ))
                     }
+                    { // MenuItem of provided Model
+                      model && models === undefined ? 
+                      <MenuItem key={model} value={model}>
+                          {model}
+                      </MenuItem> : null 
+                    }
                   </Select>
                 </FormControl>
               </Box>
             </ListItem>
 
-            {/* Instance name for provider */}
             <ListItem>
-              <TextField
-                required
-                fullWidth
-                label="Instance Name"
-                defaultValue={instanceName}
-                onBlur={event => setInstanceName(event.target.value)}
-                margin="normal"
-                InputProps={{
-                  startAdornment: <AddCircle style={{ marginRight: 8 }} />,
-                }}
-              />
+              <Box 
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                    alignItems: 'center', 
+                    flexGrow: 1 
+                  }}
+                >
+                  {/* Instance name for provider */}
+                  <TextField
+                    required
+                    fullWidth
+                    sx={{ mr: 2 }}
+                    label="Instance Name"
+                    defaultValue={instanceName}
+                    onBlur={event => setInstanceName(event.target.value.trim())}
+                    InputProps={{
+                      startAdornment: <AddCircle style={{ marginRight: 8 }} />,
+                    }}
+                  />
+
+                  {/* Threshold for Retrain-job of provider */}
+                  <TextField
+                    required
+                    fullWidth
+                    label="Treshold for Retrain-Job"
+                    defaultValue={threshold}
+                    error={!isThresholdValid}
+                    onBlur={event => {
+                      let value = event.target.value
+                      if(!isNaN(value) && value.trim() !== '') {
+                        setIsThresholdValid(true)
+                        setThreshold(Number(event.target.value))
+                      }
+                      else {
+                        setIsThresholdValid(false) 
+                        setThreshold()
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: <TuneTwoTone style={{ marginRight: 8 }} />,
+                    }}
+                  />
+                </ Box>
             </ListItem>
 
             {/* Add button to save provider */}
-            <ListItem>
+            <ListItem
+              sx={{
+                display: 'flex',
+                flexWrap: 'nowrap',
+                justifyContent: 'space-between'
+              }}
+            >
               <SaveButton
                 variant='contained'
                 disabled={
                   (
-                    selectedOption === 'openai' ? apiKey.length === 0 || model.length === 0
+                    selectedOption === 'openai' ? apiKey.length === 0 || !isApiKeyValid
                   : selectedOption === 'selfhosted' ? hostserver.length === 0 || !isURLValid
                   : true
-                  ) 
+                  )
+                  || model.length === 0
                   || instanceName.length === 0
+                  || threshold === undefined
                 }
                 onClick={() => 
                   saveProviderData(
                     {
                       "option": selectedOption,
-                      "'instance_name": instanceName,
-                      "data": selectedOption === 'openai' ? {
-                        "api_key": apiKey,
-                        "model": model
-                      } : {
-                        "hostserver_url": hostserver,
-                        "model": model
-                      }
-                    }
+                      "instance_name": instanceName,
+                      "data": 
+                        selectedOption === 'openai' ? {
+                          "api_key": apiKey,
+                          "model": model,
+                          "threshold_retrain_job": threshold
+                        } :
+                        selectedOption === 'selfhosted' ? {
+                          "hostserver_url": hostserver,
+                          "model": model,
+                          "threshold_retrain_job": threshold
+                        } : undefined
+                    },
+                    dialogProps.usage
                   )
                     .then(() => resetProps())
-                    .catch(error => alert(error.response?.data.detail))
+                    .catch(error => console.log(error.response?.data.detail))
                 }
               >
-                Add
+                {dialogProps.usage}
               </SaveButton>
+              <Button
+                variant='outlined'
+                onClick={resetProps}
+              >
+                Close
+              </Button>
             </ListItem>
           </>
         }

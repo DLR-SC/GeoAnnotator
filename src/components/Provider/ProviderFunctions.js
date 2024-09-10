@@ -16,19 +16,64 @@ export async function loadProviders() {
 
 /**
  * Delete a specific provider
- * @param {string} instance_name 
+ * @param {Number} index 
  */
-export async function deleteProvider(instance_name) {
+export async function deleteProvider(index) {
     let 
         config = {
             baseURL: 'http://localhost:8000/api',
-            params: { instance_name },
+            params: { index },
             timeout: 60_000
         },
         response = await axios.delete(
-            `/provider/delete`,
+            `/provider`,
             config
         );
 
     return response.data;
 }
+
+/**
+ * Load the models of OpenAI
+ */
+export async function getOpenAIModels(apiKey) {
+    let 
+      config = {
+        baseURL: 'https://api.openai.com/v1',
+        headers: {
+          Authorization: `Bearer ${apiKey}`
+        }
+      },
+      response = await axios.get('/models', config);
+  
+      return response.data.data;
+  }
+  
+  /**
+   * Load the models of selhosted LLMs
+   */
+  export async function getSelfhostedModels(hostserver_url) {
+    let response = await axios.get(`${hostserver_url}/models`);
+  
+    return response.data.data;
+  }
+  
+  /**
+   * Save provider data
+   */
+  export async function saveProviderData(data, usage) {
+    let 
+      config = {
+        baseURL: 'http://localhost:8000/api',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      response = usage === 'Add' ?
+        // Add
+        await axios.post('/provider', data, config) : 
+        // Edit
+        await axios.put('/provider', data, config);
+  
+    return response.data.data;
+  }

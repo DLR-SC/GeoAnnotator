@@ -24,6 +24,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 export default function ProvidersConfig({ providers, setProviders }) {
   const 
     [openProviderDialog, setOpenProviderDialog] = useState(false),
+    [providerDialogData, setProviderDialogData] = useState(),
     handleLoadProvider = async () => {
       try {
         setProviders(await loadProviders())
@@ -51,6 +52,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
                   <TableCell>Instance Name</TableCell>
                   <TableCell>Provider</TableCell>
                   <TableCell>Model</TableCell>
+                  <TableCell>Threshold for Retrain-Job</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -58,26 +60,27 @@ export default function ProvidersConfig({ providers, setProviders }) {
                 {
                   providers ? (
                     providers?.map((provider, index) => (
-                      <TableRow key={index + 1}>
-                        <TableCell>{index + 1}</TableCell>
+                      <TableRow key={index}>
+                        <TableCell>{index}</TableCell>
                         <TableCell>{provider?.instance_name}</TableCell>
                         <TableCell>{provider?.option}</TableCell>
                         <TableCell>{provider?.data.model}</TableCell>
+                        <TableCell>{provider?.data.threshold_retrain_job}</TableCell>
                         <TableCell>
                           <IconButton 
                             color="primary"
-                            // onClick={() => 
-                            //   deleteProvider(provider?.instance_name)
-                            //     .then(async () => await handleLoadProvider())
-                            //     .catch(e => alert(e))
-                            // }
+                            onClick={() => {
+                              setProviderDialogData({ index: index, provider: provider, usage: 'Edit' });
+                              setOpenProviderDialog(true);
+                              
+                            }}
                           >✏️</IconButton>
                           <IconButton 
                             color="secondary"
                             onClick={() => 
-                              deleteProvider(provider?.instance_name)
+                              deleteProvider(index)
                                 .then(async () => await handleLoadProvider())
-                                .catch(e => alert(e.response?.data.detail))
+                                .catch(e => alert(e))
                             }
                           >🗑️</IconButton>
                         </TableCell>
@@ -106,7 +109,10 @@ export default function ProvidersConfig({ providers, setProviders }) {
               color="primary"
               startIcon={<AddIcon />}
               style={{ marginTop: '20px' }}
-              onClick={() => setOpenProviderDialog(true)}
+              onClick={() => {
+                setProviderDialogData({ provider: undefined, usage: 'Add' });
+                setOpenProviderDialog(true);
+              }}
             >
               Add Provider
             </Button>
@@ -122,14 +128,15 @@ export default function ProvidersConfig({ providers, setProviders }) {
           </Box>
           <ProviderDialog 
             dialogProps={{
-              title: 'Add provider',
               open: openProviderDialog,
               onClose: async () => {
                 try {
                   setProviders(await loadProviders());
                 } catch(e) { alert(e) }
                 setOpenProviderDialog(false);
-              }
+              },
+              usage: providerDialogData?.usage,
+              provider: providerDialogData?.provider
             }}
           />
         </AccordionDetails>
