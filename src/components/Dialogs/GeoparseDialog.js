@@ -24,12 +24,20 @@ import { PlaceTwoTone } from "@mui/icons-material";
  * @param {{ open: Boolean, onClose: Function }} dialogProps
  * @returns {React.JSX.Element}
  */
-export default function GeoparseDialog({ georeferences, setGeolocations, dialogProps }) {
+export default function GeoparseDialog({ dataProps, dialogProps }) {
   const
     // Access to global data
     { sessionData, setSessionData } = useSession(),
+    {
+      georeferences,
+      setGeolocations,
+      setDetectedGeoreferences,
+    } = dataProps,
     // Reset properties, when dialog is closed
-    resetProps = () => dialogProps.onClose();
+    resetProps = () => {
+      dialogProps.onClose();
+      setDetectedGeoreferences();
+    };
 
   return (
       <DialogContentArea
@@ -100,7 +108,6 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
                   padding: 2
                 }}
               >
-
                 <Grid item xs={10}>
                   <Typography paragraph={true}>
                     The existing georeferences will be overwritten!
@@ -113,13 +120,12 @@ export default function GeoparseDialog({ georeferences, setGeolocations, dialogP
                     onClick={() => {
                       setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: false })
                       setGeolocations(georeferences);
-                      resetProps();
+                      dialogProps.onClose();
                     }}
                   >
                     Save
                   </SaveButton>
                 </Grid>
-
               </Grid>
             </ListItem>
           </>

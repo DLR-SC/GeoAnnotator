@@ -30,7 +30,9 @@ export default function App() {
     // TextContent of currentData
     [textContent, setTextContent] = useState(),
     // Geolocations of currentData
-    [geolocations, setGeolocations] = useState();
+    [geolocations, setGeolocations] = useState(),
+    // Georeferences detected by the geoparser
+    [detectedGeoreferences, setDetectedGeoreferences] = useState();
   
   /**  
    * Set data when new file is chosen
@@ -54,29 +56,27 @@ export default function App() {
             <Routes>
               <Route path='/main' element={
                   <MainArea 
-                    dataProps={{
-                      provider: provider,
-                      fileDataset: fileDataset,
-                      setFileDataset: setFileDataset,
-                      // currentData: currentData,
-                      setCurrentData: setCurrentData,
-                      textContent: textContent,
-                      // setTextContent: setTextContent,
-                      geolocations: geolocations,
-                      setGeolocations: setGeolocations,
-                    }}
+                    provider={provider}
+                    fileDataset={fileDataset}
+                    setFileDataset={setFileDataset}
+                    // currentData: currentData
+                    setCurrentData={setCurrentData}
+                    textContent={textContent}
+                    // setTextContent: setTextContent
+                    geolocations={geolocations}
+                    setGeolocations={setGeolocations}
+                    detectedGeoreferences={detectedGeoreferences}
+                    setDetectedGeoreferences={setDetectedGeoreferences}
                   />
                 } 
                 replace
               />
               <Route path='/provider' element={
                 <Provider 
-                  dataProps={{
-                    provider: provider,
-                    setProvider: setProvider,
-                    providers: providers,
-                    setProviders: setProviders
-                  }}
+                  provider={provider}
+                  setProvider={setProvider}
+                  providers={providers}
+                  setProviders={setProviders}
                 />
               } />
             </Routes>

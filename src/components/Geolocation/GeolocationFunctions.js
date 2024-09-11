@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSession } from '../SessionProvider';
 import {
@@ -112,4 +113,24 @@ export function GeolocationItems({ data }) {
             />
         </Box>
     )
+}
+
+/**
+ * Save corrected georeferences in backend for specific provider
+ */
+export async function processFeedback(feedback) {
+    let
+        config = {
+            baseURL: "http://localhost:8000/api",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        },
+        response = await axios.post(
+            "/feedback",
+            feedback,
+            config
+        );
+
+    return response.data;
 }

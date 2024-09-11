@@ -28,16 +28,14 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
         if(newFileData) {
             // Overwrite location attribute in corresponding file in the dataset
             fileDataset[newFileData.key] = { ...fileDataset[newFileData.key], locations: newFileData.locations };
-            setSessionData({ ...sessionData, changedFiles : sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.key) : [newFileData.key]});
+            setSessionData({ ...sessionData, changedFiles: sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.key) : [newFileData.key]});
         }
     }, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [sessionData?.newFileData])
 
     // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
-    useEffect(() => { 
-        if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false);
-    }, 
+    useEffect(() => { if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false) }, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [fileDataset])
 

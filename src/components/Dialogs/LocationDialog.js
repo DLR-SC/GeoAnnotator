@@ -38,8 +38,6 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
     [optionalPositionDialogOpen, setOptionalPositionDialogOpen] = useState(false),
     // Reset properties, when dialog is closed
     resetProps = () => {
-      // setPlacename()
-      // setCoordinate({ lat: undefined, lng: undefined })
       setErrorMessage(undefined)
       setOptionalCoordinates([])
       setDisableButton(true)

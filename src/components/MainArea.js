@@ -1,5 +1,6 @@
 /** Main content area of the page - grid with 4 cells */
 
+import { useEffect } from 'react';
 import Mapping from './Mapping/Mapping';
 import { Box, Grid } from '@mui/material';
 import { Item } from './customComponents';
@@ -8,20 +9,21 @@ import Geolocation from './Geolocation/Geolocation';
 import FileExplorer from './FileExplorer/FileExplorer';
 import { TextContent } from './TextContent/TextContent';
 import { restructureLocationAttribute } from '../utils/jsonFunctions';
-import { useEffect } from 'react';
+import { processFeedback } from './Geolocation/GeolocationFunctions';
 
-export default function MainArea({ dataProps }) {
+export default function MainArea(props) {
     const 
         {
             provider,
-            fileDataset,        setFileDataset,
-            /*currentData,*/    setCurrentData,
-            textContent,        /*setTextContent,*/
-            geolocations,       setGeolocations
-        } = dataProps,
+            fileDataset,            setFileDataset,
+            /*currentData,*/        setCurrentData,
+            textContent,            /*setTextContent,*/
+            geolocations,           setGeolocations,
+            detectedGeoreferences,   setDetectedGeoreferences
+        } = props,
         { sessionData, setSessionData } = useSession();
     
-    // Rerender Geolocation list, when changes are made
+    // Rerender Geolocation list, when changes are made (edit, delete)
     useEffect(() => {if(sessionData?.updatedGeolocations) setGeolocations(sessionData?.updatedGeolocations)}, [sessionData?.updatedGeolocations]);
 
     return (
@@ -49,6 +51,7 @@ export default function MainArea({ dataProps }) {
                             <FileExplorer 
                                 handleFileItemClick={(jsonData, key) => {
                                     setCurrentData(jsonData);
+                                    if(detectedGeoreferences) setDetectedGeoreferences();
                                     setSessionData({ ...sessionData, fileData: jsonData, fileIndex: key });
                                 }}
                                 dataProps={{
@@ -77,10 +80,14 @@ export default function MainArea({ dataProps }) {
                             <Item
                                 children={
                                     <TextContent
-                                        provider        ={provider      }
-                                        textContent     ={textContent   }
-                                        geolocations    ={geolocations  }
-                                        setGeolocations ={setGeolocations}
+                                        dataProps={{
+                                            provider: provider,
+                                            textContent: textContent,
+                                            geolocations: geolocations,
+                                            setGeolocations: setGeolocations,
+                                            detectedGeoreferences: detectedGeoreferences,
+                                            setDetectedGeoreferences: setDetectedGeoreferences
+                                        }}
                                     />
                                 }
                             />
@@ -107,13 +114,18 @@ export default function MainArea({ dataProps }) {
                         children={
                             <Geolocation
                                 geolocations={geolocations}
-                                handleSaveButtonClick={() => 
+                                handleSaveButtonClick={() => {
                                     setSessionData({
                                         ...sessionData, 
                                         newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), key: sessionData?.fileIndex },
-                                        disableSaveGeolocationChangesButton: true                                        
-                                    })
-                                }
+                                        disableSaveGeolocationChangesButton: true                                    
+                                    });
+                                
+                                    if(detectedGeoreferences)
+                                        processFeedback({ text: textContent, predictions: detectedGeoreferences, corrections: geolocations, provider: provider })
+                                            .then(message => console.log(message))
+                                            .catch(error => alert(error + " | Feedback couldn't be saved."));
+                                }}
                             />
                         }
                     />

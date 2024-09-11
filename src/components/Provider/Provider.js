@@ -16,12 +16,12 @@ import ProvidersConfig from './ProvidersConfig';
 /**
  * Provider to manage LLMs
  */
-export default function Provider({ dataProps }) {
+export default function Provider(props) {
   const 
     { 
         provider, setProvider,
         providers, setProviders
-    } = dataProps;
+    } = props;
 
   return (
     <Grid 

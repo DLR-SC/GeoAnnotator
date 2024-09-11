@@ -1,15 +1,14 @@
 /** Main location system with list of location */
 
+import { useEffect } from 'react';
 import { List } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
 import { GeolocationItems } from './GeolocationFunctions';
-import { useSession } from '../SessionProvider';
 
 export default function Geolocation({ geolocations, handleSaveButtonClick }) {
     const
-        { sessionData, setSessionData } = useSession(),
-        [disabledButton, setDisabledButton] = useState(true);
+        { sessionData, setSessionData } = useSession();
 
     // When a new json-file is chosen, disable the save changes button
     useEffect(() => setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: true }), [sessionData?.fileData])
@@ -35,7 +34,7 @@ export default function Geolocation({ geolocations, handleSaveButtonClick }) {
             <SaveButton
                 variant='contained'
                 disabled={sessionData?.disableSaveGeolocationChangesButton}
-                onClick={() => handleSaveButtonClick()}
+                onClick={handleSaveButtonClick}
             >
                 Save changes
             </SaveButton>

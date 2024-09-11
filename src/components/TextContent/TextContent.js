@@ -10,8 +10,15 @@ import LocationDialog from '../Dialogs/LocationDialog'
 import GeoparseDialog from '../Dialogs/GeoparseDialog'
 import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 
-export function TextContent({ provider, textContent, geolocations, setGeolocations }) {
-    const 
+export function TextContent({ dataProps }) {
+    const
+        {
+            provider,
+            textContent,
+            geolocations,           setGeolocations,
+            detectedGeoreferences,  setDetectedGeoreferences,
+        } = dataProps,
+
         // eslint-disable-next-line no-unused-vars
         refSelectableGroup = useRef(null),
 
@@ -26,8 +33,6 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
         [disableButton, setDisableButton] = useState(true),
         [disableGeoparseButton, setDisableGeoparseButton] = useState(),
 
-        // The georeferences from the geoparsed text content and the new geolocation
-        [detectedGeoreferences, setDetectedGeoreferences] = useState(),
         [geolocation, setGeolocation] = useState({ name: undefined, position: [] }),
 
         handleSelectionFinish = (selectedItems) => {
@@ -47,7 +52,7 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
     }, [geolocations])
 
     // Disable GeoparseButton when no provider is selected
-    useEffect(() => setDisableGeoparseButton(provider === undefined), [])
+    useEffect(() => setDisableGeoparseButton(provider === undefined), [textContent])
 
     return (
         <Box
@@ -151,15 +156,15 @@ export function TextContent({ provider, textContent, geolocations, setGeolocatio
             />
 
             <GeoparseDialog
-                georeferences={detectedGeoreferences}
-                setGeolocations={setGeolocations}
+                dataProps={{
+                    georeferences: detectedGeoreferences,
+                    setDetectedGeoreferences: setDetectedGeoreferences,
+                    setGeolocations: setGeolocations,
+                }}
                 dialogProps={{
                     title: 'Detected Georeferences',
                     open: openGeoparseDialog,
-                    onClose: () => {
-                        setDetectedGeoreferences();
-                        setOpenGeoparseDialog(false);
-                    }
+                    onClose: () => setOpenGeoparseDialog(false)
                 }}         
             />               
         </Box>
