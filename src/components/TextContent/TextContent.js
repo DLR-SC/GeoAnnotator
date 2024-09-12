@@ -10,14 +10,14 @@ import LocationDialog from '../Dialogs/LocationDialog'
 import GeoparseDialog from '../Dialogs/GeoparseDialog'
 import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 
-export function TextContent({ dataProps }) {
+export function TextContent(props) {
     const
         {
             provider,
             textContent,
             geolocations,           setGeolocations,
             detectedGeoreferences,  setDetectedGeoreferences,
-        } = dataProps,
+        } = props,
 
         // eslint-disable-next-line no-unused-vars
         refSelectableGroup = useRef(null),

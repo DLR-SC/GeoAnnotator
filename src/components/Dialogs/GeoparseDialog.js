@@ -29,8 +29,8 @@ export default function GeoparseDialog({ dataProps, dialogProps }) {
     // Access to global data
     { sessionData, setSessionData } = useSession(),
     {
-      georeferences,
       setGeolocations,
+      georeferences,
       setDetectedGeoreferences,
     } = dataProps,
     // Reset properties, when dialog is closed
@@ -78,9 +78,9 @@ export default function GeoparseDialog({ dataProps, dialogProps }) {
                         />
                         <ListItemText 
                             primary={
-                                (georeference.name ? `${georeference.name}, `  : '')
+                                (georeference.name ?? '')
                                 +
-                                `(${georeference.position})`
+                                ` (${georeference.position})`
                             }
                         />
                     </ListItem>

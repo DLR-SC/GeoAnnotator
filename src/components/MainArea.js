@@ -23,9 +23,6 @@ export default function MainArea(props) {
         } = props,
         { sessionData, setSessionData } = useSession();
     
-    // Rerender Geolocation list, when changes are made (edit, delete)
-    useEffect(() => {if(sessionData?.updatedGeolocations) setGeolocations(sessionData?.updatedGeolocations)}, [sessionData?.updatedGeolocations]);
-
     return (
         <Box component="main"
             sx={{
@@ -51,7 +48,6 @@ export default function MainArea(props) {
                             <FileExplorer 
                                 handleFileItemClick={(jsonData, key) => {
                                     setCurrentData(jsonData);
-                                    if(detectedGeoreferences) setDetectedGeoreferences();
                                     setSessionData({ ...sessionData, fileData: jsonData, fileIndex: key });
                                 }}
                                 dataProps={{
@@ -80,14 +76,12 @@ export default function MainArea(props) {
                             <Item
                                 children={
                                     <TextContent
-                                        dataProps={{
-                                            provider: provider,
-                                            textContent: textContent,
-                                            geolocations: geolocations,
-                                            setGeolocations: setGeolocations,
-                                            detectedGeoreferences: detectedGeoreferences,
-                                            setDetectedGeoreferences: setDetectedGeoreferences
-                                        }}
+                                        provider={provider}
+                                        textContent={textContent}
+                                        geolocations={geolocations}
+                                        setGeolocations={setGeolocations}
+                                        detectedGeoreferences={detectedGeoreferences}
+                                        setDetectedGeoreferences={setDetectedGeoreferences}
                                     />
                                 }
                             />
@@ -114,6 +108,7 @@ export default function MainArea(props) {
                         children={
                             <Geolocation
                                 geolocations={geolocations}
+                                setGeolocations={setGeolocations}
                                 handleSaveButtonClick={() => {
                                     setSessionData({
                                         ...sessionData, 
@@ -124,7 +119,7 @@ export default function MainArea(props) {
                                     if(detectedGeoreferences)
                                         processFeedback({ text: textContent, predictions: detectedGeoreferences, corrections: geolocations, provider: provider })
                                             .then(message => console.log(message))
-                                            .catch(error => alert(error + " | Feedback couldn't be saved."));
+                                            .catch(error => alert(error));
                                 }}
                             />
                         }

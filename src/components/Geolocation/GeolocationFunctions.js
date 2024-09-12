@@ -21,16 +21,13 @@ import LocationDialog from '../Dialogs/LocationDialog'
  * @param {Object} param
  * @param {{ position: float[], name: string }[]} param.data
  */
-export function GeolocationItems({ data }) {
+export function GeolocationItems(props) {
     const 
         { sessionData, setSessionData } = useSession(),
+        { geolocations, setGeolocations } = props,
         [open, setOpen] = useState(false),
         [anchorEl, setAnchorEl] = useState(null),
-        [geolocation, setGeolocation] = useState(),
-        [geolocations, setGeolocations] = useState(data);
-
-    // When the geolocations are updated (Not necessarily a new json-file chosen), rerender the location list
-    useEffect(() => setGeolocations(data), [data])
+        [geolocation, setGeolocation] = useState();
 
     return (
         <Box>
@@ -58,7 +55,7 @@ export function GeolocationItems({ data }) {
                             <MenuRounded 
                                 edge="end" 
                                 onClick={event => {
-                                    setGeolocation(geo);
+                                    setGeolocation(geo); // Set geolocation for Menu-Anchor
                                     setAnchorEl(event.currentTarget);
                                 }}
                                 sx={{
@@ -88,14 +85,11 @@ export function GeolocationItems({ data }) {
                 {/* Delete */}
                 <MenuItem 
                     onClick={() => {
-                        // When a geolocation is deleted, re-map through the changed geolocations array and rerender
                         setAnchorEl(null);
                         // High-order components are being 'informed' about the deletion
-                        setSessionData({ 
-                            ...sessionData, 
-                            updatedGeolocations: geolocations.filter(geo => geo.name !== geolocation.name),
-                            disableSaveGeolocationChangesButton: false
-                        });
+                        setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: false});
+                        // When a geolocation is deleted, re-map through the changed geolocations array and rerender
+                        setGeolocations(geolocations.filter(geo => geo.name !== geolocation.name));
                     }}
                 >
                     Delete

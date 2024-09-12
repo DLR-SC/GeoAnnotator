@@ -41,6 +41,7 @@ export default function App() {
   useEffect(() => {
     setTextContent(currentData?.text);
     setGeolocations(structureLocationAttribute(currentData?.locations));
+    setDetectedGeoreferences();
   }, [currentData]);
 
 
