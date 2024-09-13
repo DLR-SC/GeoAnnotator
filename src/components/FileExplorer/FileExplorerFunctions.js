@@ -1,5 +1,4 @@
 /** File system with the list entries */
-import { useState } from 'react';
 import { MapRounded, MenuRounded } from '@mui/icons-material';
 import {
     ListItem,
@@ -11,8 +10,10 @@ import { useSession } from '../SessionProvider';
 
 /**
  * Extract the respective JSONObjects from the JSON-file and construct a List out of it
- * @param {JSON[]} data
- * @param {Function} handleClick
+ * @param {Object}   props
+ * @param {JSON[]}   props.data
+ * @param {Function} props.handleClick
+ * @param {Function} props.handleMenuClick
  * @returns {React.JSX.Element[]}
  */
 export function ExtractEntries({data, handleClick, handleMenuClick}) {
@@ -39,7 +40,7 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
                         children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
                     />
                     <ListItemButton onClick={() => handleClick(object, index)}>
-                        {`file_${index}.json`}
+                        {`Entry: ${index}`}
                     </ListItemButton>
                     {/* Menu of json file */}
                     <ListItemSecondaryAction>
@@ -60,11 +61,11 @@ export function ExtractEntries({data, handleClick, handleMenuClick}) {
 
 /**
  * Check, if the new file is already added to the list
- * @param {{text: string, locations: { location: [float, float] }, key?: number}[]} dataset 
- * @param {{text: string, locations: { location: [float, float] }, key: number}} fileData 
+ * @param {{text: string, locations: { location: [float, float] }, id?: number}[]} dataset 
+ * @param {{text: string, locations: { location: [float, float] }, id: number}} fileData 
  */
-export function hasKey(dataset, fileData) {
-    for(let data of dataset) if(data.key === fileData?.key) return true;
+export function hasID(dataset, fileData) {
+    for(let data of dataset) if(data.id === fileData?.id) return true;
     return false;
 }
 
@@ -80,7 +81,7 @@ export function downloadFile(fileData, sessionData) {
         a = document.createElement('a');
         
     a.href = url;
-    a.download = `file_${fileData.key ?? 'unregistered'}${sessionData?.changedFiles?.includes(fileData.key) ? '.edt' : ''}.json`;
+    a.download = `file_${fileData.id ?? 'unregistered'}${sessionData?.changedFiles?.includes(fileData.id) ? '.edt' : ''}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();

@@ -19,7 +19,7 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
         [fileData, setFileData] = useState(),
         handleMenuClick = (event, object, index) => {
             setAnchorEl(event.currentTarget);
-            setFileData({ ...object, key: index });
+            setFileData({ ...object, id: index });
         };
 
     // Apply changes to the corresponding files
@@ -27,8 +27,8 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
         const newFileData = sessionData?.newFileData;
         if(newFileData) {
             // Overwrite location attribute in corresponding file in the dataset
-            fileDataset[newFileData.key] = { ...fileDataset[newFileData.key], locations: newFileData.locations };
-            setSessionData({ ...sessionData, changedFiles: sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.key) : [newFileData.key]});
+            fileDataset[newFileData.id] = { ...fileDataset[newFileData.id], locations: newFileData.locations };
+            setSessionData({ ...sessionData, changedFiles: sessionData?.changedFiles ? addFileWithoutDupe(sessionData, newFileData.id) : [newFileData.id]});
         }
     }, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,7 +87,7 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
                     <MenuItem 
                         onClick={() => {
                             setAnchorEl(null);
-                            setFileDataset(fileDataset.map((file, index) => { if(index === fileData?.key) return undefined; else return file; }));
+                            setFileDataset(fileDataset.map((file, index) => { if(index === fileData?.id) return undefined; else return file; }));
                         }}
                     >
                         Delete

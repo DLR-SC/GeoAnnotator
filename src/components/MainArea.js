@@ -46,9 +46,9 @@ export default function MainArea(props) {
                     <Item
                         children={
                             <FileExplorer 
-                                handleFileItemClick={(jsonData, key) => {
+                                handleFileItemClick={(jsonData, index) => {
                                     setCurrentData(jsonData);
-                                    setSessionData({ ...sessionData, fileData: jsonData, fileIndex: key });
+                                    setSessionData({ ...sessionData, fileData: jsonData, fileIndex: index });
                                 }}
                                 dataProps={{
                                     fileDataset:    fileDataset,
@@ -112,7 +112,7 @@ export default function MainArea(props) {
                                 handleSaveButtonClick={() => {
                                     setSessionData({
                                         ...sessionData, 
-                                        newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), key: sessionData?.fileIndex },
+                                        newFileData: { text: textContent, locations: restructureLocationAttribute(geolocations), id: sessionData?.fileIndex },
                                         disableSaveGeolocationChangesButton: true                                    
                                     });
                                 
