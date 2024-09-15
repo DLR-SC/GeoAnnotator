@@ -1,11 +1,10 @@
 import './Dialog.css';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
 import DialogMapping from '../Mapping/DialogMapping';
 import { DialogContentArea } from './DialogFunctions';
 import { 
-    //   Button,
     Box,
     List,
     ListItem, 
@@ -109,7 +108,7 @@ export default function GeoparseDialog({ dataProps, dialogProps }) {
                 }}
               >
                 <Grid item xs={10}>
-                  <Typography paragraph={true}>
+                  <Typography paragraph>
                     The existing georeferences will be overwritten!
                   </Typography> 
                 </Grid>
