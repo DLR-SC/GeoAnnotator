@@ -328,7 +328,7 @@ export default function ProviderDialog({ dialogProps }) {
                     dialogProps.usage
                   )
                     .then(() => resetProps())
-                    .catch(error => console.log(error.response?.data.detail))
+                    .catch(error => alert(error.response?.data.detail))
                 }
               >
                 {dialogProps.usage}

@@ -11,51 +11,96 @@ import { useSession } from '../SessionProvider';
 /**
  * Extract the respective JSONObjects from the JSON-file and construct a List out of it
  * @param {Object}   props
- * @param {JSON[]}   props.data
+ * @param {JSON[]}   props.fileDataset
  * @param {Function} props.handleClick
  * @param {Function} props.handleMenuClick
  * @returns {React.JSX.Element[]}
  */
-export function ExtractEntries({data, handleClick, handleMenuClick}) {
-    const { sessionData } = useSession();
+export function ExtractEntries(props) {
+    const 
+        { fileDataset, fileIndex, handleClick, handleMenuClick } = props,
+        { sessionData } = useSession();
 
     return (
-        data.map((object, index) => {
-            if(object === undefined) return null;
+        !isNaN(fileIndex) ? <Entry props={props} sessionData={sessionData}/> :
+            fileDataset.map((object, index) => {
+                // In case the entry got "deleted"
+                if(object === undefined) return null;
 
-            return (
-                <ListItem 
-                    key={index}
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        bgcolor: sessionData?.fileIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
-                    }}
-                >
-                    <ListItemIcon 
+                return (
+                    <ListItem 
+                        key={index}
                         sx={{
                             display: 'flex',
-                            justifyContent: 'center'
+                            justifyContent: 'space-between',
+                            bgcolor: sessionData?.fileIndex === index ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
                         }}
-                        children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
-                    />
-                    <ListItemButton onClick={() => handleClick(object, index)}>
-                        {`Entry: ${index}`}
-                    </ListItemButton>
-                    {/* Menu of json file */}
-                    <ListItemSecondaryAction>
-                        {/* Menu-Icon */}
-                        <MenuRounded 
-                            edge="end" 
-                            onClick={event => handleMenuClick(event, object, index)}
+                    >
+                        <ListItemIcon 
                             sx={{
-                                '&:hover': { cursor: 'pointer' }
+                                display: 'flex',
+                                justifyContent: 'center'
                             }}
+                            children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(index) ? 'red' : 'limegreen' }}/>} 
                         />
-                    </ListItemSecondaryAction>
-                </ListItem>
-            )
-        })
+                        <ListItemButton onClick={() => handleClick(object, index)}>
+                            {index}
+                        </ListItemButton>
+                        {/* Menu of json file */}
+                        <ListItemSecondaryAction>
+                            {/* Menu-Icon */}
+                            <MenuRounded 
+                                edge="end" 
+                                onClick={event => handleMenuClick(event, object, index)}
+                                sx={{
+                                    '&:hover': { cursor: 'pointer' }
+                                }}
+                            />
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                )
+            })
+    )
+}
+
+function Entry({ props, sessionData }) {
+    const 
+        { fileDataset, fileIndex, handleClick, handleMenuClick } = props,
+        fileData = fileDataset[fileIndex];
+
+    return (
+        fileData ?
+        <ListItem 
+            key={fileIndex}
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                bgcolor: sessionData?.fileIndex === fileIndex ? 'rgba(0, 255, 0, 0.2)' : 'inherit'
+            }}
+        >
+            <ListItemIcon 
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+                children={<MapRounded sx={{ color: sessionData?.changedFiles?.includes(fileIndex) ? 'red' : 'limegreen' }}/>} 
+            />
+            <ListItemButton onClick={() => handleClick(fileData, fileIndex)}>
+                {fileIndex}
+            </ListItemButton>
+            {/* Menu of json file */}
+            <ListItemSecondaryAction>
+                {/* Menu-Icon */}
+                <MenuRounded 
+                    edge="end" 
+                    onClick={event => handleMenuClick(event, fileData, fileIndex)}
+                    sx={{
+                        '&:hover': { cursor: 'pointer' }
+                    }}
+                />
+            </ListItemSecondaryAction>
+        </ListItem>
+        : <ListItem>No entry with ID "{fileIndex}" found</ListItem>
     )
 }
 

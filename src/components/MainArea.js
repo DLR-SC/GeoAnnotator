@@ -26,7 +26,7 @@ export default function MainArea(props) {
     return (
         <Box component="main"
             sx={{
-                minWidth: '50rem'
+                minWidth: 'fit-content'
             }}
         >
             <Grid container 
@@ -40,7 +40,7 @@ export default function MainArea(props) {
                 {/* Left wing - FileExplorer */}
                 <Grid item xs={2}
                     sx={{
-                        minWidth: '18rem' // Content should not be crushed when window is being reduced in size
+                        minWidth: 'fit-content' // Content should not be crushed when window is being reduced in size
                     }}
                 >
                     <Item
@@ -52,7 +52,8 @@ export default function MainArea(props) {
                                 }}
                                 dataProps={{
                                     fileDataset:    fileDataset,
-                                    setFileDataset: setFileDataset
+                                    setFileDataset: setFileDataset,
+                                    setCurrentData: setCurrentData,
                                 }}
                             />
                         }

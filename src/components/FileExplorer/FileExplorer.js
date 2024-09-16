@@ -5,21 +5,36 @@ import { Save } from '@mui/icons-material'
 import { useSession } from '../SessionProvider'
 import { SaveButton } from '../customComponents'
 import React, { useEffect, useState } from 'react'
-import { List, Menu, MenuItem } from '@mui/material'
 import { addFileWithoutDupe } from '../../utils/utilFunctions'
 import { convertFileToJSONArray } from '../../utils/jsonFunctions'
+import { List, Menu, MenuItem, TextField, InputAdornment } from '@mui/material'
 import { ExtractEntries, downloadFile, downloadFiles } from './FileExplorerFunctions'
 
 export default function FileExplorer({ dataProps, handleFileItemClick }) {
     const
-        { fileDataset, setFileDataset } = dataProps,
+        { 
+            fileDataset, setFileDataset,
+            setCurrentData
+        } = dataProps,
         { sessionData, setSessionData } = useSession(),
-        [anchorEl, setAnchorEl] = useState(null),
-        [disabledSaveButton, setDisabledSaveButton] = useState(true),
+
+        // Menu
         [fileData, setFileData] = useState(),
+        [anchorEl, setAnchorEl] = useState(null),
         handleMenuClick = (event, object, index) => {
             setAnchorEl(event.currentTarget);
             setFileData({ ...object, id: index });
+        },
+
+        // Save all files button 
+        [disabledSaveButton, setDisabledSaveButton] = useState(true),
+        
+        // Search bar
+        [fileIndex, setFileIndex] = useState(),
+        handleSearchBarChange = (event) => {
+            let value = event.target.value;
+            if (!isNaN(value) && /^\d*$/.test(value) && value.trim() !== '') setFileIndex(Number(value))
+            else setFileIndex();
         };
 
     // Apply changes to the corresponding files
@@ -34,80 +49,92 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [sessionData?.newFileData])
 
-    // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen) (once)
+    // Enable 'Save all files'-button, when 'fileDataset' changes (e.g. local file chosen)
     useEffect(() => { if(fileDataset.length && disabledSaveButton) setDisabledSaveButton(false) }, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [fileDataset])
 
-    return (
-        <>
-            <FileUploader 
-                onFilesSelect={files => { 
-                    // FIXME: We assume, that we only have selected one file. Thus we expect only one element in the array
-                    convertFileToJSONArray(files[0], setFileDataset);
-                    // Reset the changeFiles-stat
-                    setSessionData({ ...sessionData, changedFiles: undefined });
-                }}
+    return (<>
+        <FileUploader 
+            onFilesSelect={files => { 
+                // FIXME: We assume, that we only have selected one file. Thus we expect only one element in the array
+                convertFileToJSONArray(files[0], setFileDataset);
+                // Reset the changeFiles-stat
+                setSessionData({ ...sessionData, changedFiles: undefined });
+            }}
+        />
+        <TextField
+            fullWidth
+            margin='normal'
+            placeholder='Search for entry'
+            disabled={fileDataset.length === 0}
+            InputProps={{
+                startAdornment: <InputAdornment position='start'>ID:</InputAdornment>,
+              }}
+            onChange={handleSearchBarChange}
+        />
+        <List
+            sx={{
+                display: 'flex',
+                flexWrap: 'nowrap',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                // alignItems: 'flex-start',
+                mt: 2, mb: 2,
+                height: '70vh',
+                overflowY: 'auto',
+                borderRadius: '0.5rem',
+                backgroundColor: 'white'
+            }}
+        >
+            <ExtractEntries 
+                fileIndex={fileIndex}
+                fileDataset={fileDataset}
+                handleClick={handleFileItemClick} 
+                handleMenuClick={handleMenuClick}
             />
-            <List
-                sx={{
-                    display: 'flex',
-                    flexWrap: 'nowrap',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    mt: 2, mb: 2,
-                    height: '70vh',
-                    overflowY: 'auto',
-                    borderRadius: '0.5rem',
-                    backgroundColor: 'white'
-                }}
+            {/* Menu */}
+            <Menu 
+                anchorEl={anchorEl} 
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
             >
-                <ExtractEntries 
-                    data={fileDataset} 
-                    handleClick={handleFileItemClick} 
-                    handleMenuClick={handleMenuClick}
-                />
-                {/* Menu */}
-                <Menu 
-                    anchorEl={anchorEl} 
-                    open={Boolean(anchorEl)}
-                    onClose={() => setAnchorEl(null)}
+                {/* Download */}
+                <MenuItem 
+                    variant="outlined" 
+                    onClick={() => {
+                        setAnchorEl(null);
+                        downloadFile(fileData, sessionData);
+                    }}
                 >
-                    {/* Download */}
-                    <MenuItem 
-                        variant="outlined" 
-                        onClick={() => {
-                            setAnchorEl(null);
-                            downloadFile(fileData, sessionData);
-                        }}
-                    >
-                        Download
-                    </MenuItem>
-                    {/* Delete */}
-                    <MenuItem 
-                        onClick={() => {
-                            setAnchorEl(null);
-                            setFileDataset(fileDataset.map((file, index) => { if(index === fileData?.id) return undefined; else return file; }));
-                        }}
-                    >
-                        Delete
-                    </MenuItem>
-                </Menu>
-            </List>
-            <SaveButton
-                disabled={disabledSaveButton}
-                variant='contained'
-                startIcon={<Save />}
-                sx={{
-                    backgroundColor: 'lightgrey',
-                    '&:hover': {
-                        backgroundColor: 'darkblue',
-                    }
-                }}
-                onClick={() => downloadFiles(fileDataset, sessionData)}
-            >
-                Save all files
-            </SaveButton>
-        </>
-    )
+                    Download
+                </MenuItem>
+                {/* Delete */}
+                <MenuItem 
+                    onClick={() => {
+                        setAnchorEl(null);
+                        setFileDataset(fileDataset.map((file, index) => { if(index === fileData?.id) return undefined; else return file; }));
+                        // If data was chosen before, reset the values of textcontent and geolocation-list
+                        if(sessionData?.fileIndex === fileData?.id) setCurrentData();
+                    }}
+                >
+                    Delete
+                </MenuItem>
+            </Menu>
+        </List>
+        <SaveButton
+            disabled={disabledSaveButton}
+            variant='contained'
+            startIcon={<Save />}
+            sx={{
+                backgroundColor: 'lightgrey',
+                '&:hover': {
+                    backgroundColor: 'darkblue',
+                }
+            }}
+            onClick={() => downloadFiles(fileDataset, sessionData)}
+        >
+            Save all files
+        </SaveButton>
+    </>)
 }
