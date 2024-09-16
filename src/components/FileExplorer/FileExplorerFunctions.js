@@ -100,7 +100,7 @@ function Entry({ props, sessionData }) {
                 />
             </ListItemSecondaryAction>
         </ListItem>
-        : <ListItem>No entry with ID "{fileIndex}" found</ListItem>
+        : <ListItem>Entry not found</ListItem>
     )
 }
 

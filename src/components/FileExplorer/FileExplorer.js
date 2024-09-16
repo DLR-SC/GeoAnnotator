@@ -64,14 +64,18 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
             }}
         />
         <TextField
+            disabled={fileDataset.length === 0}
             fullWidth
             margin='normal'
             placeholder='Search for entry'
-            disabled={fileDataset.length === 0}
+            onChange={handleSearchBarChange}
             InputProps={{
                 startAdornment: <InputAdornment position='start'>ID:</InputAdornment>,
-              }}
-            onChange={handleSearchBarChange}
+            }}
+            sx={{
+                backgroundColor: 'white',
+                borderRadius: '0.5rem',
+            }}
         />
         <List
             sx={{
@@ -79,8 +83,7 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
                 flexWrap: 'nowrap',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                // alignItems: 'flex-start',
-                mt: 2, mb: 2,
+                mb: 2,
                 height: '70vh',
                 overflowY: 'auto',
                 borderRadius: '0.5rem',

@@ -87,8 +87,7 @@ export default function Provider(props) {
                             <TextField
                                 disabled
                                 size='small'
-                                // variant='filled'
-                                label="Amount"
+                                label="Number"
                                 value={datacount}
                                 helperText={"Current amount of annotated data with chosen provider"}
                                 InputProps={{
