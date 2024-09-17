@@ -78,18 +78,13 @@ export default function Provider(props) {
                             </FormControl>
                         </ListItem>
                         {/* Current amount of annotated datasets */}
-                        <ListItem
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'flex-end'
-                            }}
-                        >
+                        <ListItem>
                             <TextField
                                 disabled
                                 size='small'
                                 label="Number"
                                 value={datacount}
-                                helperText={"Current amount of annotated data with chosen provider"}
+                                helperText={"Current amount of annotated data with selected provider"}
                                 InputProps={{
                                     startAdornment: <Numbers style={{ marginRight: 8 }} />,
                                 }}

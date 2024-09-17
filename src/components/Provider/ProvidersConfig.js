@@ -32,7 +32,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
     };
       
   return (
-    <Paper elevation={3} style={{ margin: '20px', padding: '20px' }}>
+    <Paper elevation={3} sx={{ m: '20px', p: '20px' }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -108,7 +108,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
               variant="contained"
               color="primary"
               startIcon={<AddIcon />}
-              style={{ marginTop: '20px' }}
+              sx={{ mt: '20px' }}
               onClick={() => {
                 setProviderDialogData({ provider: undefined, usage: 'Add' });
                 setOpenProviderDialog(true);
@@ -120,7 +120,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
               variant="outlined"
               color="secondary"
               startIcon={<Refresh />}
-              style={{ marginTop: '20px' }}
+              sx={{ mt: '20px' }}
               onClick={handleLoadProvider}
             >
               Load Provider

@@ -144,6 +144,7 @@ export default function ProviderDialog({ dialogProps }) {
                 required={selectedOption === 'selfhosted'}
                 error={!isURLValid}
                 label="Hostserver-URL"
+                helperText="Hint: The URL should support the endpoints '/models' and '/chat/completions'"
                 defaultValue={hostserver}
                 onBlur={event => {
                   let url = event.target.value

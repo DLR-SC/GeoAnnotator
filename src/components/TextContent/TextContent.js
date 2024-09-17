@@ -58,8 +58,8 @@ export function TextContent(props) {
         <Box
             sx={{
                 display: 'flex',
+                flexWrap: 'wrap',
                 flexDirection: 'column',
-                flexWrap: 'nowrap'
             }}
         >
             {/* Text area */}

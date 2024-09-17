@@ -40,6 +40,9 @@ export default function Geolocation(props) {
                 variant='contained'
                 disabled={sessionData?.disableSaveGeolocationChangesButton}
                 onClick={handleSaveButtonClick}
+                sx={{
+                    width: '10rem'
+                }}
             >
                 Save changes
             </SaveButton>
