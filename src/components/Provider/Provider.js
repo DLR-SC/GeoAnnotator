@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { 
+    Box,
     FormControl,
     FormHelperText,
     Grid,
@@ -12,9 +13,9 @@ import {
     Typography,
     TextField,
 } from '@mui/material';
-import { Numbers } from '@mui/icons-material';
+import { CheckCircle, Cancel, Numbers } from '@mui/icons-material';
 import ProvidersConfig from './ProvidersConfig';
-import { countAnnotatedData } from './ProviderFunctions';
+import { checkSelfhostedServerStatus, countAnnotatedData, checkModelStatus } from './ProviderFunctions';
 
 /**
  * Provider to manage LLMs
@@ -25,13 +26,51 @@ export default function Provider(props) {
             provider, setProvider,
             providers, setProviders
         } = props,
-        [datacount, setDatacount] = useState(0);
+        [datacount, setDatacount] = useState(0),
 
-    // Count annotated data with chosen provider
+        [serverStatus, setServerStatus] = useState(),
+        renderServerStatus = () => {
+            switch (serverStatus) {
+                case 'offline':
+                  return <Cancel sx={{ color: 'red', mr: 1 }} />;
+                case 'online':
+                  return <CheckCircle sx={{ color: 'green', mr: 1 }} />;
+                default:
+                  return null;
+              }
+        },
+
+        [modelStatus, setModelStatus] = useState(),
+        renderModelStatus = () => {
+            switch (modelStatus) {
+                case 'Model loaded':
+                    return <CheckCircle sx={{ color: 'green', mr: 1 }} />;
+                case 'Model not loaded':
+                    return <Cancel sx={{ color: 'red', mr: 1 }} />;
+                default:
+                  return null;
+              }
+        };
+
     useEffect(() => {
         countAnnotatedData(provider?.instance_name)
             .then(count => setDatacount(count))
             .catch(error => alert(error))
+
+        if(provider?.data?.hostserver_url) 
+            checkSelfhostedServerStatus(provider?.data?.hostserver_url)
+                .then(async status => {
+                    setServerStatus(status === 200 ? 'online' : 'offline');
+                    setModelStatus(await checkModelStatus(provider));
+                })
+                .catch(() => {
+                    setServerStatus('offline')
+                    setModelStatus('Model not loaded')
+                })
+        else {
+            setServerStatus()
+            setModelStatus()
+        }
     }, [provider])
 
     return (
@@ -54,9 +93,21 @@ export default function Provider(props) {
                         Provider Settings
                     </Typography>
                     <List>
-                        <ListItem>
+                        <ListItem
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'nowrap',
+                                alignItems: 'baseline'
+                            }}
+                        >
                             {/* Provider selection */}
-                            <FormControl fullWidth margin="normal">
+                            <FormControl 
+                                margin="normal"
+                                sx={{
+                                    flexBasis: '50%',
+                                    mr: 2
+                                }}
+                            >
                                 <InputLabel id="provider-select-label">Provider</InputLabel>
                                 <Select
                                     disabled={providers?.length === 0 || providers === undefined}
@@ -64,7 +115,6 @@ export default function Provider(props) {
                                     labelId="provider-select-label"
                                     value={provider?.instance_name ?? ''}
                                     onChange={(event) => setProvider(providers.find((p) => p.instance_name === event.target.value))}
-                                    fullWidth
                                 >
                                     {
                                         providers?.map((provider, index) => (
@@ -76,6 +126,34 @@ export default function Provider(props) {
                                 </Select>
                                 <FormHelperText>Select a provider</FormHelperText>
                             </FormControl>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-around',
+                                    flexBasis: '50%'
+                                }}
+                            >
+                                <Typography 
+                                    variant="overline"
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'nowrap',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    {renderServerStatus()} {serverStatus}
+                                </Typography>
+                                <Typography 
+                                    variant="overline"
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'nowrap',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    {renderModelStatus()} {modelStatus}
+                                </Typography>
+                            </Box>
                         </ListItem>
                         {/* Current amount of annotated datasets */}
                         <ListItem>
