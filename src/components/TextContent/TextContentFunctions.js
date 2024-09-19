@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 
-import { SelectableTextItem } from "../customComponents"
-
 /**
  * Hightlight locations
  * @param {string} textContent 
@@ -17,21 +15,22 @@ export function highlightDetectedLocations(textContent, geolocations) {
  * @param {string} text 
  * @param {string[]} wordsToHighlight 
  */
-function highlightText (text, wordsToHighlight) {
+function highlightText(text, wordsToHighlight) {
     const
-        regexPattern = `${wordsToHighlight.length ? `(${wordsToHighlight.join('|')})|` : ''}[\\wäöüß']+|[.,!?;:()\\-"]`,
+        regexPattern = `(${wordsToHighlight.join('|')})`,
         regex = new RegExp(regexPattern, 'gi'),
-        parts = text.match(regex);
-    
-    return (
+        parts = text.split(regex);
+
+    return (<>{
         parts.map((part, index) =>
-            wordsToHighlight.includes(part) ? 
-                <SelectableTextItem key={index} props={{ text: part, isHighlighted: true }} />
-            : 
-                <SelectableTextItem key={index} props={{ text: part, isHighlighted: false}} />
+            wordsToHighlight.includes(part) ? (
+                <span key={index}>{part}</span>
+            ) : (
+                <React.Fragment key={index}>{part}</React.Fragment>
+            )
         )
-    )
-  };
+    }</>)
+}
 
 /**
  * @param {{name: string, position: [float, float]}} geolocations 

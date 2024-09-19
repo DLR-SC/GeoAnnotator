@@ -1,27 +1,29 @@
-.Selected {
-    background-color: yellow;
-}
-
-.Selecting {
-    background-color: yellow;
-}
-
-.TextItem::selection {
-    background-color: transparent; 
-}
-
-.TextItem[ishighlighted='true'].Selected {
-    background-color: defaultColor;
-}
-
-.TextItem[ishighlighted='true'].Selecting {
-    background-color: defaultColor;
-}
-
 .grid-container-textcontent-buttons {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.grid-container-textcontent-buttons .clearselection-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.grid-container-textcontent-buttons > .clearselection-button p {
+    margin-left: 1ch;
+}
+
+.grid-container-textcontent-buttons > .addlocation-geoparse-buttons Button:last-child {
+    margin-left: 1ch;
+}
+
+.textcontentarea_textcontent > span {
+    font-weight: bold;
+    color: white;
+    background-color: rgb(37, 135, 190);
+    border-radius: 5px;
 }

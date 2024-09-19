@@ -1,13 +1,11 @@
 /** The main text content area */
 
 import './TextContent.css'
-import { pipe } from '../../utils/utilFunctions'
+import { useEffect, useState } from "react"
 import { SaveButton } from '../customComponents'
-import { Box, Button, Grid } from "@mui/material"
-import { useEffect, useRef, useState } from "react"
-import { SelectableGroup } from "react-selectable-fast"
 import LocationDialog from '../Dialogs/LocationDialog'
 import GeoparseDialog from '../Dialogs/GeoparseDialog'
+import { Box, Button, Grid, Typography } from "@mui/material"
 import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 
 export function TextContent(props) {
@@ -19,40 +17,33 @@ export function TextContent(props) {
             detectedGeoreferences,  setDetectedGeoreferences,
         } = props,
 
-        // eslint-disable-next-line no-unused-vars
-        refSelectableGroup = useRef(null),
 
         // Open-States for dialogs
         [openLocationDialog, setOpenLocationDialog] = useState(false),
         [openGeoparseDialog, setOpenGeoparseDialog] = useState(false),
 
         // Selected entities in text content
-        [selectedItems, setSelectedItems] = useState([]),
+        [selectedItems, setSelectedItems] = useState(null),
+        handleEscapeClick = (event) => {
+            if(event.key === 'Escape') setSelectedItems(null)
+        },
 
-        // Disable 'Add location' and 'Geoparse' button
-        [disableButton, setDisableButton] = useState(true),
+        // Disable 'Add location' button
+        [disableAddLocationButton, setDisableAddLocationButton] = useState(true),
         [disableGeoparseButton, setDisableGeoparseButton] = useState(),
 
-        [geolocation, setGeolocation] = useState({ name: undefined, position: [] }),
-
-        handleSelectionFinish = (selectedItems) => {
-            let processOutput = pipe(
-                items => items.filter(item => !item.props.props.isHighlighted),
-                items => items.map(item => item.props.props.text)
-            ), output = processOutput(selectedItems);
-            setSelectedItems(output);
-            setDisableButton(output.length === 0);
-        };
-
-    // When another file is loaded, clear the selected items
-    useEffect(() => { 
-        if(refSelectableGroup.current) refSelectableGroup.current.clearSelection();
-        setDisableButton(true);
-        setDisableGeoparseButton(false);
-    }, [geolocations])
+        [geolocation, setGeolocation] = useState({ name: undefined, position: [] });
 
     // Disable GeoparseButton when no provider is selected
-    useEffect(() => setDisableGeoparseButton(provider === undefined), [textContent])
+    useEffect(() => setDisableGeoparseButton(!provider), [textContent])
+
+    useEffect(() => setDisableAddLocationButton(!selectedItems || selectedItems?.length < 1), [selectedItems])
+
+    // Add event-listener for ESC-button and remove @ unrendering
+    useEffect(() => { 
+        document.addEventListener('keydown', handleEscapeClick);
+        return () => { document.removeEventListener('keydown', handleEscapeClick) }
+    }, [])
 
     return (
         <Box
@@ -71,41 +62,68 @@ export function TextContent(props) {
                     height: '15rem',
                     overflowY: 'auto',
                     borderRadius: '0.5rem',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'flex-start'
                 }}
             >
-                <SelectableGroup
-                    ref={refSelectableGroup}
-                    deselectOnEsc
-                    enableDeselect
-                    onSelectionFinish={handleSelectionFinish}
-                    style={{ display: 'flex', flexWrap: 'wrap' }}
+                <Typography 
+                    className='textcontentarea_textcontent'
+                    onMouseUp={() => {
+                        let selection_ = window.getSelection(), selection = selection_.toString().trim();
+                        setSelectedItems(selection);
+                    }}
                 >
                     {highlightDetectedLocations(textContent, geolocations)}
-                </SelectableGroup>
+                </Typography>
+            </Box>
+
+            {/* Selection */}
+            <Box 
+                variant='inherit'
+                sx={{
+                    padding: 1,
+                    height: '5ch',
+                    overflowX: 'auto',
+                    borderRadius: '0.5rem',
+                    backgroundColor: 'white',
+                    display: 'flex',
+                    justifyContent: 'flex-start'
+                }}
+            >
+                <Typography>
+                    {selectedItems}
+                </Typography>
             </Box>
 
             <Grid container spacing={1} className='grid-container-textcontent-buttons'>
-                
                 {/* Clear selection button */}
-                <Grid item xs={'auto'}>
+                <Grid item className='clearselection-button'>
                     <Button
+                        disabled={!selectedItems}
                         variant='contained'
-                        disabled={disableButton}
                         sx={{ fontWeight: 'bold' }}
-                        onClick={() => refSelectableGroup.current.clearSelection()}
+                        onClick={() => setSelectedItems(null)}
                     >
                         Clear selection
                     </Button>
-                </Grid>
-                
-                {/* Info-Text for clearing selection */}
-                <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <p>or press ESC</p>
                 </Grid>
 
-                {/* Geoparse button */}
-                <Grid item xs={'auto'}>
+                {/* Add location button */}
+                <Grid item className='addlocation-geoparse-buttons'>
+                    <SaveButton
+                        variant='contained'
+                        disabled={disableAddLocationButton}
+                        onClick={() => {
+                            setGeolocation({...geolocation, name: selectedItems});
+                            setOpenLocationDialog(true);
+                        }}
+                    >
+                        Add location
+                    </SaveButton>
+                    {/* Geoparse button */}
                     <Button
                         disabled={disableGeoparseButton}
                         variant='contained'
@@ -125,21 +143,6 @@ export function TextContent(props) {
                     >
                         Geoparse
                     </Button>
-                </Grid>
-
-                {/* Add location button */}
-                <Grid item xs={'auto'}>
-                    <SaveButton
-                        variant='contained'
-                        disabled={disableButton}
-                        onClick={() => {
-                            setGeolocation({...geolocation, name: selectedItems.join(' ')});
-                            refSelectableGroup.current.clearSelection();
-                            setOpenLocationDialog(true);
-                        }}
-                    >
-                        Add new location
-                    </SaveButton>
                 </Grid>
 
             </Grid>

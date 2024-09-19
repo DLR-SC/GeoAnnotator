@@ -166,6 +166,9 @@ export default function Provider(props) {
                                 InputProps={{
                                     startAdornment: <Numbers style={{ marginRight: 8 }} />,
                                 }}
+                                sx={{
+                                    flexBasis: '25%'
+                                }}
                             />
                         </ListItem>
                     </List>
