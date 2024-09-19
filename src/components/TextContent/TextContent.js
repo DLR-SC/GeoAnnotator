@@ -24,9 +24,11 @@ export function TextContent(props) {
 
         // Selected entities in text content
         [selectedItems, setSelectedItems] = useState(null),
-        handleEscapeClick = (event) => {
-            if(event.key === 'Escape') setSelectedItems(null)
+        clearSelection = () => {
+            setSelectedItems(null);
+            let selection = window.getSelection(); selection.removeAllRanges();
         },
+        handleEscapeClick = (event) => { if(event.key === 'Escape') clearSelection() },
 
         // Disable 'Add location' button
         [disableAddLocationButton, setDisableAddLocationButton] = useState(true),
@@ -34,8 +36,12 @@ export function TextContent(props) {
 
         [geolocation, setGeolocation] = useState({ name: undefined, position: [] });
 
-    // Disable GeoparseButton when no provider is selected
-    useEffect(() => setDisableGeoparseButton(!provider), [textContent])
+    useEffect(() => {
+        // Disable GeoparseButton when no provider is selected
+        setDisableGeoparseButton(!provider)
+        // Reset selected Items when new text content is loaded
+        setSelectedItems(null)
+    }, [textContent])
 
     useEffect(() => setDisableAddLocationButton(!selectedItems || selectedItems?.length < 1), [selectedItems])
 
@@ -104,7 +110,7 @@ export function TextContent(props) {
                         disabled={!selectedItems}
                         variant='contained'
                         sx={{ fontWeight: 'bold' }}
-                        onClick={() => setSelectedItems(null)}
+                        onClick={clearSelection}
                     >
                         Clear selection
                     </Button>

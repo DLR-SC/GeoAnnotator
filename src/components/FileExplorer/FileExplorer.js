@@ -59,8 +59,9 @@ export default function FileExplorer({ dataProps, handleFileItemClick }) {
             onFilesSelect={files => { 
                 // FIXME: We assume, that we only have selected one file. Thus we expect only one element in the array
                 convertFileToJSONArray(files[0], setFileDataset);
-                // Reset the changeFiles-stat
-                setSessionData({ ...sessionData, changedFiles: undefined });
+                
+                // Reset file-properties
+                setCurrentData(); setSessionData({ ...sessionData, fileData: undefined, fileIndex: undefined, changedFiles: undefined });
             }}
         />
         <TextField

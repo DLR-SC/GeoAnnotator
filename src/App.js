@@ -36,7 +36,6 @@ export default function App() {
   
   /**  
    * Set data when new file is chosen
-   * Hint: Attributes "text" and "locations" may vary due
    */
   useEffect(() => {
     setTextContent(currentData?.text);
