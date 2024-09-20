@@ -168,10 +168,10 @@ export default function LocationDialog({ geolocations, geolocation, dialogProps 
                 onClick={() => {
                   let geolocationPos = [ coordinate.lat, coordinate.lng ];
                                     
-                  if(dialogProps.dialogUsage === 'edit')     geolocations.forEach((geo) => { if(geo.name === geolocation?.name) geo.position = geolocationPos }); 
+                  if(dialogProps.dialogUsage === 'edit')     geolocations.forEach(geo => { if(geo.name === geolocation?.name) geo.position = geolocationPos }); 
                   else if(dialogProps.dialogUsage === 'add') geolocations.push({ ...geolocation, position: geolocationPos });
                   
-                  setSessionData({ ...sessionData, disableSaveChangesButton: false });
+                  setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: false });
                   resetProps();
                 }}
               >

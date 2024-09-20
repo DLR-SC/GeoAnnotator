@@ -31,18 +31,26 @@ export default function Mapping({ geolocations }) {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {
-                geolocations ? geolocations.map((marker, index) => (
-                    <Marker 
-                        key={index} 
-                        position={marker.position}
-                    >
-                        <Popup>
-                            {marker.name}
-                            <br/>
-                            {`(${marker.position})`}
-                        </Popup>
-                    </Marker>
-                )) : null
+                geolocations ? geolocations.map((marker, index) => {
+                    if(
+                        marker.position === undefined   ||
+                        marker.position.length === 0    ||
+                        marker.position[0] === undefined||marker.position[1] === undefined   
+                    ) return null;
+
+                    return (
+                        <Marker 
+                            key={index} 
+                            position={marker.position}
+                        >
+                            <Popup>
+                                {marker.name}
+                                <br/>
+                                {`(${marker.position})`}
+                            </Popup>
+                        </Marker>
+                    )
+                }) : null
             }
             <FocusOnLatest markers={geolocations}/>
             <FocusOnClickedMarker/>

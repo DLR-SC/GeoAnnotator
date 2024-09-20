@@ -29,8 +29,7 @@ export default function GeoparseDialog({ dataProps, dialogProps }) {
     { sessionData, setSessionData } = useSession(),
     {
       setGeolocations,
-      georeferences,
-      setDetectedGeoreferences,
+      georeferences,    setDetectedGeoreferences,
     } = dataProps,
     // Reset properties, when dialog is closed
     resetProps = () => {
@@ -87,7 +86,7 @@ export default function GeoparseDialog({ dataProps, dialogProps }) {
             }
             </List>
 
-            {/* Mapping  */}
+            {/* Mapping */}
             <ListItem disablePadding sx={{ mt: 1 }}>
               <Box sx={{ width: '100%', height: '15rem' }}>
                 <DialogMapping
@@ -112,13 +111,13 @@ export default function GeoparseDialog({ dataProps, dialogProps }) {
                     The existing georeferences will be overwritten!
                   </Typography> 
                 </Grid>
-
+                
                 <Grid item xs={2}>
                   <SaveButton
                     variant='contained'
                     onClick={() => {
                       setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: false })
-                      setGeolocations(georeferences);
+                      setGeolocations(JSON.parse(JSON.stringify(georeferences))); // Create a copy of georeferences
                       dialogProps.onClose();
                     }}
                   >

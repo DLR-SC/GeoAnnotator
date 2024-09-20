@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { SaveButton } from '../customComponents'
 import LocationDialog from '../Dialogs/LocationDialog'
 import GeoparseDialog from '../Dialogs/GeoparseDialog'
-import { Box, Button, Grid, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material"
 import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 
 export function TextContent(props) {
@@ -17,8 +17,6 @@ export function TextContent(props) {
             detectedGeoreferences,  setDetectedGeoreferences,
         } = props,
 
-
-        // Open-States for dialogs
         [openLocationDialog, setOpenLocationDialog] = useState(false),
         [openGeoparseDialog, setOpenGeoparseDialog] = useState(false),
 
@@ -30,9 +28,9 @@ export function TextContent(props) {
         },
         handleEscapeClick = (event) => { if(event.key === 'Escape') clearSelection() },
 
-        // Disable 'Add location' button
         [disableAddLocationButton, setDisableAddLocationButton] = useState(true),
         [disableGeoparseButton, setDisableGeoparseButton] = useState(),
+        [geoparseLoading, setGeoparseLoading] = useState(),
 
         [geolocation, setGeolocation] = useState({ name: undefined, position: [] });
 
@@ -135,19 +133,20 @@ export function TextContent(props) {
                         variant='contained'
                         sx={{ fontWeight: 'bold' }}
                         onClick={() => {
-                            setDisableGeoparseButton(true);
+                            setDisableGeoparseButton(true); setGeoparseLoading(true); 
                             geoparseTextContent(provider, textContent)
                                 .then(data => {
-                                    setDetectedGeoreferences(data);
-                                    setOpenGeoparseDialog(true);
+                                    setOpenGeoparseDialog(true); setDetectedGeoreferences(data);
                                 })
-                                .catch(error => {
-                                    setDisableGeoparseButton(false);
-                                    alert(error?.response?.data?.detail)
+                                .catch(error => alert(error?.response?.data?.detail))
+                                .finally(() => {
+                                    setGeoparseLoading(false); setDisableGeoparseButton(false);
                                 })
                         }}
                     >
-                        Geoparse
+                        {
+                            !geoparseLoading ? 'Geoparse' : <CircularProgress size={24} style={{ color: 'white' }}/>
+                        }
                     </Button>
                 </Grid>
 
