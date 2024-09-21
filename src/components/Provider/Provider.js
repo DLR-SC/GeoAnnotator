@@ -53,23 +53,27 @@ export default function Provider(props) {
         };
 
     useEffect(() => {
-        countAnnotatedData(provider?.instance_name)
-            .then(count => setDatacount(count))
-            .catch(error => alert(error))
-
-        if(provider?.data?.hostserver_url) 
-            checkSelfhostedServerStatus(provider?.data?.hostserver_url)
-                .then(async status => {
-                    setServerStatus(status === 200 ? 'online' : 'offline');
-                    setModelStatus(await checkModelStatus(provider));
-                })
-                .catch(() => {
-                    setServerStatus('offline')
-                    setModelStatus('Model not loaded')
-                })
-        else {
-            setServerStatus()
-            setModelStatus()
+        if(provider){
+            // Annotated Datacount with selected provider
+            countAnnotatedData(provider?.instance_name)
+                .then(count => setDatacount(count))
+                .catch(error => alert(error))
+    
+            // Server Status Check for selfhosted provider
+            if(provider?.data?.hostserver_url) 
+                checkSelfhostedServerStatus(provider?.data?.hostserver_url)
+                    .then(async status => {
+                        setServerStatus(status === 200 ? 'online' : 'offline');
+                        setModelStatus(await checkModelStatus(provider));
+                    })
+                    .catch(() => {
+                        setServerStatus('offline')
+                        setModelStatus('Model not loaded')
+                    })
+            else {
+                setServerStatus()
+                setModelStatus()
+            }
         }
     }, [provider])
 

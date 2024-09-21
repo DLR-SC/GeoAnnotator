@@ -97,7 +97,7 @@ export default function ProviderDialog({ dialogProps }) {
           <>
             {/* Auswahl einer Option */}
             <ListItem>
-                <FormControl fullWidth margin="normal">
+                <FormControl fullWidth margin="dense">
                     <InputLabel id="option-select-label">Option</InputLabel>
                     <Select
                         fullWidth
@@ -127,10 +127,10 @@ export default function ProviderDialog({ dialogProps }) {
                 required={selectedOption === 'openai'}
                 error={!isApiKeyValid}
                 label="API Key"
+                fullWidth
                 defaultValue={apiKey}
                 onBlur={event => setApiKey(event.target.value)}
-                fullWidth
-                margin="normal"
+                margin='normal'
                 InputProps={{
                   startAdornment: <VpnKey style={{ marginRight: 8 }} />,
                 }}
@@ -145,6 +145,7 @@ export default function ProviderDialog({ dialogProps }) {
                 error={!isURLValid}
                 label="Hostserver-URL"
                 helperText="Hint: The URL should support the endpoints '/models' and '/chat/completions'"
+                fullWidth
                 defaultValue={hostserver}
                 onBlur={event => {
                   let url = event.target.value
@@ -156,10 +157,11 @@ export default function ProviderDialog({ dialogProps }) {
                   }
                   setHostserver(url);
                 }}
-                fullWidth
-                margin="normal"
                 InputProps={{
                   startAdornment: <Computer style={{ marginRight: 8 }} />,
+                }}
+                sx={{
+                  mt: 1, mb: 0
                 }}
               />
             </ListItem>
@@ -269,6 +271,7 @@ export default function ProviderDialog({ dialogProps }) {
                     required
                     fullWidth
                     label="Treshold for Retrain-Job"
+                    placeholder="> 100 recommended"
                     defaultValue={threshold}
                     error={!isThresholdValid}
                     onBlur={event => {
