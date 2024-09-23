@@ -39,7 +39,9 @@ export function TextContent(props) {
         setDisableGeoparseButton(!provider)
         // Reset selected Items when new text content is loaded
         setSelectedItems(null)
-    }, [textContent])
+    }, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [textContent])
 
     useEffect(() => setDisableAddLocationButton(!selectedItems || selectedItems?.length < 1), [selectedItems])
 
@@ -47,7 +49,9 @@ export function TextContent(props) {
     useEffect(() => { 
         document.addEventListener('keydown', handleEscapeClick);
         return () => { document.removeEventListener('keydown', handleEscapeClick) }
-    }, [])
+    }, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [])
 
     return (
         <Box
@@ -69,7 +73,6 @@ export function TextContent(props) {
                     backgroundColor: 'white',
                     display: 'flex',
                     flexWrap: 'wrap',
-                    justifyContent: 'flex-start'
                 }}
             >
                 <Typography 

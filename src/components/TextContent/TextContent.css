@@ -21,6 +21,10 @@
     margin-left: 1ch;
 }
 
+.textcontentarea_textcontent {
+    text-align: left;
+}
+
 .textcontentarea_textcontent > span {
     font-weight: bold;
     color: white;
