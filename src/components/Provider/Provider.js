@@ -1,3 +1,4 @@
+import './Provider.css';
 import React, { useEffect, useState } from 'react';
 import { 
     Box,
@@ -13,7 +14,7 @@ import {
     Typography,
     TextField,
 } from '@mui/material';
-import { CheckCircle, Cancel, Numbers } from '@mui/icons-material';
+import { CheckCircle, Cancel } from '@mui/icons-material';
 import ProvidersConfig from './ProvidersConfig';
 import { checkSelfhostedServerStatus, countAnnotatedData, checkModelStatus } from './ProviderFunctions';
 
@@ -96,20 +97,13 @@ export default function Provider(props) {
                     <Typography variant="h6" style={{ display: 'flex', alignItems: 'center' }}>
                         Provider Settings
                     </Typography>
-                    <List>
-                        <ListItem
-                            sx={{
-                                display: 'flex',
-                                flexWrap: 'nowrap',
-                                alignItems: 'baseline'
-                            }}
-                        >
+                    <List className="provider-settings-list">
+                        <ListItem>
                             {/* Provider selection */}
                             <FormControl 
                                 margin="normal"
                                 sx={{
-                                    flexBasis: '50%',
-                                    mr: 2
+                                    flexBasis: '50%'
                                 }}
                             >
                                 <InputLabel id="provider-select-label">Provider</InputLabel>
@@ -118,7 +112,7 @@ export default function Provider(props) {
                                     label="Provider"
                                     labelId="provider-select-label"
                                     value={provider?.instance_name ?? ''}
-                                    onChange={(event) => setProvider(providers.find((p) => p.instance_name === event.target.value))}
+                                    onChange={event => setProvider(providers.find(p => p.instance_name === event.target.value))}
                                 >
                                     {
                                         providers?.map((provider, index) => (
@@ -130,11 +124,12 @@ export default function Provider(props) {
                                 </Select>
                                 <FormHelperText>Select a provider</FormHelperText>
                             </FormControl>
+                            {/* Server Status */}
                             <Box
                                 sx={{
                                     display: 'flex',
+                                    flexBasis: '50%',
                                     justifyContent: 'space-around',
-                                    flexBasis: '50%'
                                 }}
                             >
                                 <Typography 
@@ -159,21 +154,51 @@ export default function Provider(props) {
                                 </Typography>
                             </Box>
                         </ListItem>
-                        {/* Current amount of annotated datasets */}
                         <ListItem>
-                            <TextField
-                                disabled
-                                size='small'
-                                label="Number"
-                                value={datacount}
-                                helperText={"Current amount of annotated data with selected provider"}
-                                InputProps={{
-                                    startAdornment: <Numbers style={{ marginRight: 8 }} />,
-                                }}
+                            {/* Conversation style */}
+                            <FormControl 
+                                margin="normal"
                                 sx={{
-                                    flexBasis: '25%'
+                                    flexBasis: '50%'
                                 }}
-                            />
+                            >
+                                <InputLabel id="provider-select-label">Conversation style</InputLabel>
+                                <Select
+                                    value={provider?.temperature ?? ''}
+                                    disabled={provider === undefined}
+                                    label="Conversation style"
+                                    labelId="provider-select-label"
+                                    onChange={event => setProvider({ ...provider, temperature: event.target.value })}
+                                >
+                                    {
+                                        ['Precise', 'Balanced', 'Creative'].map((style, index) => (
+                                            <MenuItem key={index} value={index/2}>
+                                                {style}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                                <FormHelperText>Creativity or predictability of the output</FormHelperText>
+                            </FormControl>
+                            {/* Current amount of annotated datasets */}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '50%'
+                                }}
+                            >
+                                <Typography
+                                    component='p'
+                                    sx={{
+                                        display: 'flex',
+                                        textAlign: 'right'
+                                    }}
+                                > 
+                                    Amount of annotated data with provider: {datacount}
+                                </Typography>
+                            </Box>
                         </ListItem>
                     </List>
                 </Paper>

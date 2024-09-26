@@ -1,0 +1,5 @@
+.provider-settings-list > li {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+}

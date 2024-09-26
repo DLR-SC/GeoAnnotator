@@ -317,6 +317,7 @@ export default function ProviderDialog({ dialogProps }) {
                     {
                       "option": selectedOption,
                       "instance_name": instanceName,
+                      "temperature": 0,
                       "data": 
                         selectedOption === 'openai' ? {
                           "api_key": apiKey,
