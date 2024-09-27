@@ -16,6 +16,7 @@ import {
   Typography,
   TableContainer,
   Paper,
+  Tooltip,
 } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
@@ -53,7 +54,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
                   <TableCell>Provider</TableCell>
                   <TableCell>Model</TableCell>
                   <TableCell>Threshold for Retrain-Job</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>Actions <Tooltip title="Edit ✏️ or delete 🗑️ provider">ⓘ</Tooltip></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -67,22 +68,26 @@ export default function ProvidersConfig({ providers, setProviders }) {
                         <TableCell>{provider?.data.model}</TableCell>
                         <TableCell>{provider?.data.threshold_retrain_job}</TableCell>
                         <TableCell>
-                          <IconButton 
-                            color="primary"
-                            onClick={() => {
-                              setProviderDialogData({ index: index, provider: provider, usage: 'Edit' });
-                              setOpenProviderDialog(true);
-                              
-                            }}
-                          >✏️</IconButton>
-                          <IconButton 
-                            color="secondary"
-                            onClick={() => 
-                              deleteProvider(index)
-                                .then(async () => await handleLoadProvider())
-                                .catch(e => alert(e))
-                            }
-                          >🗑️</IconButton>
+                          <Tooltip title="Edit">
+                            <IconButton 
+                              color="primary"
+                              onClick={() => {
+                                setProviderDialogData({ index: index, provider: provider, usage: 'Edit' });
+                                setOpenProviderDialog(true);
+                                
+                              }}
+                            >✏️</IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete">
+                            <IconButton 
+                              color="secondary"
+                              onClick={() => 
+                                deleteProvider(index)
+                                  .then(async () => await handleLoadProvider())
+                                  .catch(e => alert(e))
+                              }
+                            >🗑️</IconButton>
+                          </Tooltip>
                         </TableCell>
                       </TableRow>
                     ))

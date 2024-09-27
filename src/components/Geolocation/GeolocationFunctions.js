@@ -8,7 +8,8 @@ import {
     ListItemSecondaryAction,
     Menu,
     MenuItem,
-    Box
+    Box,
+    Tooltip
 } from '@mui/material';
 import { 
     Place,
@@ -37,7 +38,7 @@ export function GeolocationItems(props) {
                         {/* Place-Icon */}
                         <ListItemIcon 
                             onClick={() => setSessionData({ ...sessionData, geolocation: geo })} // Exchange data with MapContainer
-                            children={<Place sx={{ color: '#2587be', '&:hover': { cursor: 'pointer' } }} />} 
+                            children={<Tooltip title="Click to view on map"><Place sx={{ color: '#2587be', '&:hover': { cursor: 'pointer' } }} /></Tooltip>} 
                         />
                         {/* Placename + Position */}
                         <ListItemText 

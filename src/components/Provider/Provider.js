@@ -12,7 +12,7 @@ import {
     Paper,
     Select,
     Typography,
-    TextField,
+    Tooltip,
 } from '@mui/material';
 import { CheckCircle, Cancel } from '@mui/icons-material';
 import ProvidersConfig from './ProvidersConfig';
@@ -95,7 +95,7 @@ export default function Provider(props) {
             <Grid item>
                 <Paper elevation={3} style={{ margin: '20px', padding: '20px' }}>
                     <Typography variant="h6" style={{ display: 'flex', alignItems: 'center' }}>
-                        Provider Settings
+                        <span style={{ marginRight: '10px' }}>⚙️</span>Provider Settings
                     </Typography>
                     <List className="provider-settings-list">
                         <ListItem>
@@ -122,7 +122,6 @@ export default function Provider(props) {
                                         ))
                                     }
                                 </Select>
-                                <FormHelperText>Select a provider</FormHelperText>
                             </FormControl>
                             {/* Server Status */}
                             <Box
@@ -159,7 +158,8 @@ export default function Provider(props) {
                             <FormControl 
                                 margin="normal"
                                 sx={{
-                                    flexBasis: '50%'
+                                    flexBasis: '50%',
+                                    mr: 2
                                 }}
                             >
                                 <InputLabel id="provider-select-label">Conversation style</InputLabel>
@@ -178,7 +178,7 @@ export default function Provider(props) {
                                         ))
                                     }
                                 </Select>
-                                <FormHelperText>Creativity or predictability of the output</FormHelperText>
+                                <FormHelperText>Creativity or predictability of the output <Tooltip title="'Precise' is the default value. It is recommended to either use 'Precise' or 'Balanced'. Either way, the outputs are deterministic and diverse. Selecting 'Creative' can cause issues and return non-sense (Only for experimental purposes).">ⓘ</Tooltip></FormHelperText>
                             </FormControl>
                             {/* Current amount of annotated datasets */}
                             <Box
