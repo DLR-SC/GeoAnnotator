@@ -3,3 +3,10 @@
     flex-wrap: nowrap;
     align-items: baseline;
 }
+
+.server-status-symbol-text { 
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+}

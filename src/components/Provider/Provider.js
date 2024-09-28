@@ -131,23 +131,15 @@ export default function Provider(props) {
                                     justifyContent: 'space-around',
                                 }}
                             >
-                                <Typography 
+                                <Typography
                                     variant="overline"
-                                    sx={{
-                                        display: 'flex',
-                                        flexWrap: 'nowrap',
-                                        justifyContent: 'space-between',
-                                    }}
+                                    className='server-status-symbol-text'
                                 >
                                     {renderServerStatus()} {serverStatus}
                                 </Typography>
                                 <Typography 
                                     variant="overline"
-                                    sx={{
-                                        display: 'flex',
-                                        flexWrap: 'nowrap',
-                                        justifyContent: 'space-between',
-                                    }}
+                                    className='server-status-symbol-text'
                                 >
                                     {renderModelStatus()} {modelStatus}
                                 </Typography>
@@ -158,8 +150,7 @@ export default function Provider(props) {
                             <FormControl 
                                 margin="normal"
                                 sx={{
-                                    flexBasis: '50%',
-                                    mr: 2
+                                    flexBasis: '50%'
                                 }}
                             >
                                 <InputLabel id="provider-select-label">Conversation style</InputLabel>
