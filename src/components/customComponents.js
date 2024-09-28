@@ -2,9 +2,7 @@ import {
     Paper,
     Button, 
     styled,
-    Typography
 } from '@mui/material';
-import { createSelectable } from 'react-selectable-fast';
 
 export const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? 
@@ -41,15 +39,3 @@ export const SaveButton = styled(Button)({
         backgroundColor: 'darkgreen',
     }
 });
-
-export const SelectableTextItem = createSelectable(({ selectableRef, isSelected, isSelecting, props }) => (
-    <Typography 
-        ref={selectableRef}
-        marginX={0.25}
-        component={'p'} 
-        children={props.text}
-        ishighlighted={`${props.isHighlighted}`}
-        sx={props.isHighlighted ? {backgroundColor: '#2587be', color: 'white', padding: 0.1, borderRadius: 1} : null}
-        className={`TextItem ${isSelected ? 'Selected' : isSelecting ? 'Selecting' : ''}`}
-    />
-));

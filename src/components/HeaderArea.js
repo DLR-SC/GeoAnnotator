@@ -9,16 +9,21 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function HeaderArea() {
   const
-    navigate = useNavigate(), location = useLocation(),
+    navigate = useNavigate(),
     navItems = [{ label: 'Main', path: '/main' }, { label: 'Provider', path: '/provider' }],
     [selectedItem, setSelectedItem] = useState();
 
-  // When the GeoAnnotator is started, check on which page it starts and highlight the path
-  useEffect(() => setSelectedItem(location.pathname), [])
+  // When the GeoAnnotator is started, navigate to main page and highlight menu button
+  useEffect(() => {
+    navigate('/main')
+    setSelectedItem('/main')
+  }, 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [])
 
   return (
     <Box sx={{ display: 'flex', minWidth: '50rem' }}>
@@ -53,8 +58,8 @@ export default function HeaderArea() {
                   }
                 }}
                 onClick={() => {
-                  navigate(item.path);
                   setSelectedItem(item.path);
+                  navigate(item.path);
                 }}
 
               >

@@ -1,7 +1,7 @@
 import './App.css';
 import L from 'leaflet';
-import { useState, useEffect } from 'react';
 import { Toolbar } from '@mui/material';
+import { useState, useEffect } from 'react';
 import MainArea from './components/MainArea';
 import HeaderArea from './components/HeaderArea';
 import Provider from './components/Provider/Provider';
@@ -42,7 +42,6 @@ export default function App() {
     setGeolocations(structureLocationAttribute(currentData?.locations));
     setDetectedGeoreferences();
   }, [currentData]);
-
 
   return (
     <SessionProvider

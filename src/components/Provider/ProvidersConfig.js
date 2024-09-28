@@ -29,7 +29,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
     handleLoadProvider = async () => {
       try {
         setProviders(await loadProviders())
-      } catch (e) { alert(e) }
+      } catch (e) { alert(e?.response?.data?.detail) }
     };
       
   return (
@@ -137,7 +137,7 @@ export default function ProvidersConfig({ providers, setProviders }) {
               onClose: async () => {
                 try {
                   setProviders(await loadProviders());
-                } catch(e) { alert(e) }
+                } catch(e) { console.log(e?.response?.data?.detail) }
                 setOpenProviderDialog(false);
               },
               usage: providerDialogData?.usage,

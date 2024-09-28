@@ -15,6 +15,7 @@ export default function Geolocation(props) {
         } = props;
 
     // When a new json-file is chosen, disable the save changes button
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => setSessionData({ ...sessionData, disableSaveGeolocationChangesButton: true }), [sessionData?.fileData])
     
     return (
