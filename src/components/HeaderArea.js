@@ -41,7 +41,7 @@ export default function HeaderArea() {
               mr: 2
             }}
           >
-            GeoAnnotator
+            GeoSense Annotator
           </Typography>
           <Divider />
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>

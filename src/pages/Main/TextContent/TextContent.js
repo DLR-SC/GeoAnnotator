@@ -2,9 +2,9 @@
 
 import './TextContent.css'
 import { useEffect, useState } from "react"
-import { SaveButton } from '../customComponents'
-import LocationDialog from '../Dialogs/LocationDialog'
-import GeoparseDialog from '../Dialogs/GeoparseDialog'
+import { SaveButton } from '../../../components/customComponents'
+import LocationDialog from '../../../components/Dialogs/LocationDialog'
+import GeoparseDialog from '../../../components/Dialogs/GeoparseDialog'
 import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material"
 import { highlightDetectedLocations, geoparseTextContent } from "./TextContentFunctions"
 

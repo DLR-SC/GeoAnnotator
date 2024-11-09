@@ -1,9 +1,9 @@
 import './Dialog.css';
-import React, { useEffect, useState } from 'react';
 import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
-import DialogMapping from '../Mapping/DialogMapping';
+import React, { useEffect, useState } from 'react';
 import OptionalPositionsDialog from './OptionalCoordinatesDialog';
+import DialogMapping from '../../pages/Main/Mapping/DialogMapping';
 import { DialogContentArea, getOptionalCoordinates } from './DialogFunctions';
 import { 
   Box, 

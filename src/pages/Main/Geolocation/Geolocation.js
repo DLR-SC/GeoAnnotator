@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { List } from '@mui/material';
-import { useSession } from '../SessionProvider';
-import { SaveButton } from '../customComponents';
+import { useSession } from '../../../components/SessionProvider';
+import { SaveButton } from '../../../components/customComponents';
 import { GeolocationItems } from './GeolocationFunctions';
 
 export default function Geolocation(props) {

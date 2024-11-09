@@ -4,8 +4,8 @@ import {
     Box 
 } from '@mui/material';
 import { DataObject } from '@mui/icons-material';
-import { UploadButton } from '../customComponents';
-import { checkFileType } from '../../utils/jsonFunctions';
+import { UploadButton } from '../../../components/customComponents';
+import { checkFileType } from '../../../utils/jsonFunctions';
 
 export default function FolderUploader({ onFilesSelect }) {
   const 

@@ -1,6 +1,4 @@
-/**
- * Functions to process json-related objects
- */
+/**     Functions to process json-related objects    **/
 
 /**
  * Checks, if the file is of type 'application/json'

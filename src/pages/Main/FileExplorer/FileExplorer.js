@@ -2,11 +2,11 @@
 
 import FileUploader from './FileUploader'
 import { Save } from '@mui/icons-material'
-import { useSession } from '../SessionProvider'
-import { SaveButton } from '../customComponents'
 import React, { useEffect, useState } from 'react'
-import { addFileWithoutDupe } from '../../utils/utilFunctions'
-import { convertFileToJSONArray } from '../../utils/jsonFunctions'
+import { useSession } from '../../../components/SessionProvider'
+import { addFileWithoutDupe } from '../../../utils/utilFunctions'
+import { SaveButton } from '../../../components/customComponents'
+import { convertFileToJSONArray } from '../../../utils/jsonFunctions'
 import { List, Menu, MenuItem, TextField, InputAdornment } from '@mui/material'
 import { ExtractEntries, downloadFile, downloadFiles } from './FileExplorerFunctions'
 

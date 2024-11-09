@@ -1,14 +1,14 @@
 # Geo Annotator V1
 
-## What is the Geo Annotator used for?
-The Geo Annotator (GA) is a Content-Management-Tool, used for annotating data and managing annotated data.
+## What is the GeoSense Annotator used for?
+The GeoSense Annotator (GSA) is a Content-Management-Tool, used for annotating and managing geospatial data.
 
-![Geo Annotator - Example](./src/example.png "Geo Annotator")
+![GeoSense Annotator - Example](./src/example.png "GeoSense Annotator")
 
 ## Installation
 If you haven't Node.js (Version 20.9.0) already installed on your local system, do the following:
 ```bash
-conda create -n GeoAnnotator -c conda-forge nodejs=20.9.0 && conda activate GeoAnnotator
+conda create -n GeoSenseAnnotator -c conda-forge nodejs=20.9.0 && conda activate GeoSenseAnnotator
 ```
 
 (RECOMMENDED)
@@ -50,9 +50,9 @@ npm install axios@^1.6.8
 - and more...
 
 ## Usage
-After installing, run the server with following command (GeoAnnotator env needs to be active and you have to be in the respective directory):
+After installing, run the server with following command (GeoSenseAnnotator env needs to be active and you have to be in the respective directory):
 ```bash
-(GeoAnnotator) npm start
+(GeoSenseAnnotator) npm start
 ```
 
 Choose a json-file, that contains a JSON-Array with JSON-Objects, each with following attributes:
@@ -90,4 +90,4 @@ A json object could look like this:
 Afterwards, the textcontent, including the highlighted locations, the mapping of each location and the locations will be shown on the page.
 
 ## Project status
-Project finished.
+Ongoing.

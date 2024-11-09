@@ -2,8 +2,8 @@ import './Dialog.css';
 import React from 'react';
 import { useSession } from '../SessionProvider';
 import { SaveButton } from '../customComponents';
-import DialogMapping from '../Mapping/DialogMapping';
-import { DialogContentArea } from './DialogFunctions';
+import DialogMapping from '../../pages/Main/Mapping/DialogMapping'
+import { DialogContentArea } from './DialogFunctions'
 import { 
     Box,
     List,

@@ -2,12 +2,12 @@
 
 import Mapping from './Mapping/Mapping';
 import { Box, Grid } from '@mui/material';
-import { Item } from './customComponents';
-import { useSession } from './SessionProvider';
+import { Item } from '../../components/customComponents';
+import { useSession } from '../../components/SessionProvider';
 import Geolocation from './Geolocation/Geolocation';
 import FileExplorer from './FileExplorer/FileExplorer';
 import { TextContent } from './TextContent/TextContent';
-import { restructureLocationAttribute } from '../utils/jsonFunctions';
+import { restructureLocationAttribute } from '../../utils/jsonFunctions';
 import { processFeedback } from './Geolocation/GeolocationFunctions';
 
 export default function MainArea(props) {

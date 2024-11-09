@@ -2,13 +2,12 @@ import './App.css';
 import L from 'leaflet';
 import { Toolbar } from '@mui/material';
 import { useState, useEffect } from 'react';
-import MainArea from './components/MainArea';
+import MainArea from './pages/Main/MainArea';
 import HeaderArea from './components/HeaderArea';
-import Provider from './components/Provider/Provider';
+import Provider from './pages/Provider/Provider';
 import { SessionProvider } from './components/SessionProvider';
 import { structureLocationAttribute } from './utils/jsonFunctions';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
 
 // Set correct URLs for default Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;  // Remove old icon paths

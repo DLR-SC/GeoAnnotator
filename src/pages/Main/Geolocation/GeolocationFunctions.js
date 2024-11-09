@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { useSession } from '../SessionProvider';
+import { useSession } from '../../../components/SessionProvider';
 import {
     ListItem,
     ListItemText,
@@ -15,7 +15,7 @@ import {
     Place,
     MenuRounded
 } from '@mui/icons-material';
-import LocationDialog from '../Dialogs/LocationDialog'
+import LocationDialog from '../../../components/Dialogs/LocationDialog'
 
 /** 
  * Location list: Geolocation entries

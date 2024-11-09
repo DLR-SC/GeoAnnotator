@@ -6,7 +6,7 @@ import {
     ListItemButton,
     ListItemSecondaryAction
 } from '@mui/material';
-import { useSession } from '../SessionProvider';
+import { useSession } from '../../../components/SessionProvider';
 
 /**
  * Extract the respective JSONObjects from the JSON-file and construct a List out of it

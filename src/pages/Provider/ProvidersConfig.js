@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { deleteProvider, loadProviders } from './ProviderFunctions';
-import ProviderDialog from '../Dialogs/ProviderDialog';
+import ProviderDialog from '../../components/Dialogs/ProviderDialog';
 import {
   Accordion,
   AccordionDetails,

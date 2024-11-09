@@ -1,8 +1,8 @@
 import './Dialog.css';
-import React, { useEffect, useState } from 'react';
 import { SaveButton } from '../customComponents';
+import React, { useEffect, useState } from 'react';
 import { DialogContentArea } from './DialogFunctions';
-import { getOpenAIModels, getSelfhostedModels, saveProviderData } from '../Provider/ProviderFunctions';
+import { getOpenAIModels, getSelfhostedModels, saveProviderData } from '../../pages/Provider/ProviderFunctions';
 import { 
   ListItem, 
   InputLabel,

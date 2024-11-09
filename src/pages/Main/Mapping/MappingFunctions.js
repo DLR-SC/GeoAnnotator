@@ -1,7 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-import { useSession } from '../SessionProvider';
+import { useSession } from '../../../components/SessionProvider';
 
 /**
  * Focus on latest added marker
