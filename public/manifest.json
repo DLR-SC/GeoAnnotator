@@ -1,6 +1,6 @@
 {
-  "short_name": "GeoAnnotator",
-  "name": "Annotate data with GeoAnnotator",
+  "short_name": "GeoSense Annotator",
+  "name": "Annotate data with GeoSense Annotator",
   "icons": [
     {
       "src": "favicon.ico",
