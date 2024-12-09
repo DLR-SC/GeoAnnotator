@@ -54,7 +54,6 @@ After installing, run the server with following command (GeoSenseAnnotator env n
 ```bash
 (GeoSenseAnnotator) npm start
 ```
-
 Choose a json-file, that contains a JSON-Array with JSON-Objects, each with following attributes:
 - *text*: Text content, from which the locations have been detected and extracted
 - *locations*: The locations, including their geolocations/coordinates (Latitude, Longitude)

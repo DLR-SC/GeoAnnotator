@@ -1,0 +1,8 @@
+name: GeoSenseAnnotator
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  - nodejs=20.9.0=h57928b3_1
+prefix: C:\Users\Yunus\miniconda3\envs\GeoSenseAnnotator
