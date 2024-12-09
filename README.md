@@ -1,4 +1,4 @@
-# Geo Annotator V1
+# GeoSense Annotator
 
 ## What is the GeoSense Annotator used for?
 The GeoSense Annotator (GSA) is a Content-Management-Tool, used for annotating and managing geospatial data.
